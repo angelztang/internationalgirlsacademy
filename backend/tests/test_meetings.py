@@ -30,7 +30,7 @@ class TestScheduleMeeting:
         data = response.json()
         assert "matched_user" in data
         assert "scheduled_slot" in data
-        assert data["matched_user"]["id"] == 2
+        assert data["matched_user"]["user_id"] == 2
         assert data["matched_user"]["first_name"] == "Jane"
         assert data["message"] == "Meeting scheduled successfully for 30 minutes"
 
@@ -100,7 +100,7 @@ class TestScheduleMeeting:
 
         # Verify delete was called on original slot
         mock_table.delete.assert_called_once()
-        mock_table.delete.return_value.eq.assert_called_once_with("id", 1)
+        mock_table.delete.return_value.eq.assert_called_once_with("availability_id", 1)
 
         # Verify insert was called to create remaining slot
         mock_table.insert.assert_called_once()
