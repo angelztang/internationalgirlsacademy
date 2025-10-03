@@ -1,20 +1,22 @@
+"use client";
+
 import { useState } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { motion } from "motion/react";
+import { Card } from "../components/login/card";
+import { Button } from "../components/login/button";
+import { Input } from "../components/login/input";
+import { Label } from "../components/login/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/login/tabs";
+import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Users, GraduationCap, Heart, ArrowLeft } from "lucide-react";
 
 interface LoginProps {
   onBack: () => void;
-  onLogin: (userType: 'student' | 'volunteer' | 'organizer', userData: any) => void;
+  onLogin: (userType: 'student' | 'volunteer' | 'admin', userData: any) => void;
   onSwitchToSignup?: () => void;
 }
 
-export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
-  const [activeTab, setActiveTab] = useState<'student' | 'volunteer' | 'organizer'>('student');
+export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
+  const [activeTab, setActiveTab] = useState<'student' | 'volunteer' | 'admin'>('student');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -55,19 +57,19 @@ export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
   const tabConfig = {
     student: {
       icon: GraduationCap,
-      color: 'from-purple-500 to-purple-700',
+      color: 'bg-purple-600 text-white',
       bgColor: 'bg-purple-50',
       description: 'Access your learning journey, programs, and mentors'
     },
     volunteer: {
       icon: Heart,
-      color: 'from-pink-500 to-rose-700',
+      color: 'bg-pink-600 text-white',
       bgColor: 'bg-pink-50',
       description: 'Connect with students and manage your mentorship'
     },
-    organizer: {
+    admin: {
       icon: Users,
-      color: 'from-blue-500 to-indigo-700',
+      color: 'bg-blue-600 text-white',
       bgColor: 'bg-blue-50',
       description: 'Manage programs, events, and community'
     }
@@ -77,7 +79,7 @@ export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
   const IconComponent = currentConfig.icon;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12 px-4">
+    <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="container mx-auto max-w-md">
         <Button
           variant="ghost"
@@ -90,7 +92,7 @@ export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
 
         <Card className="overflow-hidden">
           {/* Header */}
-          <div className={`bg-gradient-to-r ${currentConfig.color} text-white p-8 text-center`}>
+          <div className={`${currentConfig.color} p-8 text-center`}>
             <motion.div
               key={activeTab}
               initial={{ scale: 0, rotate: -180 }}
@@ -110,7 +112,7 @@ export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
               <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="student">Student</TabsTrigger>
                 <TabsTrigger value="volunteer">Volunteer</TabsTrigger>
-                <TabsTrigger value="organizer">Organizer</TabsTrigger>
+                <TabsTrigger value="admin">Admin</TabsTrigger>
               </TabsList>
 
               <TabsContent value="student">
@@ -121,7 +123,7 @@ export function Login({ onBack, onLogin, onSwitchToSignup }: LoginProps) {
                 <LoginForm />
               </TabsContent>
 
-              <TabsContent value="organizer">
+              <TabsContent value="admin">
                 <LoginForm />
               </TabsContent>
             </Tabs>
