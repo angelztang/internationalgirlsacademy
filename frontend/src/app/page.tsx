@@ -4,6 +4,7 @@ import Hero from "@/components/LandingPage/Hero";
 import { CTAButtons } from "@/components/LandingPage/CTAButtons";
 import Programs from "@/components/LandingPage/Programs";
 import TrustIndicators from "@/components/LandingPage/TrustIndicators";
+import { LiveStream } from "@/components/LandingPage/LiveChat";
 import Footer from "@/components/LandingPage/Footer";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       } } />
       <Programs />
       <TrustIndicators />
+      <LiveStream />
       <Footer />
     </div>
   )
