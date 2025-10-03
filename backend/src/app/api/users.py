@@ -11,13 +11,11 @@ router = APIRouter()
 
 
 def get_user_by_email(db: Session, email: str):
-    """Get user by email"""
     return db.query(User).filter(User.email == email).first()
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    """Register a new user"""
     # Check if user already exists
     db_user = get_user_by_email(db, user.email)
     if db_user:
@@ -26,7 +24,6 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
             detail="User with this email already exists"
         )
     
-    # Hash password
     hashed_password = get_password_hash(user.password)
     
     # Create user
