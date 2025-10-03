@@ -1,7 +1,7 @@
 
 -- User Table
-CREATE TABLE "User" (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -9,22 +9,40 @@ CREATE TABLE "User" (
     user_type VARCHAR(3) NOT NULL,
     gender VARCHAR(50)  -- you could also use ENUM if you want stricter control
 );
+CREATE TABLE items (
+    item_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    cost INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+CREATE TABLE events (
+    event_id SERIAL PRIMARY KEY,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP
+);
+
+CREATE TABLE event_registration (
+    registration_id SERIAL PRIMARY KEY,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (event_id) REFERENCES event (event_id)
+);
+
 
 -- Availability Table
-CREATE TABLE Availability (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE availabilitys (
+    availability_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     time_start TIMESTAMP NOT NULL,
     time_end TIMESTAMP NOT NULL,
     CONSTRAINT fk_availability_user FOREIGN KEY (user_id)
-        REFERENCES "User"(id) ON DELETE CASCADE
+        REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Module Table
-CREATE TABLE Module (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE modules (
+    modules_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     module_progress NUMERIC DEFAULT 0,
     CONSTRAINT fk_module_user FOREIGN KEY (user_id)
-        REFERENCES "User"(id) ON DELETE CASCADE
+        REFERENCES users(id) ON DELETE CASCADE
 );
