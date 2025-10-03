@@ -223,7 +223,7 @@ export default function Shop({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden relative">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden absolute">
         <ShopHeader availablePoints={availablePoints} />
         <InfoCard />
         <ConfettiEffect show={showConfetti} />
