@@ -29,7 +29,7 @@ export default function Home() {
         </section>
       </main>
 
-      <Link href="/pages/StudentDashboard">Go to Dashboard</Link>
+      <Link href="/StudentDashboard">Go to Dashboard</Link>
     </div>
   );
 }
