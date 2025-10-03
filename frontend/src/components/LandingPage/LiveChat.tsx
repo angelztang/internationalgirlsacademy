@@ -75,7 +75,7 @@ export function LiveStream({
       animate={{ opacity: 1, y: 0 }}
       className="w-full"
     >
-      <Card className="overflow-hidden border-2 border-red-500 shadow-2xl">
+      <Card className="overflow-hidden border-2 border-red-500 shadow-2xl mx-24 mb-24">
         {/* Live Badge Header */}
         <div className="bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
