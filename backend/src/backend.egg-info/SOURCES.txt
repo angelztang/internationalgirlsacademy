@@ -4,10 +4,15 @@ src/app/__init__.py
 src/app/main.py
 src/app/api/__init__.py
 src/app/api/router.py
+src/app/api/v1/__init__.py
+src/app/api/v1/meetings.py
 src/app/core/__init__.py
 src/app/core/config.py
+src/app/core/database.py
+src/app/domain/schemas.py
 src/backend.egg-info/PKG-INFO
 src/backend.egg-info/SOURCES.txt
 src/backend.egg-info/dependency_links.txt
 src/backend.egg-info/requires.txt
 src/backend.egg-info/top_level.txt
+tests/test_meetings.py
