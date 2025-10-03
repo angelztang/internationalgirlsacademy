@@ -16,7 +16,5 @@ class Settings:
     # Database
     # DATABASE_URL: str = "postgresql://user:password@localhost/dbname"
 
-    # Add more settings as needed
-
 
 settings = Settings()

@@ -1,11 +1,8 @@
 from fastapi import APIRouter
 
+from app.api import users
+
 api_router = APIRouter()
 
-
-@api_router.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-
-# Add more endpoints here as needed
+# Include user routes
+api_router.include_router(users.router, prefix="/users", tags=["users"])
