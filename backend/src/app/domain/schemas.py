@@ -9,14 +9,14 @@ class ScheduleMeetingRequest(BaseModel):
 
 
 class AvailabilitySlot(BaseModel):
-    id: int
+    availability_id: int
     user_id: int
     time_start: datetime
     time_end: datetime
 
 
 class UserMatch(BaseModel):
-    id: int
+    user_id: int
     first_name: str
     last_name: str
     user_type: str

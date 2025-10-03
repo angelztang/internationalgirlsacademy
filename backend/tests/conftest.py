@@ -29,12 +29,12 @@ def sample_availability_data():
     """Sample availability data for testing"""
     return [
         {
-            "id": 1,
+            "availability_id": 1,
             "user_id": 2,
             "time_start": "2024-01-15T10:00:00+00:00",
             "time_end": "2024-01-15T12:00:00+00:00",
-            "User": {
-                "id": 2,
+            "users": {
+                "user_id": 2,
                 "first_name": "Jane",
                 "last_name": "Doe",
                 "user_type": "mentor",
@@ -43,12 +43,12 @@ def sample_availability_data():
             },
         },
         {
-            "id": 2,
+            "availability_id": 2,
             "user_id": 3,
             "time_start": "2024-01-15T14:00:00+00:00",
             "time_end": "2024-01-15T14:30:00+00:00",
-            "User": {
-                "id": 3,
+            "users": {
+                "user_id": 3,
                 "first_name": "John",
                 "last_name": "Smith",
                 "user_type": "mentee",
