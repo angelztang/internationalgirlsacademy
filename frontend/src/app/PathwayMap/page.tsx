@@ -18,6 +18,7 @@ import {
   Star,
 } from "lucide-react";
 import { motion } from "motion/react";
+import Shop from "../../components/Shop/Shop";
 
 interface PathStep {
   id: number;
@@ -620,6 +621,15 @@ export default function PathwayMap({
           </motion.div>
         </div>
       </div>
+      {/* Shop Modal */}
+      {pathType === "student" && (
+        <Shop
+          isOpen={showShop}
+          onClose={() => setShowShop(false)}
+          availablePoints={studentPoints}
+          onPurchase={handlePurchase}
+        />
+      )}
     </div>
   );
 }
