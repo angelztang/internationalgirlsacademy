@@ -19,8 +19,8 @@ async def schedule_meeting(
     """
 
     # Find available users (excluding the requesting user)
-    availability_response = db.table("availability").select(
-        "*, User(*)"
+    availability_response = db.table("availabilities").select(
+        "*, users(*)"
     ).neq("user_id", request.user_id).execute()
 
     if not availability_response.data:
@@ -38,7 +38,7 @@ async def schedule_meeting(
 
         if slot_duration >= duration_delta:
             matched_slot = availability
-            matched_user = availability["User"]
+            matched_user = availability["users"]
             break
 
     if not matched_slot:
@@ -53,11 +53,11 @@ async def schedule_meeting(
     meeting_end = original_start + duration_delta
 
     # Delete the original slot
-    db.table("availability").delete().eq("id", matched_slot["id"]).execute()
+    db.table("availabilities").delete().eq("availability_id", matched_slot["availability_id"]).execute()
 
     # If there's remaining time after the meeting, create a new slot
     if meeting_end < original_end:
-        db.table("availability").insert({
+        db.table("availabilities").insert({
             "user_id": matched_slot["user_id"],
             "time_start": meeting_end.isoformat(),
             "time_end": original_end.isoformat()
@@ -65,14 +65,14 @@ async def schedule_meeting(
 
     # Return the scheduled meeting details
     scheduled_slot = AvailabilitySlot(
-        id=matched_slot["id"],
+        availability_id=matched_slot["availability_id"],
         user_id=matched_slot["user_id"],
         time_start=original_start,
         time_end=meeting_end
     )
 
     user_match = UserMatch(
-        id=matched_user["id"],
+        user_id=matched_user["user_id"],
         first_name=matched_user["first_name"],
         last_name=matched_user["last_name"],
         user_type=matched_user["user_type"],
