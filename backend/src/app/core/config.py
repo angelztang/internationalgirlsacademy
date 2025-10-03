@@ -1,4 +1,8 @@
+import os
 from typing import List
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Settings:
@@ -13,10 +17,9 @@ class Settings:
         "http://localhost:8080",
     ]
 
-    # Database
-    # DATABASE_URL: str = "postgresql://user:password@localhost/dbname"
-
-    # Add more settings as needed
+    # Supabase
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_KEY: str = os.getenv("SUPABASE_KEY", "")
 
 
 settings = Settings()
