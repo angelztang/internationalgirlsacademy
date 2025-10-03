@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "../components/login/card";
-import { Button } from "../components/login/button";
-import { Input } from "../components/login/input";
-import { Label } from "../components/login/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/login/tabs";
+import { Card } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Users, GraduationCap, Heart, ArrowLeft } from "lucide-react";
 
