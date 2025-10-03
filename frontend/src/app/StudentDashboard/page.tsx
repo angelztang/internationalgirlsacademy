@@ -38,6 +38,8 @@ export default function StudentDashboard({
   onLogout,
 }: StudentDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Mock Data - in production, this would come from an API or props
   const userData = {
     id: "u12345",
     name: "Jason Luu",
