@@ -30,3 +30,7 @@ Thumbs.db
 
 # Temporary files
 *.tmp
+
+*.pem
+*.ppk
+Team-15_Server_Details.txt

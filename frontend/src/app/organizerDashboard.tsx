@@ -12,6 +12,9 @@ import {
 } from "../components/ui/tabs";
 import dynamic from "next/dynamic";
 import { getUserModules } from "../lib/api/modules";
+import { apiClient } from "../lib/api/client";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const DataManagement = dynamic(
   () => import("./DataManagement").then((mod) => mod.DataManagement),
@@ -36,8 +39,8 @@ import {
 import Link from "next/link";
 
 interface OrganizerDashboardProps {
-  userData: any;
-  onLogout: () => void;
+  userData?: any;
+  onLogout?: () => void;
 }
 
 export function OrganizerDashboard({
@@ -55,6 +58,21 @@ export function OrganizerDashboard({
   const [modules, setModules] = useState<any[]>([]);
   const [loadingModules, setLoadingModules] = useState(false);
   const [showModulesManager, setShowModulesManager] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const { user, logout: authLogout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear auth state
+    authLogout();
+
+    // Call optional prop logout handler
+    if (onLogout) onLogout();
+
+    // Redirect to login
+    router.push("/login");
+  };
 
   // Mock data
   const organizerData = {
@@ -171,6 +189,7 @@ export function OrganizerDashboard({
   useEffect(() => {
     fetchEvents();
     fetchModules();
+    fetchUsers();
   }, []);
 
   // Show data management page
@@ -183,11 +202,7 @@ export function OrganizerDashboard({
     setLoadingModules(true);
     try {
       // Fetch all user modules by getting all users first
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const usersRes = await fetch(`${API_BASE_URL}/users`);
-      if (!usersRes.ok) throw new Error("Failed to load users");
-      const users = await usersRes.json();
+      const users = await apiClient.get<any[]>('/users');
 
       // Fetch modules for each user
       const allModules: any[] = [];
@@ -214,11 +229,7 @@ export function OrganizerDashboard({
   async function fetchEvents() {
     setLoadingEvents(true);
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events`);
-      if (!res.ok) throw new Error("Failed to load events");
-      const data = await res.json();
+      const data = await apiClient.get<any[]>('/events');
       setEvents(data || []);
     } catch (err) {
       console.error(err);
@@ -229,11 +240,7 @@ export function OrganizerDashboard({
 
   async function fetchEventDetails(eventId: number) {
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`);
-      if (!res.ok) throw new Error("Failed to load event");
-      const data = await res.json();
+      const data = await apiClient.get<any>(`/events/${eventId}`);
       setSelectedEvent(data);
       setShowEventsManager(true);
     } catch (err) {
@@ -249,21 +256,11 @@ export function OrganizerDashboard({
     }
 
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_time: new Date(newEventStart).toISOString(),
-          end_time: new Date(newEventEnd).toISOString(),
-        }),
+      const created = await apiClient.post<any>('/events', {
+        start_time: new Date(newEventStart).toISOString(),
+        end_time: new Date(newEventEnd).toISOString(),
       });
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || "Failed to create event");
-      }
-      const created = await res.json();
+
       setEvents((s) => [created, ...s]);
       setNewEventStart("");
       setNewEventEnd("");
@@ -276,15 +273,7 @@ export function OrganizerDashboard({
 
   async function updateEvent(eventId: number, payload: any) {
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Failed to update event");
-      const updated = await res.json();
+      const updated = await apiClient.put<any>(`/events/${eventId}`, payload);
       setEvents((s) =>
         s.map((e) => (e.event_id === updated.event_id ? updated : e))
       );
@@ -298,12 +287,7 @@ export function OrganizerDashboard({
   async function deleteEvent(eventId: number) {
     if (!confirm("Delete this event?")) return;
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete event");
+      await apiClient.delete(`/events/${eventId}`);
       setEvents((s) => s.filter((e) => e.event_id !== eventId));
       alert("Event deleted");
     } catch (err) {
@@ -315,12 +299,7 @@ export function OrganizerDashboard({
   async function deleteModule(moduleId: number, userId: string) {
     if (!confirm("Delete this module?")) return;
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete module");
+      await apiClient.delete(`/modules/${moduleId}/${userId}`);
       setModules((s) =>
         s.filter((m) => !(m.module_id === moduleId && m.user_id === userId))
       );
@@ -331,10 +310,37 @@ export function OrganizerDashboard({
     }
   }
 
+  async function fetchUsers() {
+    setLoadingUsers(true);
+    try {
+      const data = await apiClient.get<any[]>('/users');
+      setUsers(data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingUsers(false);
+    }
+  }
+
+  async function updateUserRole(userId: string, newRole: string) {
+    if (!confirm(`Change user role to ${newRole}?`)) return;
+
+    try {
+      await apiClient.put(`/users/${userId}/role?new_role=${newRole}`);
+
+      // Refresh users list
+      await fetchUsers();
+      alert("User role updated successfully");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to update user role");
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="bg-white border-b-4 border-[#f7a1c0] sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
@@ -346,10 +352,12 @@ export function OrganizerDashboard({
               <Button variant="ghost" size="icon">
                 <Bell className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon">
-                <Settings className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" onClick={onLogout} className="gap-2">
+              <Link href="/profile">
+                <Button variant="ghost" size="icon">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
+              <Button variant="ghost" onClick={handleLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>
@@ -362,7 +370,7 @@ export function OrganizerDashboard({
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-blue-primary text-white p-8">
+          <Card className="bg-gradient-to-r from-[#4455f0] via-[#b4bbf8] to-[#f7a1c0] text-white p-8 shadow-xl border-0">
             <h2 className="text-3xl mb-2">Welcome, {organizerData.name}! 👋</h2>
             <p className="text-white-accent mb-6">
               Here&apos;s what&apos;s happening across IGA programs
@@ -800,9 +808,73 @@ export function OrganizerDashboard({
           <TabsContent value="users">
             <Card className="p-6">
               <h3 className="text-xl mb-4">User Management</h3>
-              <p className="text-gray-600">
-                Student and volunteer management would be displayed here...
-              </p>
+
+              {loadingUsers ? (
+                <p>Loading users...</p>
+              ) : users.length === 0 ? (
+                <p className="text-gray-600">No users found</p>
+              ) : (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-5 gap-4 p-3 bg-gray-100 rounded font-semibold text-sm">
+                    <div>Name</div>
+                    <div>Email</div>
+                    <div>Current Role</div>
+                    <div>XP</div>
+                    <div>Actions</div>
+                  </div>
+                  {users.map((user) => (
+                    <div key={user.user_id} className="grid grid-cols-5 gap-4 p-3 border rounded items-center">
+                      <div>
+                        <p className="font-medium">{user.first_name} {user.last_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                      </div>
+                      <div>
+                        <Badge className={
+                          user.user_type === 'admin' ? 'bg-purple-100 text-purple-700' :
+                          user.user_type === 'volunteer' ? 'bg-pink-100 text-pink-700' :
+                          'bg-blue-100 text-blue-700'
+                        }>
+                          {user.user_type}
+                        </Badge>
+                      </div>
+                      <div>
+                        <p className="text-sm">{user.experience_points || 0}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        {user.user_type !== 'admin' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'admin')}
+                          >
+                            Make Admin
+                          </Button>
+                        )}
+                        {user.user_type !== 'volunteer' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'volunteer')}
+                          >
+                            Make Volunteer
+                          </Button>
+                        )}
+                        {user.user_type !== 'student' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'student')}
+                          >
+                            Make Student
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           </TabsContent>
 

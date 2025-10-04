@@ -1,92 +1,49 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
-  'http://localhost:8000/api/v1';
+import { apiClient } from './client';
 
-  export interface Module {
-    module_id: number;
-    user_id: string; // UUID
-    progress: number;
-  }
+export interface Module {
+  module_id: number;
+  user_id: string; // UUID
+  progress: number;
+}
 
-  export interface CreateModuleRequest {
-    user_id: string; // UUID
-    progress: number;
-  }
+export interface CreateModuleRequest {
+  user_id: string; // UUID
+  progress: number;
+}
 
-  export interface UpdateModuleProgressRequest {
-    progress: number;
-  }
+export interface UpdateModuleProgressRequest {
+  progress: number;
+}
 
-  export interface UserModulesResponse {
-    user_id: string; // UUID
-    modules: Module[];
-  }
+export interface UserModulesResponse {
+  user_id: string; // UUID
+  modules: Module[];
+}
 
-  // Get all modules for a specific user
-  export async function getUserModules(userId: string): 
-  Promise<UserModulesResponse> {
-    const response = await fetch(`${API_BASE_URL}/modules/user/${userId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch user modules');
-    }
-    return response.json();
-  }
+// Get all modules for a specific user
+export async function getUserModules(userId: string): Promise<UserModulesResponse> {
+  return apiClient.get<UserModulesResponse>(`/modules/user/${userId}`);
+}
 
-  // Get a specific module by ID
-  export async function getModule(moduleId: number): Promise<Module> {
-    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch module');
-    }
-    return response.json();
-  }
+// Get a specific module by ID
+export async function getModule(moduleId: number): Promise<Module> {
+  return apiClient.get<Module>(`/modules/${moduleId}`);
+}
 
-  // Create a new module for a user
-  export async function createModule(request: CreateModuleRequest): 
-  Promise<Module> {
-    const response = await fetch(`${API_BASE_URL}/modules`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    });
+// Create a new module for a user
+export async function createModule(request: CreateModuleRequest): Promise<Module> {
+  return apiClient.post<Module>('/modules', request);
+}
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Failed to create module');
-    }
+// Update module progress
+export async function updateModuleProgress(
+  moduleId: number,
+  progress: number
+): Promise<Module> {
+  return apiClient.put<Module>(`/modules/${moduleId}`, { progress });
+}
 
-    return response.json();
-  }
-
-  // Update module progress
-  export async function updateModuleProgress(
-    moduleId: number,
-    progress: number
-  ): Promise<Module> {
-    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ progress: progress }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || 'Failed to update module progress');
-    }
-
-    return response.json();
-  }
-
-  // Delete a module
-  export async function deleteModule(moduleId: number, userId: string): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete module');
-    }
-  }
+// Delete a module
+export async function deleteModule(moduleId: number, userId: string): Promise<void> {
+  return apiClient.delete<void>(`/modules/${moduleId}/${userId}`);
+}

@@ -24,12 +24,16 @@ import {
   LogOut,
   Bell,
   Settings,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+
 interface VolunteerDashboardProps {
-  userData: any;
-  onLogout: () => void;
+  userData?: any;
+  onLogout?: () => void;
 }
 
 export default function VolunteerDashboard({
@@ -37,6 +41,19 @@ export default function VolunteerDashboard({
   onLogout,
 }: VolunteerDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const { user, logout: authLogout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear auth state
+    authLogout();
+
+    // Call optional prop logout handler
+    if (onLogout) onLogout();
+
+    // Redirect to login
+    router.push("/login");
+  };
 
   // Mock data
   const volunteerData = {
@@ -124,9 +141,9 @@ export default function VolunteerDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="bg-white border-b-4 border-[#f7a1c0] sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
@@ -142,7 +159,7 @@ export default function VolunteerDashboard({
               <Button variant="ghost" size="icon">
                 <Settings className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" onClick={onLogout} className="gap-2">
+              <Button variant="ghost" onClick={handleLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>
@@ -155,7 +172,7 @@ export default function VolunteerDashboard({
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-pink text-white p-8">
+          <Card className="bg-gradient-to-r from-[#f7a1c0] to-[#4455f0] text-white p-8 shadow-xl border-0">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">
@@ -262,6 +279,30 @@ export default function VolunteerDashboard({
                     </p>
                     <p className="text-xs text-gray-600">Impact</p>
                   </Card>
+                </div>
+
+                {/* My Volunteer Pathway - Direct access to volunteer PathwayMap */}
+                <div className="mt-6">
+                  <Link href="/PathwayMap?path=volunteer">
+                  <Card className="p-6 bg-gradient-to-r from-[#f7a1c0] to-[#b4bbf8] text-white cursor-pointer hover:shadow-xl transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
+                          <BookOpen className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl mb-1">My Volunteer Pathway</h3>
+                          <p className="text-sm text-pink-100">
+                            Continue your volunteering journey and learn how to mentor
+                          </p>
+                        </div>
+                      </div>
+                      <Button className="bg-white text-pink hover:bg-white/90">
+                        Continue →
+                      </Button>
+                    </div>
+                  </Card>
+                  </Link>
                 </div>
 
                 {/* Mentees Overview */}
