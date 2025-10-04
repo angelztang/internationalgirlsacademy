@@ -7,9 +7,20 @@ export default function LoginRoute() {
   const router = useRouter();
 
   const handleBack = () => router.push("/");
-  const handleLogin = (_userType: "student" | "volunteer" | "organizer", _userData: any) => {
-    // TODO: replace with real post-login navigation
-    router.push("/");
+  const handleLogin = (userType: "student" | "volunteer" | "admin", _userData: any) => {
+    // Simple post-login navigation based on role (no auth)
+    if (userType === "student") {
+      router.push("/StudentDashboard");
+      return;
+    }
+
+    if (userType === "volunteer") {
+      router.push("/volunteerDashboard");
+      return;
+    }
+
+    // organizer (admin) -> organizer dashboard
+    router.push("/organizerDashboard");
   };
 
   const handleSwitchToSignup = () => router.push("/signup");
