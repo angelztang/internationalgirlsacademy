@@ -39,6 +39,10 @@ export default function StudentDashboard({
   onLogout,
 }: StudentDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [timeInput, setTimeInput] = useState("");
+  const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
+  const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -205,9 +209,7 @@ export default function StudentDashboard({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="courses">My Courses</TabsTrigger>
             <TabsTrigger value="mentor">Mentorship</TabsTrigger>
-            <TabsTrigger value="community">Community</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -366,35 +368,135 @@ export default function StudentDashboard({
             </div>
           </TabsContent>
 
-          {/* Courses Tab */}
-          <TabsContent value="courses">
-            <Card className="p-6">
-              <h3 className="text-xl mb-4">My Courses</h3>
-              <p className="text-gray-600">
-                Course content would be displayed here...
-              </p>
-            </Card>
-          </TabsContent>
 
           {/* Mentor Tab */}
           <TabsContent value="mentor">
             <Card className="p-6">
               <h3 className="text-xl mb-4">Mentorship</h3>
-              <p className="text-gray-600">
-                Mentorship details would be displayed here...
-              </p>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">Select a date for mentoring sessions</p>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="w-full border rounded p-2 mb-3"
+                  />
+
+                  <div className="space-y-2">
+                    <label className="text-sm">Add available time for {selectedDate || '...'}</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="time"
+                        value={timeInput}
+                        onChange={(e) => setTimeInput(e.target.value)}
+                        className="flex-1 border rounded p-2"
+                      />
+                      <Button
+                        onClick={() => {
+                          if (!selectedDate || !timeInput) return alert('Pick a date and time');
+                          setTimeSlotsByDate((prev) => {
+                            const next = { ...prev };
+                            next[selectedDate] = Array.from(new Set([...(next[selectedDate] || []), timeInput]));
+                            return next;
+                          });
+                          setTimeInput('');
+                        }}
+                        className="bg-blue-primary"
+                      >
+                        Add time
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <h4 className="text-sm mb-2">Your availability</h4>
+                    {Object.keys(timeSlotsByDate).length === 0 ? (
+                      <p className="text-xs text-gray-500">No times added yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {Object.entries(timeSlotsByDate).map(([date, slots]) => (
+                          <div key={date} className="p-2 border rounded">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="text-sm font-medium">{date}</div>
+                              <div>
+                                <Button size="sm" variant="ghost" onClick={() => { const next = { ...timeSlotsByDate }; delete next[date]; setTimeSlotsByDate(next); }}>Remove</Button>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {slots.map((t) => (
+                                <div key={t} className="px-3 py-1 bg-white border rounded text-sm">
+                                  {t}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4">
+                    <Button
+                      className="bg-pink"
+                      onClick={() => {
+                        // Simple mock matching algorithm: choose a static pool and pick a user who shares any slot
+                        const pool = [
+                          { id: 'u200', name: 'Alex Kim', available: { [selectedDate]: ['09:00', '14:00'] } },
+                          { id: 'u201', name: 'Priya Singh', available: { [selectedDate]: ['10:00', '15:00'] } },
+                          { id: 'u202', name: 'Luis Ramirez', available: { [selectedDate]: ['11:00'] } },
+                        ];
+
+                        const mySlots = timeSlotsByDate[selectedDate] || [];
+                        let found = null;
+                        for (const candidate of pool) {
+                          const cSlots = candidate.available[selectedDate] || [];
+                          if (mySlots.some((s) => cSlots.includes(s))) {
+                            found = { ...candidate, matchedAt: mySlots.find((s) => cSlots.includes(s)) };
+                            break;
+                          }
+                        }
+
+                        if (found) setMatchedUser(found);
+                        else setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
+                      }}
+                    >
+                      Pair me!
+                    </Button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm mb-2">Matched mentor</h4>
+                  {matchedUser ? (
+                    matchedUser.id === 'none' ? (
+                      <Card className="p-4">No matches found for those times — try other slots.</Card>
+                    ) : (
+                      <Card className="p-4">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-12 h-12">
+                            <AvatarFallback className="bg-blue-primary text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{matchedUser.name}</div>
+                            <div className="text-xs text-gray-600">Matched at {matchedUser.matchedAt} on {selectedDate}</div>
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          <Button className="bg-blue-primary">Message Mentor</Button>
+                        </div>
+                      </Card>
+                    )
+                  ) : (
+                    <p className="text-xs text-gray-500">Pairing results will show here.</p>
+                  )}
+                </div>
+              </div>
             </Card>
           </TabsContent>
 
-          {/* Community Tab */}
-          <TabsContent value="community">
-            <Card className="p-6">
-              <h3 className="text-xl mb-4">Community</h3>
-              <p className="text-gray-600">
-                Community feed would be displayed here...
-              </p>
-            </Card>
-          </TabsContent>
+          
         </Tabs>
       </div>
     </div>
