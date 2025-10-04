@@ -66,3 +66,24 @@ class EquipItemRequest(BaseModel):
 class UserInventoryResponse(BaseModel):
     user_id: int
     items: List[UserItem]
+
+
+# Module schemas
+class Module(BaseModel):
+    module_id: int
+    user_id: int
+    module_progress: float
+
+
+class CreateModuleRequest(BaseModel):
+    user_id: int
+    module_progress: float = 0.0
+
+
+class UpdateModuleProgressRequest(BaseModel):
+    module_progress: float
+
+
+class UserModulesResponse(BaseModel):
+    user_id: int
+    modules: List[Module]
