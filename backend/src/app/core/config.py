@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 # Load .env file from backend directory
 backend_dir = Path(__file__).parent.parent.parent
 env_path = backend_dir / ".env"
+print(f"Looking for .env at: {env_path}")  # Add this
+print(f"File exists: {env_path.exists()}")  # Add this
 load_dotenv(env_path)
 
 class Settings:
