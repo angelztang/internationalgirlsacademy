@@ -217,7 +217,7 @@ export default function PathwayMap({
   const router = useRouter();
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
-  const [userModules, setUserModules] = useState<any[]>([]);
+  const [userModules, setUserModules] = useState<Array<{module_id: number; user_id: string; progress: number}>>([]);
   const [isLoadingModules, setIsLoadingModules] = useState(false);
 
   // Calculate student points

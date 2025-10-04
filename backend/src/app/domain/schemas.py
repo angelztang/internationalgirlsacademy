@@ -152,16 +152,19 @@ class UserModulesResponse(BaseModel):
 # Event schemas
 class Event(BaseModel):
     event_id: int
+    name: Optional[str] = None
     start_time: datetime
     end_time: datetime
 
 
 class CreateEventRequest(BaseModel):
+    name: Optional[str] = None
     start_time: datetime
     end_time: datetime
 
 
 class UpdateEventRequest(BaseModel):
+    name: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 
@@ -180,6 +183,7 @@ class RegisterForEventRequest(BaseModel):
 
 class EventWithRegistrations(BaseModel):
     event_id: int
+    name: Optional[str] = None
     start_time: datetime
     end_time: datetime
     registrations: List[EventRegistration]

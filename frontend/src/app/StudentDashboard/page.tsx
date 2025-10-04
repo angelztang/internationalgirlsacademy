@@ -32,7 +32,11 @@ import {
 import { getUserModules } from "@/lib/api/modules";
 
 interface StudentDashboardProps {
-  userData: any;
+  userData: {
+    name?: string;
+    email?: string;
+    id?: string;
+  };
   onLogout: () => void;
 }
 
@@ -44,11 +48,11 @@ export default function StudentDashboard({
   const [selectedDate, setSelectedDate] = useState("");
   const [timeInput, setTimeInput] = useState("");
   const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
-  const [matchedUser, setMatchedUser] = useState<any | null>(null);
+  const [matchedUser, setMatchedUser] = useState<{name: string; program: string} | null>(null);
   const router = useRouter();
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
-  const [userModules, setUserModules] = useState<any[]>([]);
+  const [userModules, setUserModules] = useState<Array<{module_id: number; user_id: string; progress: number}>>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
 
   // Fetch user modules 

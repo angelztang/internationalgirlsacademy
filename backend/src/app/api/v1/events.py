@@ -52,6 +52,7 @@ async def get_event(event_id: int, db: Client = Depends(get_supabase)):
 
     return EventWithRegistrations(
         event_id=event["event_id"],
+        name=event.get("name"),
         start_time=event["start_time"],
         end_time=event["end_time"],
         registrations=registrations,
@@ -69,10 +70,13 @@ async def create_event(request: CreateEventRequest, db: Client = Depends(get_sup
             detail="Event end time must be after start time"
         )
 
-    response = db.table("events").insert({
+    insert_data = {
+        "name": request.name or "Untitled Event",
         "start_time": request.start_time.isoformat(),
         "end_time": request.end_time.isoformat()
-    }).execute()
+    }
+
+    response = db.table("events").insert(insert_data).execute()
 
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create event")
@@ -95,6 +99,8 @@ async def update_event(
 
     # Build update dict
     update_data = {}
+    if request.name is not None:
+        update_data["name"] = request.name
     if request.start_time:
         update_data["start_time"] = request.start_time.isoformat()
     if request.end_time:
