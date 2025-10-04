@@ -2,11 +2,12 @@
 
 export const dynamic = 'force-dynamic'
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SignupPage from "../signup";
 import { useAuth } from "@/context/AuthContext";
 
-export default function SignupRoute() {
+function SignupRouteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signup } = useAuth();
@@ -62,5 +63,13 @@ export default function SignupRoute() {
       onSignupSuccess={handleSignupSuccess}
       onSwitchToLogin={handleSwitchToLogin}
     />
+  );
+}
+
+export default function SignupRoute() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SignupRouteContent />
+    </Suspense>
   );
 }
