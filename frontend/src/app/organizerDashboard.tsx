@@ -419,7 +419,6 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <Button size="sm" onClick={() => fetchEventDetails(ev.event_id)}>Details</Button>
-                                  <Button size="sm" variant="ghost" onClick={() => updateEvent(ev.event_id, {})}>Edit</Button>
                                   <Button size="sm" variant="destructive" onClick={() => deleteEvent(ev.event_id)}>Delete</Button>
                                 </div>
                               </div>
