@@ -83,8 +83,6 @@ Teaser: "Complete these modules to unlock programs"
 - Cultural markers visible (pink, Nguzo Saba symbols)
 - Clear next steps at every section
 
-```
-
 ## Backend API Routes → Frontend Integration
 
 ### User Management (Authentication via Supabase)
