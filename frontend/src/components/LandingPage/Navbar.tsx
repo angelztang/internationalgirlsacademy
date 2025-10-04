@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { LogIn } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,10 +30,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-pink rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">IGA</span>
-            </div>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/nonprofit-logo.png"
+              alt="International Girls Academy Logo"
+              width={50}
+              height={50}
+              className="object-contain"
+              style={{ backgroundColor: 'transparent'}}
+            />
             <span className={`font-bold text-xl transition-colors ${
               isScrolled ? "text-gray-900" : "text-gray-900"
             }`}>

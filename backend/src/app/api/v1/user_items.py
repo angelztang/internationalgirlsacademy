@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from datetime import datetime
+from datetime import datetime, UTC
 from supabase import Client
 
 from app.core.database import get_supabase
@@ -89,7 +89,7 @@ async def purchase_item(
             "user_id": user_id,
             "item_id": request.item_id,
             "quantity": request.quantity,
-            "acquired_at": datetime.utcnow().isoformat(),
+            "acquired_at": datetime.now(UTC).isoformat(),
             "equipped": False
         }).execute()
 
