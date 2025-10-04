@@ -96,7 +96,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     setLoadingModules(true);
     try {
       // Fetch all user modules by getting all users first
-      const usersRes = await fetch("/api/v1/users");
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const usersRes = await fetch(`${API_BASE_URL}/users`);
       if (!usersRes.ok) throw new Error("Failed to load users");
       const users = await usersRes.json();
 
@@ -122,7 +123,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   async function fetchEvents() {
     setLoadingEvents(true);
     try {
-      const res = await fetch("/api/v1/events");
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/events`);
       if (!res.ok) throw new Error("Failed to load events");
       const data = await res.json();
       setEvents(data || []);
@@ -135,7 +137,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
 
   async function fetchEventDetails(eventId: number) {
     try {
-      const res = await fetch(`/api/v1/events/${eventId}`);
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/events/${eventId}`);
       if (!res.ok) throw new Error("Failed to load event");
       const data = await res.json();
       setSelectedEvent(data);
@@ -153,7 +156,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     }
 
     try {
-      const res = await fetch(`/api/v1/events`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ start_time: new Date(newEventStart).toISOString(), end_time: new Date(newEventEnd).toISOString() }),
@@ -175,7 +179,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
 
   async function updateEvent(eventId: number, payload: any) {
     try {
-      const res = await fetch(`/api/v1/events/${eventId}`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -193,7 +198,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   async function deleteEvent(eventId: number) {
     if (!confirm("Delete this event?")) return;
     try {
-      const res = await fetch(`/api/v1/events/${eventId}`, { method: "DELETE" });
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete event");
       setEvents((s) => s.filter((e) => e.event_id !== eventId));
       alert("Event deleted");
@@ -206,7 +212,8 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   async function deleteModule(moduleId: number) {
     if (!confirm("Delete this module?")) return;
     try {
-      const res = await fetch(`/api/v1/modules/${moduleId}`, { method: "DELETE" });
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${API_BASE_URL}/modules/${moduleId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete module");
       setModules((s) => s.filter((m) => m.module_id !== moduleId));
       alert("Module deleted");
