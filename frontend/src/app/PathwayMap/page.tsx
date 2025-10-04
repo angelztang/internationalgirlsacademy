@@ -280,7 +280,7 @@ export default function PathwayMap({
       else if (userId) {
         const newModule = await createModule({
           user_id: userId,
-          module_progress: newProgress
+          progress: newProgress
         });
         setUserModules([...userModules, newModule]);
       }

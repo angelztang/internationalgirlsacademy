@@ -62,8 +62,7 @@ export default function StudentDashboard({
 
         // Calculate average progress from all modules
         if (data.modules.length > 0) {
-          const avgProgress = data.modules.reduce((sum: number, m: any) => sum
-   + m.module_progress, 0) / data.modules.length;
+          const avgProgress = data.modules.reduce((sum: number, m: any) => sum + m.progress, 0) / data.modules.length;
           setModuleProgress(Math.round(avgProgress));
         }
       } catch (error) {
