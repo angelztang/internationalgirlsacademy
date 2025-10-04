@@ -101,7 +101,7 @@ Teaser: "Complete these modules to unlock programs"
 - ✅ `GET /api/v1/modules/{module_id}` → Modules API utility (`frontend/src/lib/api/modules.ts`)
 - ✅ `POST /api/v1/modules` → Modules API utility
 - ✅ `PUT /api/v1/modules/{module_id}` → PathwayMap (`frontend/src/app/PathwayMap/page.tsx`)
-- ✅ `DELETE /api/v1/modules/{module_id}` → Modules API utility
+- ✅ `DELETE /api/v1/modules/{module_id}` → Organizer dashboard 
 
 ### Meetings (Zoom Integration)
 - ✅ `GET /api/v1/meetings` → Meetings page (`frontend/src/app/events/meetings/page.tsx`)
