@@ -4,16 +4,16 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   export interface Module {
     module_id: number;
     user_id: string; // UUID
-    module_progress: number;
+    progress: number;
   }
 
   export interface CreateModuleRequest {
     user_id: string; // UUID
-    module_progress: number;
+    progress: number;
   }
 
   export interface UpdateModuleProgressRequest {
-    module_progress: number;
+    progress: number;
   }
 
   export interface UserModulesResponse {
@@ -61,7 +61,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
 
   // Update module progress
   export async function updateModuleProgress(
-    moduleId: number, 
+    moduleId: number,
     progress: number
   ): Promise<Module> {
     const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`, {
@@ -69,7 +69,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ module_progress: progress }),
+      body: JSON.stringify({ progress: progress }),
     });
 
     if (!response.ok) {
@@ -81,8 +81,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   // Delete a module
-  export async function deleteModule(moduleId: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`, {
+  export async function deleteModule(moduleId: number, userId: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, {
       method: 'DELETE',
     });
 

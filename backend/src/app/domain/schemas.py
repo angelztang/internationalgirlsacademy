@@ -131,39 +131,41 @@ class UserInventoryResponse(BaseModel):
 # Module schemas
 class Module(BaseModel):
     module_id: int
-    user_id: int
-    module_progress: float
+    user_id: str  # UUID from Supabase
+    progress: float  # Changed from module_progress to match DB schema
 
 
 class CreateModuleRequest(BaseModel):
-    user_id: int
-    module_progress: float = 0.0
+    user_id: str  # UUID from Supabase
+    progress: float = 0.0  # Changed from module_progress
 
 
 class UpdateModuleProgressRequest(BaseModel):
-    module_progress: float
+    progress: float  # Changed from module_progress
 
 
 class UserModulesResponse(BaseModel):
-    user_id: int
+    user_id: str  # UUID from Supabase
     modules: List[Module]
 
 
 # Event schemas
 class Event(BaseModel):
     event_id: int
+    name: Optional[str] = None
     start_time: datetime
     end_time: datetime
 
 
 class CreateEventRequest(BaseModel):
-    name: str
+    name: Optional[str] = None  # ← keep this if you want name to be optional
     start_time: datetime
     end_time: datetime
 
 
+
 class UpdateEventRequest(BaseModel):
-    name: str
+    name: Optional[str] = None  # ← keep this if you want name to be optional
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 
@@ -182,6 +184,7 @@ class RegisterForEventRequest(BaseModel):
 
 class EventWithRegistrations(BaseModel):
     event_id: int
+    name: Optional[str] = None
     start_time: datetime
     end_time: datetime
     registrations: List[EventRegistration]
