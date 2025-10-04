@@ -14,6 +14,11 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+			// custom palette
+			lavender: '#b4bbf8',
+			'blue-primary': '#4455f0',
+			pink: '#f7a1c0',
+			'white-accent': '#ffffff',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

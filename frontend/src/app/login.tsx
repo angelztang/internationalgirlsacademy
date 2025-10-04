@@ -66,20 +66,20 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
   const tabConfig = {
     student: {
       icon: GraduationCap,
-      color: 'bg-purple-600 text-white',
-      bgColor: 'bg-purple-50',
+      color: 'bg-blue-primary text-white',
+      bgColor: 'bg-lavender',
       description: 'Access your learning journey, programs, and mentors'
     },
     volunteer: {
       icon: Heart,
-      color: 'bg-pink-600 text-white',
-      bgColor: 'bg-pink-50',
+      color: 'bg-pink text-white',
+      bgColor: 'bg-pink',
       description: 'Connect with students and manage your mentorship'
     },
     admin: {
       icon: Users,
-      color: 'bg-blue-600 text-white',
-      bgColor: 'bg-blue-50',
+      color: 'bg-blue-primary text-white',
+      bgColor: 'bg-white',
       description: 'Manage programs, events, and community'
     }
   };
@@ -214,7 +214,7 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
         <div>
           <Button
             type="submit"
-            className={`w-full bg-gradient-to-r ${currentConfig.color}`}
+            className={`w-full ${currentConfig.color}`}
             disabled={isLoading}
           >
             {isLoading ? (

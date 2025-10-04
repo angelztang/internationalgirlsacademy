@@ -9,33 +9,33 @@ const programs = [
     description: "12 weeks to launch your business",
     details: "Learn entrepreneurship, build a business plan, and launch your venture with mentor support",
     icon: Rocket,
-    color: "from-pink-500 to-rose-600",
-    bgColor: "bg-pink-50",
-    iconBg: "bg-pink-100",
+    color: "text-pink",
+    bgColor: "bg-pink",
+    iconBg: "bg-pink",
   },
   {
     title: "Kumbathon",
     description: "Make coding cool through hackathons",
     details: "Join exciting coding challenges, build projects, and connect with tech enthusiasts",
     icon: Code,
-    color: "from-purple-500 to-indigo-600",
-    bgColor: "bg-purple-50",
-    iconBg: "bg-purple-100",
+    color: "text-lavender",
+    bgColor: "bg-lavender",
+    iconBg: "bg-lavender",
   },
   {
     title: "Box of Open Love",
     description: "Get essential items for school/college",
     details: "Receive supplies and resources to support your educational journey",
     icon: Gift,
-    color: "from-blue-500 to-cyan-600",
-    bgColor: "bg-blue-50",
-    iconBg: "bg-blue-100",
+    color: "text-blue-primary",
+    bgColor: "bg-blue-primary",
+    iconBg: "bg-blue-primary",
   },
 ]
 
 export default function Programs() {
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-white to-pink-50">
+    <section className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -45,7 +45,7 @@ export default function Programs() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-blue-primary">
             Our Programs
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -68,16 +68,16 @@ export default function Programs() {
                 className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
                 {/* Gradient Background on Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${program.color} opacity-0 group-hover:opacity-5 transition-opacity`} />
+                <div className={`absolute inset-0 ${program.color.replace('from-','bg-')} opacity-5 transition-opacity`} />
 
                 <div className="relative p-8">
                   {/* Icon */}
                   <div className={`w-16 h-16 ${program.iconBg} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                    <Icon className={`w-8 h-8 bg-gradient-to-br ${program.color} bg-clip-text text-transparent`} strokeWidth={2.5} />
+                    <Icon className={`w-8 h-8 ${program.iconBg.replace('bg-','')} text-white`} strokeWidth={2.5} />
                   </div>
 
                   {/* Title */}
-                  <h3 className={`text-2xl font-bold mb-3 bg-gradient-to-r ${program.color} bg-clip-text text-transparent`}>
+                  <h3 className={`text-2xl font-bold mb-3 ${program.color.replace('from-','text-')}`}>
                     {program.title}
                   </h3>
 
@@ -94,7 +94,7 @@ export default function Programs() {
                   {/* Learn More Link */}
                   <a
                     href="#"
-                    className={`inline-flex items-center gap-2 font-semibold bg-gradient-to-r ${program.color} bg-clip-text text-transparent group-hover:gap-3 transition-all`}
+                    className={`inline-flex items-center gap-2 font-semibold ${program.color.replace('from-','text-')} group-hover:gap-3 transition-all`}
                   >
                     Learn More
                     <ArrowRight className="w-5 h-5" strokeWidth={2.5} />

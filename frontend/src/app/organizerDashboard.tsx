@@ -78,7 +78,7 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -106,9 +106,9 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-gradient-to-r from-blue-500 to-indigo-700 text-white p-8">
+          <Card className="bg-blue-primary text-white p-8">
             <h2 className="text-3xl mb-2">Welcome, {organizerData.name}! 👋</h2>
-            <p className="text-blue-100 mb-6">Here's what's happening across IGA programs</p>
+            <p className="text-white-accent mb-6">Here's what's happening across IGA programs</p>
             <div className="grid md:grid-cols-4 gap-4">
               <div className="bg-white/10 rounded-lg p-4">
                 <Users className="w-6 h-6 mb-2" />
@@ -138,24 +138,24 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
         <div className="grid md:grid-cols-5 gap-4 mb-8">
           <Button 
             onClick={() => setShowDataManagement(true)}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 h-auto py-4 flex-col gap-2"
+            className="bg-blue-primary h-auto py-4 flex-col gap-2"
           >
             <Database className="w-6 h-6" />
             <span>Data Management</span>
           </Button>
-          <Button className="bg-gradient-to-r from-purple-500 to-pink-500 h-auto py-4 flex-col gap-2">
+          <Button className="bg-lavender h-auto py-4 flex-col gap-2">
             <UserPlus className="w-6 h-6" />
             <span>Add Student</span>
           </Button>
-          <Button className="bg-gradient-to-r from-blue-500 to-purple-500 h-auto py-4 flex-col gap-2">
+          <Button className="bg-blue-primary h-auto py-4 flex-col gap-2">
             <Calendar className="w-6 h-6" />
             <span>Create Event</span>
           </Button>
-          <Button className="bg-gradient-to-r from-pink-500 to-rose-600 h-auto py-4 flex-col gap-2">
+          <Button className="bg-pink h-auto py-4 flex-col gap-2">
             <Video className="w-6 h-6" />
             <span>Start Live Stream</span>
           </Button>
-          <Button className="bg-gradient-to-r from-indigo-500 to-blue-600 h-auto py-4 flex-col gap-2">
+          <Button className="bg-blue-primary h-auto py-4 flex-col gap-2">
             <FileText className="w-6 h-6" />
             <span>View Reports</span>
           </Button>
@@ -247,9 +247,9 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                         <span className="text-sm text-gray-600">Engagement Rate</span>
                         <span className="text-sm">{organizerData.stats.engagementRate}%</span>
                       </div>
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-green-500 to-green-600 rounded-full"
+                          className="h-full bg-blue-primary rounded-full"
                           style={{ width: `${organizerData.stats.engagementRate}%` }}
                         />
                       </div>
@@ -286,7 +286,7 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                 </Card>
 
                 {/* Quick Stats */}
-                <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50">
+                <Card className="p-6 bg-white">
                   <h3 className="text-lg mb-4">Global Reach</h3>
                   <div className="flex items-center gap-2 mb-2">
                     <Globe className="w-5 h-5 text-purple-600" />

@@ -30,7 +30,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-pink rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-xl">IGA</span>
             </div>
             <span className={`font-bold text-xl transition-colors ${
@@ -43,7 +43,7 @@ export default function Navbar() {
           {/* Login Button */}
           <a
             href="/login"
-            className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+            className="flex items-center gap-2 bg-blue-primary text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             <LogIn className="w-5 h-5" />
             Login
