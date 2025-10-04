@@ -169,7 +169,7 @@ export default function StudentDashboard({
   const studentData = {
     name: userData.name || "Sarah Martinez",
     email: userData.email,
-    program: userData.selectedProgram || "STEM Innovation Lab",
+    program: userData.selectedProgram || "NIA Empowerment Academy",
     enrollmentDate: "September 2024",
     progress: 65,
     completedModules: 8,
@@ -197,21 +197,31 @@ export default function StudentDashboard({
     currentCourses: [
       {
         id: 1,
-        name: "Python Programming",
-        progress: 75,
-        nextLesson: "Data Structures",
+        name: "NIA Empowerment Academy",
+        progress: 65,
+        nextLesson: "Career Development & AI Skills",
+        description: "Six-week transformative program for career development and college preparation"
       },
       {
         id: 2,
-        name: "Web Development Basics",
+        name: "UJIMA Business Program",
         progress: 40,
-        nextLesson: "CSS Flexbox",
+        nextLesson: "Business Plan Development",
+        description: "Create your own innovative business before age 18"
       },
       {
         id: 3,
-        name: "Design Thinking",
-        progress: 90,
-        nextLesson: "Final Project",
+        name: "KUMBATHON Prep",
+        progress: 20,
+        nextLesson: "STEM Problem Solving",
+        description: "Prepare for our annual March hackathon and tech competition"
+      },
+      {
+        id: 4,
+        name: "NIA Global Academy",
+        progress: 55,
+        nextLesson: "Cultural Exchange Project",
+        description: "Connect with international students through virtual collaboration"
       },
     ],
     mentor: {
@@ -395,20 +405,23 @@ export default function StudentDashboard({
                     {studentData.currentCourses.map((course) => (
                       <div
                         key={course.id}
-                        className="border border-gray-200 rounded-lg p-4"
+                        className="border border-gray-200 rounded-lg p-5 hover:border-[#4455f0]/50 transition-colors"
                       >
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h4 className="mb-1">{course.name}</h4>
-                            <p className="text-sm text-gray-600">
-                              Next: {course.nextLesson}
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-[#4455f0] mb-1">{course.name}</h4>
+                            <p className="text-xs text-gray-500 mb-2">
+                              {course.description}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              <span className="font-medium">Next:</span> {course.nextLesson}
                             </p>
                           </div>
-                          <Badge variant="secondary">{course.progress}%</Badge>
+                          <Badge className="bg-[#b4bbf8] text-[#4455f0] ml-2">{course.progress}%</Badge>
                         </div>
-                        <Progress value={course.progress} className="mb-3" />
-                        <Button size="sm" className="bg-blue-primary">
-                          Continue
+                        <Progress value={course.progress} className="mb-3 h-2" />
+                        <Button size="sm" className="bg-gradient-to-r from-[#4455f0] to-[#b4bbf8] text-white w-full hover:opacity-90">
+                          Continue Learning →
                         </Button>
                       </div>
                     ))}
