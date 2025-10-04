@@ -191,3 +191,55 @@ async def get_current_user(
             status_code=401,
             detail="Invalid or expired token"
         )
+
+@router.put("/{user_id}", response_model=UserProfileResponse)
+async def update_user_profile(
+    user_id: str,
+    first_name: str = None,
+    last_name: str = None,
+    gender: str = None,
+    bio: str = None,
+    db: Client = Depends(get_supabase)
+):
+    """Update user profile"""
+    try:
+        update_data = {}
+        if first_name is not None:
+            update_data["first_name"] = first_name
+        if last_name is not None:
+            update_data["last_name"] = last_name
+        if gender is not None:
+            update_data["gender"] = gender
+        if bio is not None:
+            update_data["bio"] = bio
+
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields to update")
+
+        # Update user profile
+        response = db.table("users").update(update_data).eq(
+            "user_id", user_id
+        ).execute()
+
+        if not response.data:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        profile = response.data[0]
+
+        return UserProfileResponse(
+            user_id=profile["user_id"],
+            email=profile["email"],
+            first_name=profile["first_name"],
+            last_name=profile["last_name"],
+            user_type=profile["user_type"],
+            gender=profile.get("gender"),
+            experience_points=int(profile.get("experience_points", 0))
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
