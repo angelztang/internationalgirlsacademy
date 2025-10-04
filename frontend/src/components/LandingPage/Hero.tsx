@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <header className="relative flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 overflow-hidden py-20 min-h-[85vh]">
-      {/* Animated background blobs */}
+    <header className="relative flex items-center justify-center bg-white overflow-hidden py-20 min-h-[85vh]">
+      {/* Animated background blobs (using palette colors) */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{
@@ -15,7 +15,7 @@ export default function Hero() {
             y: [0, -30, 0],
           }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute top-20 left-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"
+          className="absolute top-20 left-20 w-96 h-96 bg-lavender rounded-full mix-blend-multiply filter blur-3xl opacity-70"
         />
         <motion.div
           animate={{
@@ -24,7 +24,7 @@ export default function Hero() {
             y: [0, 50, 0],
           }}
           transition={{ duration: 15, repeat: Infinity }}
-          className="absolute top-40 right-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"
+          className="absolute top-40 right-20 w-96 h-96 bg-pink rounded-full mix-blend-multiply filter blur-3xl opacity-70"
         />
       </div>
 
@@ -36,7 +36,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-blue-primary leading-tight">
             Welcome to International Girls Academy
           </h1>
           <p className="text-xl md:text-2xl text-gray-700">
@@ -52,14 +52,14 @@ export default function Hero() {
           className="max-w-3xl mx-auto mb-12"
         >
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 md:p-10">
-            <div className="relative aspect-video bg-gradient-to-br from-pink-200 via-purple-200 to-pink-300 rounded-2xl overflow-hidden group cursor-pointer">
+            <div className="relative aspect-video bg-lavender rounded-2xl overflow-hidden group cursor-pointer">
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl"
                 >
-                  <Play className="w-10 h-10 text-purple-600 ml-1" fill="currentColor" />
+                  <Play className="w-10 h-10 text-blue-primary ml-1" fill="currentColor" />
                 </motion.div>
               </div>
             </div>

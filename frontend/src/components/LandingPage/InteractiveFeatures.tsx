@@ -14,9 +14,9 @@ export function InteractiveFeatures() {
       <div className="container mx-auto max-w-6xl">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Alumni + Mentorship Preview */}
-          <Card className="p-8 bg-gradient-to-br from-purple-50 to-pink-50">
+          <Card className="p-8 bg-white">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-primary rounded-full flex items-center justify-center">
                 <Users className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-2xl">Alumni & Mentorship</h3>
@@ -29,7 +29,7 @@ export function InteractiveFeatures() {
               
               <div className="bg-white rounded-lg p-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white">
+                  <div className="w-12 h-12 bg-lavender rounded-full flex items-center justify-center text-white">
                     SJ
                   </div>
                   <div>
@@ -44,7 +44,7 @@ export function InteractiveFeatures() {
 
               <div className="bg-white rounded-lg p-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white">
+                  <div className="w-12 h-12 bg-blue-primary rounded-full flex items-center justify-center text-white">
                     MK
                   </div>
                   <div>
@@ -57,14 +57,14 @@ export function InteractiveFeatures() {
                 </p>
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500">
+              <Button className="w-full bg-blue-primary">
                 Browse Mentors
               </Button>
             </div>
           </Card>
 
           {/* Event Signup (Zephy Integration) */}
-          <Card className="p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+          <Card className="p-8 bg-white">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-white" />
@@ -73,7 +73,7 @@ export function InteractiveFeatures() {
             </div>
             
             <div className="space-y-4">
-              <div className="bg-white rounded-lg p-4 border-l-4 border-purple-500">
+              <div className="bg-white rounded-lg p-4 border-l-4 border-blue-primary">
                 <h4 className="mb-1">Weekly Circle Time</h4>
                 <p className="text-sm text-gray-600 mb-2">Every Tuesday, 4:00 PM EST</p>
                 <p className="text-sm text-gray-700 mb-3">
@@ -82,7 +82,7 @@ export function InteractiveFeatures() {
                 <Button size="sm" className="w-full">Sign Up</Button>
               </div>
 
-              <div className="bg-white rounded-lg p-4 border-l-4 border-pink-500">
+              <div className="bg-white rounded-lg p-4 border-l-4 border-pink">
                 <h4 className="mb-1">Entrepreneurship Workshop</h4>
                 <p className="text-sm text-gray-600 mb-2">Saturday, Oct 12, 2:00 PM EST</p>
                 <p className="text-sm text-gray-700 mb-3">
@@ -91,7 +91,7 @@ export function InteractiveFeatures() {
                 <Button size="sm" className="w-full">Sign Up</Button>
               </div>
 
-              <div className="bg-white rounded-lg p-4 border-l-4 border-blue-500">
+              <div className="bg-white rounded-lg p-4 border-l-4 border-blue-primary">
                 <h4 className="mb-1">Alumni Panel Discussion</h4>
                 <p className="text-sm text-gray-600 mb-2">Oct 20, 6:00 PM EST</p>
                 <p className="text-sm text-gray-700 mb-3">
@@ -104,9 +104,9 @@ export function InteractiveFeatures() {
         </div>
 
         {/* Filtered Q&A Form */}
-        <Card className="mt-8 p-8 bg-gradient-to-br from-pink-50 to-purple-50">
+  <Card className="mt-8 p-8 bg-white">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-pink rounded-full flex items-center justify-center">
               <MessageSquare className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -146,7 +146,7 @@ export function InteractiveFeatures() {
             </div>
 
             <div className="md:col-span-2">
-              <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500">
+              <Button className="w-full bg-pink">
                 Submit Question
               </Button>
               <p className="text-xs text-gray-500 mt-2 text-center">
