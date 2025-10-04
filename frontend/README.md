@@ -2,30 +2,29 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Frontend-Backend Integration
 
-This application uses a **backend API** for authentication that internally leverages **Supabase Auth**. The frontend communicates with the backend via a centralized API client.
+This application uses **Supabase Auth directly** for authentication. The frontend communicates with Supabase for auth and the backend for other API operations.
 
 ### Authentication System
 
 **Architecture:**
-- Frontend → Backend API → Supabase Auth
-- Backend handles all authentication logic
-- Frontend uses type-safe API client (`/src/lib/api.ts`)
+- Frontend → Supabase Auth (for authentication)
+- Frontend → Backend API (for other operations)
+- Backend uses Supabase for user profile management
 
 **Key Components:**
 
-1. **API Client Layer** (`/src/lib/api.ts`)
-   - Centralized API communication
-   - Type-safe interfaces for all requests/responses
-   - Built-in error handling
-   - Endpoints: `register()`, `login()`, `getCurrentUser()`
+1. **Supabase Client** (`/src/lib/supabase.ts`)
+   - Direct Supabase authentication
+   - User session management
+   - Helper functions for auth operations
 
 2. **Login Page** (`/src/app/login.tsx`)
-   - Calls backend `/api/v1/users/login`
+   - Uses Supabase Auth directly (`supabase.auth.signInWithPassword`)
    - Validates user_type matches selected tab (student/volunteer/admin)
-   - Returns full user profile and access token
+   - Gets user UUID from Supabase Auth response
 
 3. **Signup Page** (`/src/app/signup.tsx`)
-   - Calls backend `/api/v1/users/register`
+   - Uses Supabase Auth directly (`supabase.auth.signUp`)
    - Student and Volunteer registration
    - Auto-login after successful registration
 
@@ -105,10 +104,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
    - Login with your registered credentials
    - Ensure you select the correct user type tab
 
-## API Endpoints Used
+## Authentication Flow
 
-- `POST /api/v1/users/register` - Register new user
-- `POST /api/v1/users/login` - Login user
-- `GET /api/v1/users/me` - Get current user profile (with JWT token)
+1. **Registration/Login:** Handled directly by Supabase Auth
+   - Frontend calls `supabase.auth.signUp()` or `supabase.auth.signInWithPassword()`
+   - User UUID obtained from `data.user.id` in Supabase response
+   - User profile stored in Supabase `users` table
 
-All authentication is handled by the backend, which uses Supabase Auth internally for password hashing, JWT generation, and session management.
+2. **Backend API:** Used for other operations (events, modules, etc.)
+   - Backend API routes use Supabase client for user profile management
+   - User UUIDs are consistently obtained from Supabase Auth
+
+All authentication is handled directly by Supabase Auth, ensuring consistent UUID usage throughout the application.
