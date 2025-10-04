@@ -3,6 +3,7 @@ src/app/__init__.py
 src/app/main.py
 src/app/api/__init__.py
 src/app/api/v1/__init__.py
+src/app/api/v1/availability.py
 src/app/api/v1/chatbot.py
 src/app/api/v1/event_registration.py
 src/app/api/v1/events.py

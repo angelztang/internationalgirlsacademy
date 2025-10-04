@@ -226,3 +226,22 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserProfileResponse
+
+
+# Availability schemas
+class CreateAvailabilityRequest(BaseModel):
+    time_start: datetime
+    time_end: datetime
+
+
+class UpdateAvailabilityRequest(BaseModel):
+    time_start: datetime
+    time_end: datetime
+
+
+class AvailabilityResponse(BaseModel):
+    availability_id: int
+    user_id: str
+    time_start: datetime
+    time_end: datetime
+    created_at: datetime
