@@ -30,6 +30,7 @@ import {
   Star,
 } from "lucide-react";
 import { getUserModules } from "@/lib/api/modules";
+import { getAllEvents, getUserEvents, registerForEvent, unregisterFromEvent } from "@/lib/api/events";
 import Link from "next/link";
 
 interface StudentDashboardProps {
@@ -53,6 +54,11 @@ export default function StudentDashboard({
   const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
+  const [events, setEvents] = useState<any[]>([]);
+  const [registeredEvents, setRegisteredEvents] = useState<Set<number>>(new Set());
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
   // Fetch user modules
   useEffect(() => {
@@ -79,6 +85,63 @@ export default function StudentDashboard({
 
     loadModules();
   }, [userId]);
+
+  // Fetch events on mount
+  useEffect(() => {
+    if (!userId) return;
+
+    const loadEvents = async () => {
+      setLoadingEvents(true);
+      try {
+        // Get all events
+        const allEvents = await getAllEvents();
+        setEvents(allEvents);
+
+        // Get user's registered events
+        const userEventsData = await getUserEvents(userId);
+        const registeredIds = new Set(userEventsData.events.map(e => e.event_id));
+        setRegisteredEvents(registeredIds);
+      } catch (error) {
+        console.error("Failed to load events:", error);
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    loadEvents();
+  }, [userId]);
+
+  const handleRegisterEvent = async (eventId: number) => {
+    if (!userId) return;
+
+    try {
+      await registerForEvent(eventId, userId);
+      setRegisteredEvents(prev => new Set(prev).add(eventId));
+      alert("Successfully registered for event!");
+    } catch (error: any) {
+      console.error("Failed to register:", error);
+      alert(error.message || "Failed to register for event");
+    }
+  };
+
+  const handleUnregisterEvent = async (eventId: number) => {
+    if (!userId) return;
+
+    if (!confirm("Are you sure you want to cancel this registration?")) return;
+
+    try {
+      await unregisterFromEvent(eventId, userId);
+      setRegisteredEvents(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(eventId);
+        return newSet;
+      });
+      alert("Registration cancelled");
+    } catch (error: any) {
+      console.error("Failed to unregister:", error);
+      alert(error.message || "Failed to cancel registration");
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -380,22 +443,143 @@ export default function StudentDashboard({
                     <Calendar className="w-5 h-5 text-purple-600" />
                     <h3 className="text-lg">Upcoming Events</h3>
                   </div>
-                  <div className="space-y-3">
-                    {studentData.upcomingEvents.map((event) => (
-                      <div
-                        key={event.id}
-                        className="pb-3 border-b border-gray-200 last:border-0 last:pb-0"
-                      >
-                        <p className="text-sm mb-1">{event.title}</p>
-                        <p className="text-xs text-gray-600">{event.date}</p>
-                        <p className="text-xs text-purple-600">{event.time}</p>
+                  {loadingEvents ? (
+                    <p className="text-sm text-gray-600">Loading events...</p>
+                  ) : events.length === 0 ? (
+                    <p className="text-sm text-gray-600">No upcoming events</p>
+                  ) : (
+                    <>
+                      <div className="space-y-3">
+                        {(showAllEvents ? events : events.slice(0, 3)).map((event) => {
+                          const isRegistered = registeredEvents.has(event.event_id);
+                          const eventDate = new Date(event.start_time);
+
+                          return (
+                            <div
+                              key={event.event_id}
+                              className="pb-3 border-b border-gray-200 last:border-0 last:pb-0"
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium mb-1">
+                                    {event.name || `Event #${event.event_id}`}
+                                  </p>
+                                  <p className="text-xs text-gray-600">
+                                    {eventDate.toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </p>
+                                  <p className="text-xs text-purple-600">
+                                    {eventDate.toLocaleTimeString('en-US', {
+                                      hour: 'numeric',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                                {isRegistered && (
+                                  <Badge className="bg-green-100 text-green-700 text-xs">
+                                    Registered
+                                  </Badge>
+                                )}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => setSelectedEvent(event)}
+                              >
+                                Learn More
+                              </Button>
+                            </div>
+                          );
+                        })}
                       </div>
-                    ))}
-                  </div>
-                  <Button variant="outline" className="w-full mt-4">
-                    View All Events
-                  </Button>
+                      {events.length > 3 && (
+                        <Button
+                          variant="ghost"
+                          className="w-full mt-4"
+                          onClick={() => setShowAllEvents(!showAllEvents)}
+                        >
+                          {showAllEvents ? 'Show Less' : `View All (${events.length})`}
+                        </Button>
+                      )}
+                    </>
+                  )}
                 </Card>
+
+                {/* Event Details Modal */}
+                {selectedEvent && (
+                  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
+                    <Card className="max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="text-xl font-semibold mb-1">
+                            {selectedEvent.name || `Event #${selectedEvent.event_id}`}
+                          </h3>
+                          {registeredEvents.has(selectedEvent.event_id) && (
+                            <Badge className="bg-green-100 text-green-700">
+                              You're Registered
+                            </Badge>
+                          )}
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setSelectedEvent(null)}>
+                          ✕
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <span>
+                            {new Date(selectedEvent.start_time).toLocaleDateString('en-US', {
+                              weekday: 'long',
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="w-4 h-4 text-gray-500" />
+                          <span>
+                            {new Date(selectedEvent.start_time).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })} - {new Date(selectedEvent.end_time).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {registeredEvents.has(selectedEvent.event_id) ? (
+                        <Button
+                          variant="outline"
+                          className="w-full text-red-600 hover:text-red-700"
+                          onClick={() => {
+                            handleUnregisterEvent(selectedEvent.event_id);
+                            setSelectedEvent(null);
+                          }}
+                        >
+                          Cancel Registration
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full bg-blue-primary"
+                          onClick={() => {
+                            handleRegisterEvent(selectedEvent.event_id);
+                            setSelectedEvent(null);
+                          }}
+                        >
+                          Register for Event
+                        </Button>
+                      )}
+                    </Card>
+                  </div>
+                )}
 
                 {/* Mentor Card */}
                 <Card className="p-6 bg-white">
