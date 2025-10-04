@@ -11,6 +11,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
+
 # Create database tables on startup
 create_tables()
 

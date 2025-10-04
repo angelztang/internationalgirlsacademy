@@ -23,8 +23,11 @@ export default function PathSteps({
   setCurrentStep,
 }: PathStepsProps) {
   // Provide safe defaults if colors is missing (prevents runtime crash when prop is undefined)
-  const safeColors =
-    colors ?? { primary: "bg-[#4455f0]", secondary: "bg-[#b4bbf8]/20", accent: "border-[#4455f0]" };
+  const safeColors = colors ?? {
+    primary: "bg-[#4455f0]",
+    secondary: "bg-[#b4bbf8]/20",
+    accent: "border-[#4455f0]",
+  };
 
   const positions = [
     { top: "0", left: "0%" },
@@ -74,7 +77,11 @@ export default function PathSteps({
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : `${safeColors.secondary} border-4 ${safeColors.accent} hover:scale-110 cursor-pointer`
                   }
-                  ${currentStep === idx ? "ring-4 ring-yellow-400 animate-pulse" : ""}
+                  ${
+                    currentStep === idx
+                      ? "ring-4 ring-yellow-400 animate-pulse"
+                      : ""
+                  }
                 `}
               >
                 {step.locked ? (

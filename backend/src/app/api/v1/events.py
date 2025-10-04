@@ -70,6 +70,7 @@ async def create_event(request: CreateEventRequest, db: Client = Depends(get_sup
         )
 
     response = db.table("events").insert({
+        "name": request.name,
         "start_time": request.start_time.isoformat(),
         "end_time": request.end_time.isoformat()
     }).execute()
@@ -95,10 +96,14 @@ async def update_event(
 
     # Build update dict
     update_data = {}
+    if request.name:
+        update_data["name"] = request.name
     if request.start_time:
         update_data["start_time"] = request.start_time.isoformat()
     if request.end_time:
         update_data["end_time"] = request.end_time.isoformat()
+    
+    
 
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
@@ -126,6 +131,8 @@ async def update_event(
             status_code=400,
             detail="Event end time must be after start time"
         )
+    
+    print(update_data)
 
     # Update event
     response = db.table("events").update(update_data).eq("event_id", event_id).execute()
