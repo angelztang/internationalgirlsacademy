@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { LogIn, Mail, Lock, Users, GraduationCap, Heart, ArrowLeft } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface LoginProps {
   onBack: () => void;
@@ -48,19 +49,37 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      // In production, this would validate credentials against a backend
-      const userData = {
+    try {
+      // Login via backend API
+      const response = await apiClient.login({
         email,
-        userType: activeTab,
-        name: "Demo User",
+        password,
+      });
+
+      // Check if user_type matches selected tab
+      if (response.user.user_type !== activeTab) {
+        setErrors({ password: `Please login as ${response.user.user_type}` });
+        setIsLoading(false);
+        return;
+      }
+
+      const userData = {
+        email: response.user.email,
+        userType: response.user.user_type,
+        name: `${response.user.first_name} ${response.user.last_name}`,
         loginTime: new Date().toISOString(),
+        userId: response.user.user_id,
+        accessToken: response.access_token,
+        profile: response.user
       };
-      
+
       onLogin(activeTab, userData);
       setIsLoading(false);
-    }, 1000);
+    } catch (error: any) {
+      console.error('Login error:', error);
+      setErrors({ password: error.message || "Invalid email or password" });
+      setIsLoading(false);
+    }
   };
 
   const tabConfig = {
