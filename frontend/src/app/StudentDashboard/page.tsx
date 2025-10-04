@@ -49,7 +49,7 @@ export default function StudentDashboard({
   >({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
@@ -81,8 +81,8 @@ export default function StudentDashboard({
   }, [userId]);
 
   const handleLogout = () => {
-    if (onLogout) onLogout();
-    router.push("/login");
+    logout();
+    router.push("/");
   };
 
   // Mock Data - in production, this would come from an API or props

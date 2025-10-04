@@ -38,21 +38,21 @@ export default function GlobeSection() {
           {/* Overlay Stats */}
           <div className="absolute bottom-6 left-6 right-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-                <div className="text-2xl font-bold text-[#33333A]">2.5K+</div>
-                <div className="text-sm text-[#33333A]">Active Students</div>
+              <div className="bg-[#4455F0]/40 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                <div className="text-2xl font-bold text-white">2.5K+</div>
+                <div className="text-sm text-white">Active Students</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-                <div className="text-2xl font-bold text-[#33333A]">500+</div>
-                <div className="text-sm text-[#33333A]">Expert Mentors</div>
+              <div className="bg-[#4455F0]/40 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                <div className="text-2xl font-bold text-white">500+</div>
+                <div className="text-sm text-white">Expert Mentors</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-                <div className="text-2xl font-bold text-[#33333A]">95%</div>
-                <div className="text-sm text-[#33333A]">Success Rate</div>
+              <div className="bg-[#4455F0]/40 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                <div className="text-2xl font-bold text-white">95%</div>
+                <div className="text-sm text-white">Success Rate</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-                <div className="text-2xl font-bold text-[#33333A]">4</div>
-                <div className="text-sm text-[#33333A]">Countries</div>
+              <div className="bg-[#4455F0]/40 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                <div className="text-2xl font-bold text-white">4</div>
+                <div className="text-sm text-white">Countries</div>
               </div>
             </div>
           </div>

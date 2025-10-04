@@ -4,12 +4,21 @@ import { Button } from "../../lib/ui/button";
 import { Input } from "../../lib/ui/input";
 import { Badge } from "../../lib/ui/badge";
 import { ScrollArea } from "../../lib/ui/scroll-area";
-import { Radio, Users, Send, Maximize2, Volume2, VolumeX, Heart, Share2 } from "lucide-react";
+import {
+  Radio,
+  Users,
+  Send,
+  Maximize2,
+  Volume2,
+  VolumeX,
+  Heart,
+  Share2,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface LiveStreamProps {
   isLive?: boolean;
-  eventType?: 'hackathon' | 'pitch' | 'workshop';
+  eventType?: "hackathon" | "pitch" | "workshop";
   eventTitle?: string;
   viewerCount?: number;
 }
@@ -21,19 +30,34 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-export function LiveStream({ 
-  isLive = true, 
-  eventType = 'pitch',
+export function LiveStream({
+  isLive = true,
+  eventType = "pitch",
   eventTitle = "IGA Entrepreneurship Pitch Competition",
-  viewerCount = 247
+  viewerCount = 247,
 }: LiveStreamProps) {
   const [isMuted, setIsMuted] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    { id: 1, user: "Sarah_M", message: "This is amazing! 🎉", timestamp: new Date() },
+    {
+      id: 1,
+      user: "Sarah_M",
+      message: "This is amazing! 🎉",
+      timestamp: new Date(),
+    },
     { id: 2, user: "Alex_K", message: "Great pitch!", timestamp: new Date() },
-    { id: 3, user: "Maria_R", message: "Love the idea 💡", timestamp: new Date() },
-    { id: 4, user: "Jordan_P", message: "How did you come up with this?", timestamp: new Date() },
+    {
+      id: 3,
+      user: "Maria_R",
+      message: "Love the idea 💡",
+      timestamp: new Date(),
+    },
+    {
+      id: 4,
+      user: "Jordan_P",
+      message: "How did you come up with this?",
+      timestamp: new Date(),
+    },
   ]);
   const [likes, setLikes] = useState(342);
   const [hasLiked, setHasLiked] = useState(false);
@@ -42,15 +66,15 @@ export function LiveStream({
 
   const handleSendMessage = () => {
     if (!chatMessage.trim()) return;
-    
+
     const newMessage: ChatMessage = {
       id: chatMessages.length + 1,
       user: "You",
       message: chatMessage,
       timestamp: new Date(),
     };
-    
-    setChatMessages(prev => [...prev, newMessage]);
+
+    setChatMessages((prev) => [...prev, newMessage]);
     setChatMessage("");
   };
 
@@ -66,7 +90,7 @@ export function LiveStream({
   const eventIcons = {
     hackathon: "💻",
     pitch: "🎤",
-    workshop: "🎓"
+    workshop: "🎓",
   };
 
   return (
@@ -77,16 +101,12 @@ export function LiveStream({
     >
       <Card className="overflow-hidden border-2 border-red-500 shadow-2xl mx-24 mb-24">
         {/* Live Badge Header */}
-  <div className="bg-pink px-4 py-2 flex items-center justify-between">
+        <div className="bg-pink px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="flex items-center gap-2"
-            >
+            <div className="flex items-center gap-2">
               <Radio className="w-5 h-5 text-white" />
               <Badge className="bg-white text-red-600">LIVE</Badge>
-            </motion.div>
+            </div>
             <div className="flex items-center gap-2 text-white text-sm">
               <Users className="w-4 h-4" />
               <span>{viewerCount.toLocaleString()} watching</span>
@@ -94,7 +114,10 @@ export function LiveStream({
           </div>
           <div className="flex items-center gap-2">
             <span className="text-white text-sm">{eventIcons[eventType]}</span>
-            <Badge variant="secondary" className="bg-white/20 text-white border-0">
+            <Badge
+              variant="secondary"
+              className="bg-white/20 text-white border-0"
+            >
               {eventType.charAt(0).toUpperCase() + eventType.slice(1)}
             </Badge>
           </div>
@@ -104,13 +127,13 @@ export function LiveStream({
           {/* Video Area */}
           <div className="lg:col-span-2 bg-black relative group">
             {/* Video Placeholder */}
-              <div className="aspect-video bg-blue-primary flex items-center justify-center relative overflow-hidden">
+            <div className="aspect-video bg-blue-primary flex items-center justify-center relative overflow-hidden">
               {/* Simulated video content */}
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-pink-500 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
               </div>
-              
+
               <div className="relative z-10 text-center text-white space-y-4">
                 <div className="text-6xl mb-4">{eventIcons[eventType]}</div>
                 <h3 className="text-2xl px-4">{eventTitle}</h3>
@@ -127,7 +150,11 @@ export function LiveStream({
                       onClick={() => setIsMuted(!isMuted)}
                       className="text-white hover:bg-white/20"
                     >
-                      {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                      {isMuted ? (
+                        <VolumeX className="w-5 h-5" />
+                      ) : (
+                        <Volume2 className="w-5 h-5" />
+                      )}
                     </Button>
                   </div>
                   <Button
@@ -159,15 +186,21 @@ export function LiveStream({
                 <button
                   onClick={handleLike}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                    hasLiked 
-                      ? 'bg-red-500 text-white' 
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    hasLiked
+                      ? "bg-red-500 text-white"
+                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                   }`}
                 >
-                  <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
+                  <Heart
+                    className={`w-4 h-4 ${hasLiked ? "fill-current" : ""}`}
+                  />
                   <span className="text-sm">{likes}</span>
                 </button>
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:bg-gray-800">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-300 hover:bg-gray-800"
+                >
                   <Share2 className="w-4 h-4 mr-2" />
                   Share
                 </Button>
@@ -187,9 +220,14 @@ export function LiveStream({
                 {chatMessages.map((msg) => (
                   <div key={msg.id} className="space-y-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-purple-600">{msg.user}</span>
+                      <span className="text-sm text-purple-600">
+                        {msg.user}
+                      </span>
                       <span className="text-xs text-gray-400">
-                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {msg.timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
                     <p className="text-sm text-gray-700">{msg.message}</p>
@@ -203,7 +241,7 @@ export function LiveStream({
                 <Input
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   placeholder="Send a message..."
                   className="flex-1"
                 />
@@ -223,18 +261,23 @@ export function LiveStream({
         </div>
 
         {/* Event Info Footer */}
-  <div className="bg-white px-4 py-3 border-t border-gray-200">
+        <div className="bg-white px-4 py-3 border-t border-gray-200">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h4 className="mb-1">About This Event</h4>
               <p className="text-sm text-gray-600">
-                {eventType === 'pitch' && "Watch our talented students pitch their innovative business ideas to a panel of judges and investors. Vote for your favorite!"}
-                {eventType === 'hackathon' && "Students are coding live to solve real-world problems. See creativity and collaboration in action!"}
-                {eventType === 'workshop' && "Join our live workshop and learn alongside students from around the world."}
+                {eventType === "pitch" &&
+                  "Watch our talented students pitch their innovative business ideas to a panel of judges and investors. Vote for your favorite!"}
+                {eventType === "hackathon" &&
+                  "Students are coding live to solve real-world problems. See creativity and collaboration in action!"}
+                {eventType === "workshop" &&
+                  "Join our live workshop and learn alongside students from around the world."}
               </p>
             </div>
             <div className="flex gap-2">
-              <Badge className="bg-purple-100 text-purple-700">Entrepreneurship</Badge>
+              <Badge className="bg-purple-100 text-purple-700">
+                Entrepreneurship
+              </Badge>
               <Badge className="bg-pink-100 text-pink-700">Live Event</Badge>
             </div>
           </div>

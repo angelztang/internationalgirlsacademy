@@ -15,8 +15,10 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="flex-1 space-y-6"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#4455FF] leading-tight">
-            Uniting, Uplifting, & Empowering Girls Worldwide
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#33333A] leading-tight font-serif">
+            <span className="text-[#b4bbf8]">Uniting</span>{" "}
+            <span className=" text-[#4455FF]">Uplifting</span>{" "}
+            <span className="text-[#F7A1C0]">&</span> Empowering Girls Worldwide
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-[#B4BBF8] max-w-xl">
             Through the Nguzo Saba, we help girls create their own table.

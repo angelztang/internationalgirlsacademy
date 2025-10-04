@@ -22,8 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/lib/ui/select";
-import { MessageSquare, Users, Calendar } from "lucide-react";
+import { MessageSquare, Users, Calendar, Car } from "lucide-react";
 import Link from "next/link";
+import Carousel from "@/components/LandingPage/Carousel";
 
 export default function Home() {
   const router = useRouter();
@@ -31,9 +32,17 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-lavender">
+    <div className="min-h-screen">
       <Navbar />
       <Hero />
+      <Carousel
+        images={[
+          "https://images.squarespace-cdn.com/content/v1/5fca7b72309c26211730f173/004e2e73-accb-42c4-9ac9-40ca70955e4e/IGA+Program+Photos+%281%29.png?format=2500w",
+          "https://images.squarespace-cdn.com/content/v1/5fca7b72309c26211730f173/59d308ea-16d1-408e-9b7a-9c128784244c/1.png?format=2500wg",
+          "https://images.squarespace-cdn.com/content/v1/5fca7b72309c26211730f173/a7a81c59-4f80-4918-98fd-a69f8f68fb00/IGA+Program+Photos.png?format=2500w",
+          "https://images.squarespace-cdn.com/content/v1/5fca7b72309c26211730f173/3a2ad789-89e2-414d-b942-dbc64a1ed17b/4.png?format=2500w",
+        ]}
+      />
       <GlobeSection />
       <CTAButtons
         onSelectPath={(path: "student" | "volunteer" | "donate") => {

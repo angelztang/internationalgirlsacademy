@@ -64,8 +64,8 @@ export default function ProgramSelector({
         "Girls interested in career and academic growth",
         "Those seeking mentorship and skill development",
       ],
-      color: "purple",
-      gradient: "from-purple-500 to-purple-700",
+      color: "[#4455F0]",
+      gradient: "[#44ff50] to-[#4ff50]",
     },
     {
       id: "ujima-business",
@@ -89,8 +89,8 @@ export default function ProgramSelector({
         "Students interested in business and innovation",
         "Leadership-minded students",
       ],
-      color: "blue",
-      gradient: "from-blue-500 to-indigo-700",
+      color: "[#F7A1C0]",
+      gradient: "[#F7A1C0] to-[#F7A1C0]",
     },
     {
       id: "kumbathon",
@@ -114,8 +114,8 @@ export default function ProgramSelector({
         "Girls who love collaborative challenges",
         "Tech and innovation enthusiasts",
       ],
-      color: "green",
-      gradient: "from-green-500 to-teal-600",
+      color: "[#b4bbf8]",
+      gradient: "[#b4bbf8] to-[#b4bbf8]",
     },
     {
       id: "nia-global-youth",
@@ -139,8 +139,8 @@ export default function ProgramSelector({
         "Girls who want cross-cultural experiences",
         "Those seeking international collaboration",
       ],
-      color: "pink",
-      gradient: "from-pink-500 to-rose-500",
+      color: "[#F7A1C0]",
+      gradient: "[#F7A1C0] to-[#F7A1C0]",
     },
   ];
 

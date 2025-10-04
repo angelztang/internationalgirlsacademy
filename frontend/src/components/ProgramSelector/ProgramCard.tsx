@@ -25,7 +25,7 @@ export function ProgramCard({
         ${selected ? "ring-2 ring-green-500 ring-offset-2" : ""}`}
       >
         {/* Header */}
-        <div className={`bg-gradient-to-r ${program.gradient} text-white p-6`}>
+        <div className={`bg-${program.color} text-white p-6 h-48`}>
           <div className="flex items-start justify-between mb-3">
             <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
               <program.icon className="w-6 h-6" />
@@ -93,7 +93,7 @@ export function ProgramCard({
           <div className="mt-auto pt-4">
             <Button
               onClick={() => onSelect(program.id)}
-              className={`w-full bg-gradient-to-r ${program.gradient}`}
+              className={`w-full bg-${program.color} text-white hover:brightness-110`}
             >
               {selected ? "Selected ✓" : "Choose This Program"}
             </Button>
