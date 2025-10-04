@@ -13,7 +13,7 @@ import { ChatBot } from "@/components/Busybot/ChatBot";
 import { useSearchParams } from "next/navigation";
 import { CommentThread } from "@/components/CommentThread/CommentThread";
 import Header from "@/components/PathwayMap/Header";
-import { getUserModules, updateModuleProgress } from "@/lib/api/modules";
+import { getUserModules, updateModuleProgress, createModule } from "@/lib/api/modules";
 import { useAuth } from "@/context/AuthContext";
 
 interface PathStep {
@@ -276,10 +276,13 @@ export default function PathwayMap({
       if (existingModule) {
         await updateModuleProgress(existingModule.module_id, newProgress);
       }
-      // If no module exists, we'd need to create one (POST /modules)
-      // but for now we'll just log it
-      else {
-        console.log('No module found for user, progress not saved');
+      // If no module exists, create one
+      else if (userId) {
+        const newModule = await createModule({
+          user_id: userId,
+          module_progress: newProgress
+        });
+        setUserModules([...userModules, newModule]);
       }
     } catch (error) {
       console.error('Failed to update module progress:', error);

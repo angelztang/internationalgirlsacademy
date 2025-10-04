@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.get("/user/{user_id}", response_model=UserModulesResponse)
-async def get_user_modules(user_id: int, db: Client = Depends(get_supabase)):
+async def get_user_modules(user_id: str, db: Client = Depends(get_supabase)):
     """Get all modules for a user"""
     response = db.table("user_modules").select("*").eq("user_id",
   user_id).execute()

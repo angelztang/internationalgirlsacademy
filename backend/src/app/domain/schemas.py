@@ -131,12 +131,12 @@ class UserInventoryResponse(BaseModel):
 # Module schemas
 class Module(BaseModel):
     module_id: int
-    user_id: int
+    user_id: str  # UUID from Supabase
     module_progress: float
 
 
 class CreateModuleRequest(BaseModel):
-    user_id: int
+    user_id: str  # UUID from Supabase
     module_progress: float = 0.0
 
 
@@ -145,7 +145,7 @@ class UpdateModuleProgressRequest(BaseModel):
 
 
 class UserModulesResponse(BaseModel):
-    user_id: int
+    user_id: str  # UUID from Supabase
     modules: List[Module]
 
 
