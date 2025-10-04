@@ -13,6 +13,8 @@ import {
 import dynamic from "next/dynamic";
 import { getUserModules } from "../lib/api/modules";
 import { apiClient } from "../lib/api/client";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const DataManagement = dynamic(
   () => import("./DataManagement").then((mod) => mod.DataManagement),
@@ -37,8 +39,8 @@ import {
 import Link from "next/link";
 
 interface OrganizerDashboardProps {
-  userData: any;
-  onLogout: () => void;
+  userData?: any;
+  onLogout?: () => void;
 }
 
 export function OrganizerDashboard({
@@ -58,6 +60,19 @@ export function OrganizerDashboard({
   const [showModulesManager, setShowModulesManager] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const { user, logout: authLogout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear auth state
+    authLogout();
+
+    // Call optional prop logout handler
+    if (onLogout) onLogout();
+
+    // Redirect to login
+    router.push("/login");
+  };
 
   // Mock data
   const organizerData = {
@@ -342,7 +357,7 @@ export function OrganizerDashboard({
                   <Settings className="w-5 h-5" />
                 </Button>
               </Link>
-              <Button variant="ghost" onClick={onLogout} className="gap-2">
+              <Button variant="ghost" onClick={handleLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>

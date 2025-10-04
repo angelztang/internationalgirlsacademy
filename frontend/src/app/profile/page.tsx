@@ -28,7 +28,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, updateUser, logout } = useAuth();
+  const { user, updateUser, logout, isLoading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -54,14 +54,16 @@ export default function ProfilePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       router.push("/login");
       return;
     }
 
-    // Load user profile
-    loadUserProfile();
-  }, [user]);
+    if (user) {
+      // Load user profile
+      loadUserProfile();
+    }
+  }, [user, isLoading, router]);
 
   const loadUserProfile = async () => {
     if (!user?.id) return;
@@ -227,7 +229,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) {
+  if (isLoading || !user) {
     return null;
   }
 
@@ -504,7 +506,10 @@ export default function ProfilePage() {
                 <Button
                   variant="outline"
                   className="w-full justify-start"
-                  onClick={logout}
+                  onClick={() => {
+                    logout();
+                    router.push("/login");
+                  }}
                 >
                   Sign Out
                 </Button>

@@ -33,8 +33,8 @@ import { getUserModules } from "@/lib/api/modules";
 import Link from "next/link";
 
 interface StudentDashboardProps {
-  userData: any;
-  onLogout: () => void;
+  userData?: any;
+  onLogout?: () => void;
 }
 
 export default function StudentDashboard({
@@ -49,7 +49,7 @@ export default function StudentDashboard({
   >({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, logout: authLogout } = useAuth();
   const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
@@ -81,7 +81,13 @@ export default function StudentDashboard({
   }, [userId]);
 
   const handleLogout = () => {
+    // Clear auth state
+    authLogout();
+
+    // Call optional prop logout handler
     if (onLogout) onLogout();
+
+    // Redirect to login
     router.push("/login");
   };
 
