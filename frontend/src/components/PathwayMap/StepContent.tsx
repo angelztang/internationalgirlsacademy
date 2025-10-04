@@ -2,6 +2,7 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import BusyBotReminder from "./BusyBotReminder";
 import { CommentThread } from "../CommentThread/CommentThread";
+import Link from "next/link";
 
 interface PathStep {
   id: number;
@@ -91,16 +92,21 @@ export default function StepContent({
               </Button>
             )}
 
-            {!currentStepData.completed && (
-              <Button
-                className={`bg-blue-primary text-white px-8`}
-                onClick={() => completeStep(currentStep)}
-              >
-                {currentStep === steps.length - 1
-                  ? "Complete Journey"
-                  : "Next Step"}
-              </Button>
-            )}
+            {!currentStepData.completed &&
+              (currentStep === steps.length - 1 ? (
+                <Link href="/ProgramSelector" passHref>
+                  <Button className="bg-blue-primary text-white px-8">
+                    Complete Journey
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  className="bg-blue-primary text-white px-8"
+                  onClick={() => completeStep(currentStep)}
+                >
+                  Next Step
+                </Button>
+              ))}
 
             {currentStepData.completed && currentStep < steps.length - 1 && (
               <Button
