@@ -12,6 +12,7 @@ import {
 } from "../components/ui/tabs";
 import dynamic from "next/dynamic";
 import { getUserModules } from "../lib/api/modules";
+import { apiClient } from "../lib/api/client";
 
 const DataManagement = dynamic(
   () => import("./DataManagement").then((mod) => mod.DataManagement),
@@ -186,11 +187,7 @@ export function OrganizerDashboard({
     setLoadingModules(true);
     try {
       // Fetch all user modules by getting all users first
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const usersRes = await fetch(`${API_BASE_URL}/users`);
-      if (!usersRes.ok) throw new Error("Failed to load users");
-      const users = await usersRes.json();
+      const users = await apiClient.get<any[]>('/users');
 
       // Fetch modules for each user
       const allModules: any[] = [];
@@ -217,11 +214,7 @@ export function OrganizerDashboard({
   async function fetchEvents() {
     setLoadingEvents(true);
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events`);
-      if (!res.ok) throw new Error("Failed to load events");
-      const data = await res.json();
+      const data = await apiClient.get<any[]>('/events');
       setEvents(data || []);
     } catch (err) {
       console.error(err);
@@ -232,11 +225,7 @@ export function OrganizerDashboard({
 
   async function fetchEventDetails(eventId: number) {
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`);
-      if (!res.ok) throw new Error("Failed to load event");
-      const data = await res.json();
+      const data = await apiClient.get<any>(`/events/${eventId}`);
       setSelectedEvent(data);
       setShowEventsManager(true);
     } catch (err) {
@@ -252,21 +241,11 @@ export function OrganizerDashboard({
     }
 
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_time: new Date(newEventStart).toISOString(),
-          end_time: new Date(newEventEnd).toISOString(),
-        }),
+      const created = await apiClient.post<any>('/events', {
+        start_time: new Date(newEventStart).toISOString(),
+        end_time: new Date(newEventEnd).toISOString(),
       });
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || "Failed to create event");
-      }
-      const created = await res.json();
+
       setEvents((s) => [created, ...s]);
       setNewEventStart("");
       setNewEventEnd("");
@@ -279,15 +258,7 @@ export function OrganizerDashboard({
 
   async function updateEvent(eventId: number, payload: any) {
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Failed to update event");
-      const updated = await res.json();
+      const updated = await apiClient.put<any>(`/events/${eventId}`, payload);
       setEvents((s) =>
         s.map((e) => (e.event_id === updated.event_id ? updated : e))
       );
@@ -301,12 +272,7 @@ export function OrganizerDashboard({
   async function deleteEvent(eventId: number) {
     if (!confirm("Delete this event?")) return;
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete event");
+      await apiClient.delete(`/events/${eventId}`);
       setEvents((s) => s.filter((e) => e.event_id !== eventId));
       alert("Event deleted");
     } catch (err) {
@@ -318,12 +284,7 @@ export function OrganizerDashboard({
   async function deleteModule(moduleId: number, userId: string) {
     if (!confirm("Delete this module?")) return;
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete module");
+      await apiClient.delete(`/modules/${moduleId}/${userId}`);
       setModules((s) =>
         s.filter((m) => !(m.module_id === moduleId && m.user_id === userId))
       );
@@ -337,11 +298,7 @@ export function OrganizerDashboard({
   async function fetchUsers() {
     setLoadingUsers(true);
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/users`);
-      if (!res.ok) throw new Error("Failed to load users");
-      const data = await res.json();
+      const data = await apiClient.get<any[]>('/users');
       setUsers(data || []);
     } catch (err) {
       console.error(err);
@@ -354,12 +311,7 @@ export function OrganizerDashboard({
     if (!confirm(`Change user role to ${newRole}?`)) return;
 
     try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-      const res = await fetch(`${API_BASE_URL}/users/${userId}/role?new_role=${newRole}`, {
-        method: "PUT",
-      });
-      if (!res.ok) throw new Error("Failed to update user role");
+      await apiClient.put(`/users/${userId}/role?new_role=${newRole}`);
 
       // Refresh users list
       await fetchUsers();

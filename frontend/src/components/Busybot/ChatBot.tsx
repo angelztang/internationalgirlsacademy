@@ -4,6 +4,7 @@ import { Card } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { apiClient } from "@/lib/api/client";
 
 interface Message {
   id: number;
@@ -16,8 +17,6 @@ export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]); // start empty
   const [inputValue, setInputValue] = useState("");
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
@@ -33,21 +32,13 @@ export function ChatBot() {
     setInputValue("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/chatbot/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: inputValue,
-          history: messages.map((m) => ({
-            role: m.sender === "user" ? "user" : "assistant",
-            content: m.text,
-          })),
-        }),
+      const data = await apiClient.post<{ response: string }>('/chatbot/chat', {
+        message: inputValue,
+        history: messages.map((m) => ({
+          role: m.sender === "user" ? "user" : "assistant",
+          content: m.text,
+        })),
       });
-
-      const data = await res.json();
 
       const botMessage: Message = {
         id: messages.length + 2,
