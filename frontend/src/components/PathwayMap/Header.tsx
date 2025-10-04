@@ -1,15 +1,9 @@
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import {
-  ArrowLeft,
-  Link,
-  ShoppingBag,
-  Star,
-  Target,
-  Trophy,
-} from "lucide-react";
+import { ArrowLeft, ShoppingBag, Star, Target, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import ProgressBar from "./ProgressBar";
+import Link from "next/link";
 
 interface PathStep {
   id: number;
@@ -65,7 +59,7 @@ export default function Header({
     <div className="bg-white shadow-sm sticky top-0 z-50 w-full">
       <div className="flex flex-wrap gap-4 sm:gap-6 items-center px-4 sm:px-10 py-3 sm:py-4 w-full">
         {/* Back Button */}
-        <Link href="/home">
+        <Link href="/">
           <Button variant="ghost" className="gap-2 flex-shrink-0">
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>

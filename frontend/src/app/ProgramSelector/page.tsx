@@ -21,19 +21,25 @@ import {
   Clock,
   Globe,
 } from "lucide-react";
+import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function ProgramSelector({
   pathType,
-  onBack,
   onSelectProgram,
   onSignUp,
 }: any) {
+  const router = useRouter();
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [recommendedProgram, setRecommendedProgram] = useState<string | null>(
     null
   );
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+
+  const onBack = () => {
+    router.push("/PathwayMap");
+  };
 
   const programs = [
     {
