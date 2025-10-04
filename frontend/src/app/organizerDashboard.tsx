@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 const DataManagement = dynamic(
   () => import("./DataManagement").then((mod) => mod.DataManagement),
-  { ssr: false }
+  { ssr: false },
 );
 import {
   Users,
@@ -202,7 +202,7 @@ export function OrganizerDashboard({
     setLoadingModules(true);
     try {
       // Fetch all user modules by getting all users first
-      const users = await apiClient.get<any[]>('/users');
+      const users = await apiClient.get<any[]>("/users");
 
       // Fetch modules for each user
       const allModules: any[] = [];
@@ -213,7 +213,7 @@ export function OrganizerDashboard({
         } catch (err) {
           console.error(
             `Failed to load modules for user ${user.user_id}:`,
-            err
+            err,
           );
         }
       }
@@ -229,7 +229,7 @@ export function OrganizerDashboard({
   async function fetchEvents() {
     setLoadingEvents(true);
     try {
-      const data = await apiClient.get<any[]>('/events');
+      const data = await apiClient.get<any[]>("/events");
       setEvents(data || []);
     } catch (err) {
       console.error(err);
@@ -256,7 +256,7 @@ export function OrganizerDashboard({
     }
 
     try {
-      const created = await apiClient.post<any>('/events', {
+      const created = await apiClient.post<any>("/events", {
         start_time: new Date(newEventStart).toISOString(),
         end_time: new Date(newEventEnd).toISOString(),
       });
@@ -275,7 +275,7 @@ export function OrganizerDashboard({
     try {
       const updated = await apiClient.put<any>(`/events/${eventId}`, payload);
       setEvents((s) =>
-        s.map((e) => (e.event_id === updated.event_id ? updated : e))
+        s.map((e) => (e.event_id === updated.event_id ? updated : e)),
       );
       alert("Event updated");
     } catch (err) {
@@ -301,7 +301,7 @@ export function OrganizerDashboard({
     try {
       await apiClient.delete(`/modules/${moduleId}/${userId}`);
       setModules((s) =>
-        s.filter((m) => !(m.module_id === moduleId && m.user_id === userId))
+        s.filter((m) => !(m.module_id === moduleId && m.user_id === userId)),
       );
       alert("Module deleted");
     } catch (err) {
@@ -313,7 +313,7 @@ export function OrganizerDashboard({
   async function fetchUsers() {
     setLoadingUsers(true);
     try {
-      const data = await apiClient.get<any[]>('/users');
+      const data = await apiClient.get<any[]>("/users");
       setUsers(data || []);
     } catch (err) {
       console.error(err);
@@ -514,10 +514,10 @@ export function OrganizerDashboard({
                             activity.type === "student"
                               ? "bg-purple-100 text-purple-600"
                               : activity.type === "volunteer"
-                              ? "bg-pink-100 text-pink-600"
-                              : activity.type === "event"
-                              ? "bg-blue-100 text-blue-600"
-                              : "bg-green-100 text-green-600"
+                                ? "bg-pink-100 text-pink-600"
+                                : activity.type === "event"
+                                  ? "bg-blue-100 text-blue-600"
+                                  : "bg-green-100 text-green-600"
                           }`}
                         >
                           {activity.type === "student" && (
@@ -744,7 +744,7 @@ export function OrganizerDashboard({
                     <div className="pt-4 border-t">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-gray-600">
-                          Total Revenue
+                          Total Donations
                         </span>
                         <DollarSign className="w-4 h-4 text-green-600" />
                       </div>
@@ -823,19 +823,28 @@ export function OrganizerDashboard({
                     <div>Actions</div>
                   </div>
                   {users.map((user) => (
-                    <div key={user.user_id} className="grid grid-cols-5 gap-4 p-3 border rounded items-center">
+                    <div
+                      key={user.user_id}
+                      className="grid grid-cols-5 gap-4 p-3 border rounded items-center"
+                    >
                       <div>
-                        <p className="font-medium">{user.first_name} {user.last_name}</p>
+                        <p className="font-medium">
+                          {user.first_name} {user.last_name}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">{user.email}</p>
                       </div>
                       <div>
-                        <Badge className={
-                          user.user_type === 'admin' ? 'bg-purple-100 text-purple-700' :
-                          user.user_type === 'volunteer' ? 'bg-pink-100 text-pink-700' :
-                          'bg-blue-100 text-blue-700'
-                        }>
+                        <Badge
+                          className={
+                            user.user_type === "admin"
+                              ? "bg-purple-100 text-purple-700"
+                              : user.user_type === "volunteer"
+                                ? "bg-pink-100 text-pink-700"
+                                : "bg-blue-100 text-blue-700"
+                          }
+                        >
                           {user.user_type}
                         </Badge>
                       </div>
@@ -843,29 +852,35 @@ export function OrganizerDashboard({
                         <p className="text-sm">{user.experience_points || 0}</p>
                       </div>
                       <div className="flex gap-2">
-                        {user.user_type !== 'admin' && (
+                        {user.user_type !== "admin" && (
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => updateUserRole(user.user_id, 'admin')}
+                            onClick={() =>
+                              updateUserRole(user.user_id, "admin")
+                            }
                           >
                             Make Admin
                           </Button>
                         )}
-                        {user.user_type !== 'volunteer' && (
+                        {user.user_type !== "volunteer" && (
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => updateUserRole(user.user_id, 'volunteer')}
+                            onClick={() =>
+                              updateUserRole(user.user_id, "volunteer")
+                            }
                           >
                             Make Volunteer
                           </Button>
                         )}
-                        {user.user_type !== 'student' && (
+                        {user.user_type !== "student" && (
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => updateUserRole(user.user_id, 'student')}
+                            onClick={() =>
+                              updateUserRole(user.user_id, "student")
+                            }
                           >
                             Make Student
                           </Button>
