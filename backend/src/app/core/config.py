@@ -3,11 +3,9 @@ from typing import List
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env file from backend directory
-backend_dir = Path(__file__).parent.parent.parent
+# Load .env file from backend directory (go up 3 levels from this file to reach backend/)
+backend_dir = Path(__file__).parent.parent.parent.parent
 env_path = backend_dir / ".env"
-print(f"Looking for .env at: {env_path}")  # Add this
-print(f"File exists: {env_path.exists()}")  # Add this
 load_dotenv(env_path)
 
 class Settings:
@@ -44,7 +42,3 @@ class Settings:
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
 
 settings = Settings()
-
-# Debug: Print to verify env vars are loaded
-print(f"SUPABASE_URL loaded: {bool(settings.SUPABASE_URL)}")
-print(f"SUPABASE_KEY loaded: {bool(settings.SUPABASE_KEY)}")
