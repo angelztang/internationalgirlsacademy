@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import Hero from "@/components/LandingPage/Hero";
 import { CTAButtons } from "@/components/LandingPage/CTAButtons";
 import Programs from "@/components/LandingPage/Programs";
 import TrustIndicators from "@/components/LandingPage/TrustIndicators";
 import Footer from "@/components/LandingPage/Footer";
-import { Button } from '@/lib/ui/button';
+import { Button } from "@/lib/ui/button";
+import { ChatBot } from "@/components/Busybot/ChatBot";
 
 export default function Home() {
   return (
@@ -19,12 +20,17 @@ export default function Home() {
       </div>
 
       <Hero />
-      <CTAButtons onSelectPath={function (path: "student" | "volunteer" | "donate"): void {
-        throw new Error("Function not implemented.");
-      } } />
+      <CTAButtons
+        onSelectPath={function (
+          path: "student" | "volunteer" | "donate"
+        ): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
       <Programs />
       <TrustIndicators />
       <Footer />
+      <ChatBot />
     </div>
   );
 }
