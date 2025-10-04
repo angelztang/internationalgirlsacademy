@@ -1,95 +1,66 @@
 "use client";
 
-import { Play } from "lucide-react";
+import { ArrowRight, Play, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/lib/ui/button";
 
 export default function Hero() {
   return (
-    <header className="relative flex items-center justify-center bg-white overflow-hidden py-20 min-h-[85vh]">
-      {/* Animated background blobs (using palette colors) */}
-      <div className="absolute inset-0 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-white px-6">
+      <div className="max-w-7xl w-full flex flex-col lg:flex-row items-center gap-12">
+        {/* Left Column - Text */}
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity }}
-          className="absolute top-20 left-20 w-96 h-96 bg-lavender rounded-full mix-blend-multiply filter blur-3xl opacity-70"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, -30, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity }}
-          className="absolute top-40 right-20 w-96 h-96 bg-pink rounded-full mix-blend-multiply filter blur-3xl opacity-70"
-        />
-      </div>
-
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
-        {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="flex-1 space-y-6"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-blue-primary leading-tight">
-            Welcome to International Girls Academy
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#4455FF] leading-tight">
+            Uniting, Uplifting, & Empowering Girls Worldwide
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700">
-            Empowering students worldwide through mentorship, learning, and
-            community
+          <p className="text-lg sm:text-xl md:text-2xl text-[#B4BBF8] max-w-xl">
+            Through the Nguzo Saba, we help girls create their own table.
           </p>
-        </motion.div>
-
-        {/* Video Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="max-w-3xl mx-auto mb-12"
-        >
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 md:p-10">
-            <div className="relative aspect-video bg-lavender rounded-2xl overflow-hidden group cursor-pointer">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl"
-                >
-                  <Play
-                    className="w-10 h-10 text-blue-primary ml-1"
-                    fill="currentColor"
-                  />
-                </motion.div>
-              </div>
-            </div>
-            <p className="text-center text-gray-600 mt-6 text-lg">
-              1-Minute Intro Video
-            </p>
+          <div className="flex gap-4 flex-wrap mt-4">
+            <Button
+              size="lg"
+              className="bg-[#4455FF] text-white px-6 py-3 rounded-lg flex items-center gap-2"
+            >
+              Start Your Journey <ArrowRight className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-[#F7A1C0] text-[#F7A1C0] px-6 py-3 rounded-lg flex items-center gap-2"
+            >
+              <Play className="w-5 h-5" />
+              Watch Video
+            </Button>
           </div>
         </motion.div>
 
-        {/* Arrow + Text */}
+        {/* Right Column - Video */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex-1 w-full"
         >
-          <p className="text-gray-600 mb-3 text-lg">Choose your journey</p>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-gray-400 text-3xl"
-          >
-            ↓
-          </motion.div>
+          <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-200">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              title="IGA Introduction"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            <div className="absolute top-4 left-4 bg-[#F7A1C0] text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+              <Users className="w-3 h-3" /> Live
+            </div>
+          </div>
         </motion.div>
       </div>
-    </header>
+    </section>
   );
 }
