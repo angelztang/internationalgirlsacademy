@@ -21,7 +21,8 @@ export default function Hero() {
             <span className="text-[#F7A1C0]">&</span> Empowering Girls Worldwide
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-[#B4BBF8] max-w-xl">
-            Through the Nguzo Saba, we help girls create their own table.
+            Through the Nguzo Saba, we help girls create their own seat at the
+            table.
           </p>
           <div className="flex gap-4 flex-wrap mt-4">
             <Button

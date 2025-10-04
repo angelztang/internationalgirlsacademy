@@ -97,16 +97,6 @@ export default function Header({
         )}
 
         {/* Module Info */}
-        <Button
-          onClick={onShopOpen}
-          className="bg-[#4455f0] gap-2 relative hover:bg-[#3344df] transition-all text-white"
-        >
-          <ShoppingBag className="w-4 h-4" /> Shop
-          <Badge className="bg-white text-[#4455f0] ml-1 border-0">
-            <Star className="w-3 h-3 mr-1" />
-            {studentPoints}
-          </Badge>
-        </Button>
       </div>
     </div>
   );
