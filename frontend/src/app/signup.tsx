@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { UserPlus, Mail, Lock, User, GraduationCap, Heart, ArrowLeft } from "lucide-react";
-import { apiClient } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 interface SignupProps {
   onBack: () => void;
@@ -183,25 +183,56 @@ export default function SignupPage({ onBack, onSignupSuccess, onSwitchToLogin }:
     setIsLoading(true);
 
     try {
-      // Register with backend API
-      const response = await apiClient.register({
+      // Register with Supabase Auth directly
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        user_type: activeTab,
-        gender: formData.gender || undefined
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            user_type: activeTab,
+            gender: formData.gender || null
+          }
+        }
       });
+
+      if (error) throw error;
+      if (!data.user) throw new Error("Registration failed");
+
+      // Insert user profile into our users table
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert({
+          user_id: data.user.id,
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          user_type: activeTab,
+          gender: formData.gender || null,
+          password: null, // Managed by Supabase Auth
+          experience_points: 0
+        });
+
+      if (profileError) throw profileError;
 
       // Successfully registered
       const userData = {
-        email: response.user.email,
-        userType: response.user.user_type,
-        name: `${response.user.first_name} ${response.user.last_name}`,
+        email: data.user.email || formData.email,
+        userType: activeTab,
+        name: `${formData.firstName} ${formData.lastName}`,
         loginTime: new Date().toISOString(),
-        userId: response.user.user_id,
-        accessToken: response.access_token,
-        profile: response.user
+        userId: data.user.id, // UUID from Supabase Auth
+        accessToken: data.session?.access_token,
+        profile: {
+          user_id: data.user.id,
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          user_type: activeTab,
+          gender: formData.gender,
+          experience_points: 0
+        }
       };
 
       onSignupSuccess(activeTab, userData);

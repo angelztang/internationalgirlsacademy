@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { LogIn, Mail, Lock, Users, GraduationCap, Heart, ArrowLeft } from "lucide-react";
-import { apiClient } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 interface LoginProps {
   onBack: () => void;
@@ -50,27 +50,41 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
     setIsLoading(true);
 
     try {
-      // Login via backend API
-      const response = await apiClient.login({
+      // Login with Supabase Auth directly
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      if (error) throw error;
+      if (!data.user) throw new Error("Login failed");
+
+      // Get user profile from our database to check user_type
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('user_id', data.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        throw new Error("User profile not found");
+      }
+
       // Check if user_type matches selected tab
-      if (response.user.user_type !== activeTab) {
-        setErrors({ password: `Please login as ${response.user.user_type}` });
+      if (profile.user_type !== activeTab) {
+        setErrors({ password: `Please login as ${profile.user_type}` });
         setIsLoading(false);
         return;
       }
 
       const userData = {
-        email: response.user.email,
-        userType: response.user.user_type,
-        name: `${response.user.first_name} ${response.user.last_name}`,
+        email: data.user.email || email,
+        userType: profile.user_type,
+        name: `${profile.first_name} ${profile.last_name}`,
         loginTime: new Date().toISOString(),
-        userId: response.user.user_id,
-        accessToken: response.access_token,
-        profile: response.user
+        userId: data.user.id, // UUID from Supabase Auth
+        accessToken: data.session?.access_token,
+        profile: profile
       };
 
       onLogin(activeTab, userData);
