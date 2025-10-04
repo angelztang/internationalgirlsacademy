@@ -11,6 +11,7 @@ import StepContent from "../../components/PathwayMap/StepContent";
 import Shop from "../../components/Shop/Shop";
 import { ChatBot } from "@/components/Busybot/ChatBot";
 import { useSearchParams } from "next/navigation";
+import { CommentThread } from "@/components/CommentThread/CommentThread";
 
 interface PathStep {
   id: number;
@@ -286,15 +287,17 @@ export default function PathwayMap({
           colors={pathColors[resolvedPathType]}
           setCurrentStep={setCurrentStep}
         />
-        <StepContent
-          currentStepData={currentSteps[currentStep]}
-          pathType={resolvedPathType}
-          colors={pathColors[resolvedPathType]}
-          currentStep={currentStep}
-          steps={currentSteps}
-          completeStep={completeStep}
-          setCurrentStep={setCurrentStep}
-        />
+        <div className="flex mt-32">
+          <StepContent
+            currentStepData={currentSteps[currentStep]}
+            pathType={pathType}
+            colors={pathColors[pathType]}
+            currentStep={currentStep}
+            steps={currentSteps}
+            completeStep={completeStep}
+            setCurrentStep={setCurrentStep}
+          />
+        </div>
       </div>
 
       {resolvedPathType === "student" && (
@@ -310,4 +313,3 @@ export default function PathwayMap({
     </div>
   );
 }
-
