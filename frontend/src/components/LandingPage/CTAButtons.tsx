@@ -14,7 +14,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
     <section className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+          <h2 className="text-4xl mb-4 text-blue-primary">
             Start Your Journey
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -26,7 +26,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
           {/* Student Button */}
           <button
             onClick={() => onSelectPath('student')}
-            className="group relative bg-gradient-to-br from-purple-500 to-purple-700 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
+            className="group relative bg-blue-primary p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
             <div className="relative z-10">
@@ -49,7 +49,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
           {/* Volunteer Button */}
           <button
             onClick={() => onSelectPath('volunteer')}
-            className="group relative bg-gradient-to-br from-pink-500 to-rose-700 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
+            className="group relative bg-pink p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
             <div className="relative z-10">

@@ -77,7 +77,7 @@ export function LiveStream({
     >
       <Card className="overflow-hidden border-2 border-red-500 shadow-2xl mx-24 mb-24">
         {/* Live Badge Header */}
-        <div className="bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 flex items-center justify-between">
+  <div className="bg-pink px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
@@ -104,7 +104,7 @@ export function LiveStream({
           {/* Video Area */}
           <div className="lg:col-span-2 bg-black relative group">
             {/* Video Placeholder */}
-            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-blue-900 flex items-center justify-center relative overflow-hidden">
+              <div className="aspect-video bg-blue-primary flex items-center justify-center relative overflow-hidden">
               {/* Simulated video content */}
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
@@ -118,7 +118,7 @@ export function LiveStream({
               </div>
 
               {/* Video Controls Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Button
@@ -177,7 +177,7 @@ export function LiveStream({
 
           {/* Live Chat */}
           <div className="bg-gray-50 flex flex-col h-[500px]">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 text-white">
+            <div className="bg-blue-primary px-4 py-3 text-white">
               <h4 className="text-sm">Live Chat</h4>
               <p className="text-xs text-purple-100">Join the conversation</p>
             </div>
@@ -209,7 +209,7 @@ export function LiveStream({
                 />
                 <Button
                   onClick={handleSendMessage}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500"
+                  className="bg-blue-primary"
                   size="icon"
                 >
                   <Send className="w-4 h-4" />
@@ -223,7 +223,7 @@ export function LiveStream({
         </div>
 
         {/* Event Info Footer */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-3 border-t border-gray-200">
+  <div className="bg-white px-4 py-3 border-t border-gray-200">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h4 className="mb-1">About This Event</h4>
