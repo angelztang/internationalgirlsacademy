@@ -4,6 +4,7 @@ from supabase import Client
 from datetime import datetime
 
 from src.app.core.database import get_supabase
+from src.app.core.auth import get_current_user, require_role
 from src.app.domain.schemas import (
     Event,
     CreateEventRequest,
@@ -64,7 +65,12 @@ async def get_event(event_id: int, db: Client = Depends(get_supabase)):
 
 
 @router.post("", response_model=Event, status_code=201)
-async def create_event(request: CreateEventRequest, db: Client = Depends(get_supabase)):
+async def create_event(
+    request: CreateEventRequest,
+    current_user: dict = Depends(get_current_user),
+    _: None = Depends(require_role(["admin"])),
+    db: Client = Depends(get_supabase)
+):
     """Create a new event"""
     if request.end_time <= request.start_time:
         raise HTTPException(
@@ -89,6 +95,8 @@ async def create_event(request: CreateEventRequest, db: Client = Depends(get_sup
 async def update_event(
     event_id: int,
     request: UpdateEventRequest,
+    current_user: dict = Depends(get_current_user),
+    _: None = Depends(require_role(["admin"])),
     db: Client = Depends(get_supabase),
 ):
     """Update an event"""
@@ -142,7 +150,12 @@ async def update_event(
 
 
 @router.delete("/{event_id}", status_code=204)
-async def delete_event(event_id: int, db: Client = Depends(get_supabase)):
+async def delete_event(
+    event_id: int,
+    current_user: dict = Depends(get_current_user),
+    _: None = Depends(require_role(["admin"])),
+    db: Client = Depends(get_supabase)
+):
     """Delete an event and all its registrations"""
     event_response = db.table("events").select("*").eq("event_id", event_id).execute()
 

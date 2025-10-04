@@ -7,6 +7,7 @@ import os
 from typing import List
 
 from src.app.core.database import get_supabase
+from src.app.core.auth import get_current_user
 from src.app.domain.schemas import (
     ScheduleMeetingRequest, ScheduleMeetingResponse, UserMatch, AvailabilitySlot,
     CreateMeetingRequest, Meeting, MeetingResponse, JoinMeetingRequest, JoinMeetingResponse
@@ -24,6 +25,7 @@ ZOOM_SDK_SECRET = settings.ZOOM_SDK_SECRET
 @router.post("/schedule", response_model=ScheduleMeetingResponse)
 async def schedule_meeting(
     request: ScheduleMeetingRequest,
+    current_user: dict = Depends(get_current_user),
     db: Client = Depends(get_supabase)
 ):
     """
