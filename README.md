@@ -288,8 +288,6 @@ AI: "Based on educational platform best practices, I recommend focusing on:
 - Supabase account
 - OpenAI API key (for BusyBot)
 
-```
-
 ## 🎯 Key Learning Outcomes from LLM Integration
 
 ### What Worked Well
