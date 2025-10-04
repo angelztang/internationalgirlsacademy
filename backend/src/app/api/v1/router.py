@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from src.app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot
+from app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot
 
 api_router = APIRouter()
 

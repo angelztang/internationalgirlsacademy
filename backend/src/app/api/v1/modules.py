@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from supabase import Client
 
-from src.app.core.database import get_supabase
-from src.app.domain.schemas import Module, CreateModuleRequest, UpdateModuleProgressRequest, UserModulesResponse
+from app.core.database import get_supabase
+from app.domain.schemas import Module, CreateModuleRequest, UpdateModuleProgressRequest, UserModulesResponse
 
 router = APIRouter()
 

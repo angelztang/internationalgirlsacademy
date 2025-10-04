@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from datetime import datetime, UTC
 from supabase import Client
 
-from src.app.core.database import get_supabase
-from src.app.domain.schemas import (
+from app.core.database import get_supabase
+from app.domain.schemas import (
     PurchaseItemRequest,
     PurchaseItemResponse,
     UserInventoryResponse,
