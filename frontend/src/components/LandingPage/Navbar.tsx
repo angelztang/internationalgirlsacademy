@@ -37,6 +37,7 @@ export default function Navbar() {
               width={50}
               height={50}
               className="object-contain"
+              style={{ backgroundColor: 'transparent'}}
             />
             <span className={`font-bold text-xl transition-colors ${
               isScrolled ? "text-gray-900" : "text-gray-900"

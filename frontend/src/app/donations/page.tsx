@@ -41,12 +41,28 @@ export default function DonationPage() {
   const [selectedTier, setSelectedTier] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-purple-100">
       {/* Hero Section */}
-      <section className="relative py-20 px-6 bg-gradient-to-br from-pink-500 via-purple-600 to-blue-600 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-pink-200 rounded-full blur-3xl" />
+      <section className="relative py-20 px-6 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+            }}
+            transition={{ duration: 20, repeat: Infinity }}
+            className="absolute top-20 left-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              x: [0, -30, 0],
+              y: [0, 50, 0],
+            }}
+            transition={{ duration: 15, repeat: Infinity }}
+            className="absolute top-40 right-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"
+          />
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -55,10 +71,10 @@ export default function DonationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
               Empower the Next Generation
             </h1>
-            <p className="text-xl md:text-2xl text-pink-100 mb-8">
+            <p className="text-xl md:text-2xl text-gray-700 mb-8">
               Your donation directly supports girls worldwide in their journey to success
             </p>
           </motion.div>

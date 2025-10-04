@@ -44,7 +44,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
                 </svg>
               </div>
             </div>
-          </button>
+          </button>a
 
           {/* Volunteer Button */}
           <button
