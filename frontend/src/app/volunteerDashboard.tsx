@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -22,23 +21,18 @@ import {
   Settings
 } from "lucide-react";
 
-export default function VolunteerDashboard() {
-  const router = useRouter();
+interface VolunteerDashboardProps {
+  userData: any;
+  onLogout: () => void;
+}
+
+export default function VolunteerDashboard({ userData, onLogout }: VolunteerDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
 
-  const handleLogout = () => {
-    // simple logout for now — redirect to login
-    router.push("/login");
-  };
   // Mock data
-  const mockUser = {
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
-  };
-
   const volunteerData = {
-    name: mockUser.name || "Alex Johnson",
-    email: mockUser.email,
+    name: userData.name || "Alex Johnson",
+    email: userData.email,
     role: "Mentor & Workshop Leader",
     joinedDate: "August 2024",
     currentMentees: [
@@ -86,7 +80,7 @@ export default function VolunteerDashboard() {
               <Button variant="ghost" size="icon">
                 <Settings className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" onClick={handleLogout} className="gap-2">
+              <Button variant="ghost" onClick={onLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>
