@@ -40,7 +40,8 @@ export default function Hero() {
             Welcome to International Girls Academy
           </h1>
           <p className="text-xl md:text-2xl text-gray-700">
-            Empowering students worldwide through mentorship, learning, and community
+            Empowering students worldwide through mentorship, learning, and
+            community
           </p>
         </motion.div>
 
@@ -59,11 +60,16 @@ export default function Hero() {
                   whileTap={{ scale: 0.95 }}
                   className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl"
                 >
-                  <Play className="w-10 h-10 text-blue-primary ml-1" fill="currentColor" />
+                  <Play
+                    className="w-10 h-10 text-blue-primary ml-1"
+                    fill="currentColor"
+                  />
                 </motion.div>
               </div>
             </div>
-            <p className="text-center text-gray-600 mt-6 text-lg">1-Minute Intro Video</p>
+            <p className="text-center text-gray-600 mt-6 text-lg">
+              1-Minute Intro Video
+            </p>
           </div>
         </motion.div>
 
