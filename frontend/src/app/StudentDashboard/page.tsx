@@ -172,7 +172,7 @@ export default function StudentDashboard({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="bg-white border-b-4 border-[#f7a1c0] sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
@@ -200,7 +200,7 @@ export default function StudentDashboard({
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-blue-primary text-white p-8">
+          <Card className="bg-gradient-to-r from-[#4455f0] to-[#f7a1c0] text-white p-8 shadow-xl border-0">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">
