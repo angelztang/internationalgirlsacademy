@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
-import { Avatar, AvatarFallback } from "../../components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Badge } from "../../components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -20,16 +20,22 @@ import {
   Save,
   X,
   Lock,
-  ArrowLeft
+  ArrowLeft,
+  Camera,
+  Upload
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, updateUser, logout } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -77,11 +83,72 @@ export default function ProfilePage() {
           gender: data.gender || "",
           bio: data.bio || ""
         });
+        setProfilePictureUrl(data.profile_picture_url || null);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
     }
   };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    setIsUploadingImage(true);
+
+    try {
+      // Create unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('profile-pictures')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(filePath);
+
+      const publicUrl = urlData.publicUrl;
+
+      // Update user profile with new image URL
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ profile_picture_url: publicUrl })
+        .eq('user_id', user.id);
+
+      if (updateError) throw updateError;
+
+      setProfilePictureUrl(publicUrl);
+      alert('Profile picture updated successfully!');
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      alert(error.message || 'Failed to upload image. Make sure the "profile-pictures" storage bucket exists in Supabase.');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
 
   const handleSaveProfile = async () => {
     setErrors({});
@@ -187,11 +254,37 @@ export default function ProfilePage() {
         {/* Profile Header */}
         <Card className="p-8 mb-6">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <Avatar className="w-24 h-24">
-              <AvatarFallback className={`text-2xl ${userTypeColors[user.userType] || 'bg-gray-200'}`}>
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            {/* Avatar with upload */}
+            <div className="relative">
+              <Avatar className="w-24 h-24">
+                {profilePictureUrl ? (
+                  <AvatarImage src={profilePictureUrl} alt={user.name} />
+                ) : (
+                  <AvatarFallback className={`text-2xl ${userTypeColors[user.userType] || 'bg-gray-200'}`}>
+                    {initials}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingImage}
+                className="absolute bottom-0 right-0 bg-blue-primary text-white p-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50"
+                title="Upload profile picture"
+              >
+                {isUploadingImage ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4" />
+                )}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </div>
 
             <div className="flex-1 text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center md:items-start gap-3 mb-2">

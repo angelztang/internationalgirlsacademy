@@ -8,6 +8,7 @@ type User = {
   userType: string;
   experiencePoints?: number;
   accessToken?: string;
+  profilePictureUrl?: string;
 };
 
 type AuthContextType = {

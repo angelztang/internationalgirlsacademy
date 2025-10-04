@@ -219,6 +219,7 @@ class UserProfileResponse(BaseModel):
     user_type: str
     gender: Optional[str] = None
     experience_points: int = 0
+    profile_picture_url: Optional[str] = None
 
 
 class AuthResponse(BaseModel):
