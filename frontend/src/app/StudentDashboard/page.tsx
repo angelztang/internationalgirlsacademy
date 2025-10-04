@@ -131,7 +131,7 @@ export default function StudentDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -159,13 +159,13 @@ export default function StudentDashboard({
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-8">
+          <Card className="bg-blue-primary text-white p-8">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">
                   Welcome back, {studentData.name.split(" ")[0]}! 👋
                 </h2>
-                <p className="text-purple-100 mb-4">
+                <p className="text-white-accent mb-4">
                   You're making great progress in {studentData.program}
                 </p>
                 <div className="flex items-center gap-6 text-sm">
@@ -182,8 +182,8 @@ export default function StudentDashboard({
                   </div>
                 </div>
               </div>
-              <Avatar className="w-20 h-20 border-4 border-white/20">
-                <AvatarFallback className="bg-white/20 text-white text-2xl">
+                <Avatar className="w-20 h-20 border-4 border-white/20">
+                <AvatarFallback className="bg-blue-primary text-white text-2xl">
                   {studentData.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
@@ -278,10 +278,10 @@ export default function StudentDashboard({
                           <Badge variant="secondary">{course.progress}%</Badge>
                         </div>
                         <Progress value={course.progress} className="mb-3" />
-                        <Button
-                          size="sm"
-                          className="bg-gradient-to-r from-purple-500 to-pink-500"
-                        >
+                                <Button
+                                  size="sm"
+                                  className="bg-blue-primary"
+                                >
                           Continue
                         </Button>
                       </div>
@@ -295,9 +295,9 @@ export default function StudentDashboard({
                   <div className="grid md:grid-cols-3 gap-4">
                     {studentData.achievements.map((achievement) => (
                       <div
-                        key={achievement.id}
-                        className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg"
-                      >
+                          key={achievement.id}
+                          className="text-center p-4 bg-white rounded-lg"
+                        >
                         <div className="text-4xl mb-2">{achievement.icon}</div>
                         <p className="text-sm mb-1">{achievement.title}</p>
                         <p className="text-xs text-gray-600">
@@ -335,14 +335,14 @@ export default function StudentDashboard({
                 </Card>
 
                 {/* Mentor Card */}
-                <Card className="p-6 bg-gradient-to-br from-blue-50 to-purple-50">
+                <Card className="p-6 bg-white">
                   <div className="flex items-center gap-2 mb-4">
                     <Users className="w-5 h-5 text-blue-600" />
                     <h3 className="text-lg">Your Mentor</h3>
                   </div>
                   <div className="mb-4">
                     <Avatar className="w-16 h-16 mb-3 mx-auto">
-                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                      <AvatarFallback className="bg-blue-primary text-white">
                         {studentData.mentor.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -357,7 +357,7 @@ export default function StudentDashboard({
                     <p className="text-xs text-gray-600 mb-1">Next Session:</p>
                     <p className="text-sm">{studentData.mentor.nextSession}</p>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500">
+                  <Button className="w-full bg-blue-primary">
                     <MessageCircle className="w-4 h-4 mr-2" />
                     Message Mentor
                   </Button>

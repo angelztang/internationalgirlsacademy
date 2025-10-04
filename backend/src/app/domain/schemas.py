@@ -87,3 +87,45 @@ class UpdateModuleProgressRequest(BaseModel):
 class UserModulesResponse(BaseModel):
     user_id: int
     modules: List[Module]
+
+
+# Event schemas
+class Event(BaseModel):
+    event_id: int
+    start_time: datetime
+    end_time: datetime
+
+
+class CreateEventRequest(BaseModel):
+    start_time: datetime
+    end_time: datetime
+
+
+class UpdateEventRequest(BaseModel):
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+
+
+class EventRegistration(BaseModel):
+    registration_id: int
+    user_id: int
+    event_id: int
+    event: Optional[Event] = None
+    user: Optional[UserMatch] = None
+
+
+class RegisterForEventRequest(BaseModel):
+    user_id: int
+
+
+class EventWithRegistrations(BaseModel):
+    event_id: int
+    start_time: datetime
+    end_time: datetime
+    registrations: List[EventRegistration]
+    total_registrations: int
+
+
+class UserEventsResponse(BaseModel):
+    user_id: int
+    events: List[EventRegistration]

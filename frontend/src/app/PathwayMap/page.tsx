@@ -5,6 +5,7 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ArrowLeft, Trophy, Target, ShoppingBag, Star } from "lucide-react";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import PathSteps from "../../components/PathwayMap/PathSteps";
 import StepContent from "../../components/PathwayMap/StepContent";
 import Shop from "../../components/Shop/Shop";
@@ -197,6 +198,7 @@ export default function PathwayMap({
   const [showShop, setShowShop] = useState(false);
   const [studentPoints, setStudentPoints] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
+  const router = useRouter();
 
   // Calculate student points
   useEffect(() => {
@@ -239,7 +241,14 @@ export default function PathwayMap({
     <div className="min-h-screen bg-[#b4bbf8]/10">
       <div className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={onBack} className="gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (onBack) return onBack();
+              router.push("/");
+            }}
+            className="gap-2"
+          >
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>
 

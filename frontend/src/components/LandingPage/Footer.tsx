@@ -36,9 +36,7 @@ const socialLinks = [
 
   export default function Footer() {
     return (
-      <footer className="bg-gradient-to-b 
-  from-blue-900 to-blue-950 text-white py-16 
-  px-6">
+      <footer className="bg-blue-primary text-white py-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Main Footer Content */}
           <div className="grid md:grid-cols-4 
@@ -46,15 +44,13 @@ const socialLinks = [
             {/* Footer Sections */}
             {footerSections.map((section) => (
               <div key={section.title}>
-                <h3 className="font-bold text-lg 
-  mb-4 text-blue-200">{section.title}</h3>
+                <h3 className="font-bold text-lg mb-4 text-white-accent">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
                     <li key={link.name}>
                       <a
                         href={link.href}
-                        className="text-blue-100 
-  hover:text-white transition"
+                        className="text-white-accent hover:text-white transition"
                       >
                         {link.name}
                       </a>
@@ -66,8 +62,7 @@ const socialLinks = [
 
             {/* Connect Section */}
             <div>
-              <h3 className="font-bold text-lg 
-  mb-4 text-blue-200">Connect</h3>
+              <h3 className="font-bold text-lg mb-4 text-white-accent">Connect</h3>
               <div className="space-y-3 mb-6">
                 {socialLinks.map((link) => (
                   <a
@@ -81,26 +76,20 @@ const socialLinks = [
                 ))}
               </div>
               <div>
-                <p className="text-blue-100 
-  mb-2">Newsletter</p>
+                <p className="text-white-accent mb-2">Newsletter</p>
                 <input
                   type="email"
                   placeholder="Your email"
-                  className="w-full px-4 py-2 
-  rounded-lg bg-blue-800 text-white 
-  placeholder-blue-300 focus:outline-none 
-  focus:ring-2 focus:ring-blue-400"
+                  className="w-full px-4 py-2 rounded-lg bg-white-accent text-blue-primary placeholder-blue-primary focus:outline-none focus:ring-2 focus:ring-blue-primary"
                 />
               </div>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="border-t 
-  border-blue-800 pt-8 text-center">
-            <p className="text-blue-200">
-              © 2025 International Girls
-  Academy. Empowering students worldwide. 🌍✨
+          <div className="border-t border-white-accent/20 pt-8 text-center">
+            <p className="text-white-accent">
+              © 2025 International Girls Academy. Empowering students worldwide. 🌍✨
             </p>
           </div>
         </div>

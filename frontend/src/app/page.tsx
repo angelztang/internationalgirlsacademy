@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/LandingPage/Navbar";
 import Hero from "@/components/LandingPage/Hero";
 import { CTAButtons } from "@/components/LandingPage/CTAButtons";
@@ -12,15 +12,16 @@ import { ChatBot } from "@/components/Busybot/ChatBot";
 import { LiveStream } from "@/components/LandingPage/LiveChat";
 
 export default function Home() {
+  const router = useRouter();
   return (
-    <div className="min-h-screen bg-gradient-to-b from pink-50 to-pink-100">
+  <div className="min-h-screen bg-lavender">
       <Navbar />
       <Hero />
       <CTAButtons
-        onSelectPath={function (
-          path: "student" | "volunteer" | "donate"
-        ): void {
-          throw new Error("Function not implemented.");
+        onSelectPath={(path: "student" | "volunteer" | "donate") => {
+          if (path === "student") return router.push("/PathwayMap");
+          if (path === "volunteer") return router.push("/volunteerDashboard");
+          if (path === "donate") return router.push("/donate");
         }}
       />
       <Programs />
