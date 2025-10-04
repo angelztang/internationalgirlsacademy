@@ -215,10 +215,19 @@ export default function PathwayMap({
   const [studentPoints, setStudentPoints] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<Array<{module_id: number; user_id: string; progress: number}>>([]);
   const [isLoadingModules, setIsLoadingModules] = useState(false);
+
+  // Protect route - require authentication
+  useEffect(() => {
+    if (!isLoading && !user) {
+      // Store intended path for post-login redirect
+      const currentPath = `/PathwayMap${paramPath ? `?path=${paramPath}` : ''}`;
+      router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
+    }
+  }, [user, isLoading, router, paramPath]);
 
   // Calculate student points
   useEffect(() => {

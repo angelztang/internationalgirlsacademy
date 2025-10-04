@@ -37,9 +37,14 @@ export default function Home() {
       <GlobeSection />
       <CTAButtons
         onSelectPath={(path: "student" | "volunteer" | "donate") => {
-          if (path === "student") return router.push("/PathwayMap");
-          if (path === "volunteer")
-            return router.push("/PathwayMap?path=volunteer");
+          if (path === "student") {
+            // Redirect to login with PathwayMap as destination
+            return router.push("/login?redirect=" + encodeURIComponent("/PathwayMap"));
+          }
+          if (path === "volunteer") {
+            // Redirect to login with volunteer PathwayMap as destination
+            return router.push("/login?redirect=" + encodeURIComponent("/PathwayMap?path=volunteer"));
+          }
           if (path === "donate") return router.push("/donate");
         }}
       />
