@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from supabase import Client
 
-from app.core.database import get_supabase
+from src.app.core.database import get_supabase
 from app.domain.schemas import (
     EventRegistration,
     RegisterForEventRequest,

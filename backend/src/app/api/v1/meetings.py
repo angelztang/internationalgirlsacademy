@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from datetime import datetime, timedelta
 from supabase import Client
 
-from app.core.database import get_supabase
+from src.app.core.database import get_supabase
 from app.domain.schemas import ScheduleMeetingRequest, ScheduleMeetingResponse, UserMatch, AvailabilitySlot
 
 router = APIRouter()
