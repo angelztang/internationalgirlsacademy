@@ -439,9 +439,16 @@ export default function StudentDashboard({
               <div className="space-y-6">
                 {/* Upcoming Events */}
                 <Card className="p-6 bg-white">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="w-5 h-5 text-purple-600" />
-                    <h3 className="text-lg">Upcoming Events</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-purple-600" />
+                      <h3 className="text-lg">Upcoming Events</h3>
+                    </div>
+                    <Link href="/events/meetings">
+                      <Button variant="ghost" size="sm" className="text-blue-primary">
+                        View All →
+                      </Button>
+                    </Link>
                   </div>
                   {loadingEvents ? (
                     <p className="text-sm text-gray-600">Loading events...</p>
