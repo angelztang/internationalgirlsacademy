@@ -83,20 +83,10 @@ Teaser: "Complete these modules to unlock programs"
 - Cultural markers visible (pink, Nguzo Saba symbols)
 - Clear next steps at every section
 
-## Frontend File Structure
-
-```
-/src/
-  /app/         # Pages and layouts
-  /components/  # Reusable UI components
-  /lib/         # Utility functions
-  /lib/api/     # API utility files for route integration
-  /types/       # TypeScript types
 ```
 
 ## Backend API Routes → Frontend Integration
 
-<<<<<<< HEAD
 ### User Management (Authentication via Supabase)
 - ✅ `POST /api/v1/users/register` → Supabase Auth in `frontend/src/app/signup.tsx`
 - ✅ `POST /api/v1/users/login` → Supabase Auth in `frontend/src/app/login.tsx`
@@ -148,88 +138,192 @@ Teaser: "Complete these modules to unlock programs"
 
 ### Not Implemented in Backend
 - Donations API (frontend page exists at `frontend/src/app/donations/page.tsx` but no backend routes)
-=======
-### User Management
 
-- ✅ `POST /api/v1/users/register` → Login/Signup
-  page (`frontend/src/app/login/page.tsx`)
-- `GET /users/count` → Not integrated yet
 
-### Events Management
+# IGA Platform - Team 15
 
-- ✅ `GET /api/v1/events` → Organizer Dashboard (`
-frontend/src/app/organizerDashboard/page.tsx`)
-- ✅ `GET /api/v1/events/{event_id}` → Organizer
-  Dashboard - Event details view
-- ✅ `POST /api/v1/events` → Organizer Dashboard -
-  Create event form
-- ✅ `PUT /api/v1/events/{event_id}` → Organizer
-  Dashboard - Edit event
-- ✅ `DELETE /api/v1/events/{event_id}` →
-  Organizer Dashboard - Delete event
+> Empowering girls ages 5-18 through STEM, financial literacy, and entrepreneurship
 
-### Event Registration
+## 🌟 Project Overview
 
-- `GET /api/v1/users/{user_id}/events` →
-  Student Dashboard
-  (`frontend/src/app/StudentDashboard/page.tsx`)
-- Upcoming events section
-- `POST/api/v1/users/events/{event_id}/register` →
-  Student Dashboard - Event registration
-- `DELETE /api/v1/users/events/{event_id}/register/{user_id}`
-  → Student Dashboard - Cancel registration
-- `GET/api/v1/users/events/{event_id}/registrations`
-  → Organizer Dashboard - View event attendees
+The IGA Platform is a comprehensive educational technology solution designed to connect, educate, and empower young girls worldwide. Built with modern web technologies, it provides mentorship matching, learning pathways, community engagement, and global connectivity spanning the United States, Ghana, Liberia, and Guyana.
 
-### Meetings/Scheduling
+## 🧠 Brainstorming Process & LLM Integration
 
-- ✅ `POST /api/v1/meetings/schedule` → Volunteer
-  Dashboard (`frontend/src/app/volunteerDashboard
-/page.tsx`) - Schedule mentor sessions
+### Initial Ideation with AI Assistance
 
-### Shop/Items System
+Our development process was deeply integrated with Large Language Models (LLMs) from conception to implementation. Here's how we leveraged AI throughout our brainstorming and development journey:
 
-- ✅ `GET /api/v1/items` → Shop component
-  (`frontend/src/components/Shop/Shop.tsx`) -
-  Load available items
-- ✅ `GET /api/v1/items/{item_id}` → Shop
-  component - Item details
-- ✅ `POST /api/v1/items` → Admin/Organizer
-  Dashboard - Create shop items
+#### 1. **Concept Development & User Journey Mapping**
+- **Prompt Engineering**: We used LLMs to explore different user personas (students, mentors, parents, alumni) and their unique needs
+- **Journey Visualization**: AI helped us map out complex user flows from onboarding through program completion
+- **Feature Prioritization**: Used conversational AI to evaluate feature importance and technical feasibility
 
-### User Items (Inventory)
+```
+Example Prompt: "Help us design a user onboarding flow for girls aged 5-18 joining an educational mentorship platform. Consider different age groups, technical literacy levels, and cultural backgrounds."
+```
 
-- ✅ `GET /api/v1/users/{user_id}/items` → Shop
-  component - User inventory
-- ✅`POST /api/v1/users/{user_id}/items/purchase`
-  → Shop component - Purchase items
-- `PUT/api/v1/users/{user_id}/items/{item_id}/equip`
-  → Student Dashboard - Equip/unequip items
+#### 2. **Architecture & Technical Planning**
+- **Technology Stack Selection**: LLMs helped evaluate trade-offs between different frameworks (Next.js vs. React, FastAPI vs. Django)
+- **Database Schema Design**: AI-assisted in designing relational structures for users, programs, mentorship matching, and progress tracking
+- **API Design Patterns**: Used LLMs to establish RESTful conventions and endpoint structures
 
-### Modules (Learning Progress)
+#### 3. **UI/UX Design Philosophy**
+- **Accessibility-First Design**: AI helped us consider users with different abilities and technical backgrounds
+- **Cultural Sensitivity**: LLMs provided insights on creating inclusive interfaces for diverse global users
+- **Age-Appropriate Design**: Leveraged AI to ensure interfaces work for both 5-year-olds and 18-year-olds
 
-- ✅`GET /api/v1/modules/user/{user_id}` →
-  Student Dashboard - Course/module progress
-- `GET /api/v1/modules/{module_id}` →
-  PathwayMap
-  (`frontend/src/app/PathwayMap/page.tsx`) -
-  Module details
-- `POST /api/v1/modules` → Organizer Dashboard
-- Create learning modules
-- ✅`PUT /api/v1/modules/{module_id}` →
-  PathwayMap - Update module progress
-- `DELETE /api/v1/modules/{module_id}` →
-  Organizer Dashboard - Delete modules
+### LLM-Powered Development Features
 
-### Health Check
+#### 1. **Intelligent Chatbot (BusyBot 🤖)**
+- **Implementation**: [`frontend/src/components/Busybot/ChatBot.tsx`](frontend/src/components/Busybot/ChatBot.tsx)
+- **Backend Integration**: [`backend/src/app/api/v1/chatbot.py`](backend/src/app/api/v1/chatbot.py)
+- **Purpose**: Provides contextual help throughout the learning journey
+- **AI Model**: GPT-4o-mini with custom educational prompts
 
-- `GET /` → App initialization/health
-  monitoring
-- `GET /health` → App health checks
+```typescript
+// Example of our chatbot integration
+const handleSend = async () => {
+  const data = await apiClient.post<{ response: string }>('/chatbot/chat', {
+    message: inputValue,
+    history: messages.map((m) => ({
+      role: m.sender === "user" ? "user" : "assistant",
+      content: m.text,
+    })),
+  });
+};
+```
 
-### Not Yet Integrated
+#### 2. **Code Generation & Documentation**
+- **Component Generation**: Used LLMs to scaffold React components with TypeScript
+- **API Documentation**: AI-generated comprehensive API documentation and integration guides
+- **Test Case Creation**: Leveraged LLMs to create edge cases and comprehensive test suites
 
-- Donations page
-  (`frontend/src/app/donations/page.tsx`) → No
-  backend API routes yet (currently static page)
->>>>>>> main
+#### 3. **Content Creation & Localization**
+- **Educational Content**: AI helped generate age-appropriate learning modules
+- **Multi-language Support**: LLMs assisted in creating culturally appropriate content for different regions
+- **Accessibility Text**: Generated alt-text and screen reader friendly descriptions
+
+## 🏗️ Technical Architecture
+
+### Frontend Stack
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + Radix UI
+- **Animations**: Framer Motion
+- **3D Graphics**: Three.js with React Three Fiber
+- **State Management**: React Context + Local State
+
+### Backend Stack
+- **Framework**: FastAPI (Python)
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Real-time**: WebSocket connections
+- **AI Integration**: OpenAI GPT-4o-mini
+- **Video Conferencing**: Zoom SDK
+
+### Key Features Developed with AI Assistance
+
+#### 🌍 **Global Connectivity**
+- Interactive 3D globe showing connections between US, Ghana, Liberia, and Guyana
+- Real-time community statistics and engagement metrics
+
+#### 🎓 **Learning Pathways**
+- Personalized learning journeys based on Nguzo Saba principles
+- Progress tracking with gamification elements
+- AI-powered content recommendations
+
+#### 🤝 **Mentorship Matching**
+- Algorithm-based mentor-student pairing
+- Availability scheduling and meeting coordination
+- Progress tracking and feedback systems
+
+#### 💬 **Community Features**
+- Live chat during events and workshops
+- Comment threads on learning modules
+- Community recognition and achievement systems
+
+## 🔄 LLM-Assisted Development Workflow
+
+### 1. **Planning Phase**
+```
+Human: "We need to create a mentorship platform for young girls. What are the key features we should prioritize?"
+
+AI: "Based on educational platform best practices, I recommend focusing on:
+1. Safe, moderated communication channels
+2. Progress tracking with age-appropriate gamification
+3. Cultural sensitivity for global users
+4. Accessibility features for different abilities..."
+```
+
+### 2. **Implementation Phase**
+- **Code Reviews**: LLMs helped identify potential bugs and suggest optimizations
+- **Documentation**: AI generated inline comments and README sections
+- **Testing Strategies**: Created comprehensive test cases covering edge scenarios
+
+### 3. **Refinement Phase**
+- **User Experience**: AI helped identify friction points in user flows
+- **Performance Optimization**: LLMs suggested caching strategies and bundle optimizations
+- **Security Audits**: AI-assisted security review of authentication and data handling
+
+## 📁 Project Structure
+
+```
+├── frontend/                 # Next.js React application
+│   ├── src/app/             # App Router pages
+│   ├── src/components/      # Reusable UI components
+│   ├── src/lib/            # Utilities and API clients
+│   └── src/context/        # React Context providers
+├── backend/                 # FastAPI Python application
+│   ├── src/app/api/        # API routes and endpoints
+│   ├── src/app/core/       # Core configurations
+│   ├── src/app/models/     # Database models
+│   └── tests/              # Test suites
+└── README.md               # This file
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ and npm
+- Python 3.11+
+- Supabase account
+- OpenAI API key (for BusyBot)
+
+```
+
+## 🎯 Key Learning Outcomes from LLM Integration
+
+### What Worked Well
+1. **Rapid Prototyping**: LLMs accelerated initial feature development by 3-4x
+2. **Code Quality**: AI-assisted code reviews caught edge cases we might have missed
+3. **Documentation**: Comprehensive documentation generated with minimal manual effort
+4. **User Experience**: AI helped us consider accessibility and usability from day one
+
+### Challenges & Solutions
+1. **Over-reliance Risk**: We balanced AI suggestions with human judgment and domain expertise
+2. **Context Limitations**: Broke down complex problems into smaller, AI-manageable chunks
+3. **Code Consistency**: Established clear prompting patterns and coding standards
+
+### Future LLM Integration Plans
+- **Adaptive Learning**: AI-powered curriculum that adjusts to individual student progress
+- **Automated Mentorship Matching**: Enhanced algorithms using NLP to match communication styles
+- **Content Generation**: AI-created educational materials tailored to different cultural contexts
+
+## 🌟 Impact & Vision
+
+This platform represents more than just code—it's a bridge connecting young women across continents, powered by human creativity and AI efficiency. By leveraging LLMs throughout our development process, we've created a more thoughtful, accessible, and globally-minded educational platform.
+
+Our AI-assisted approach enabled us to:
+- Consider edge cases for users across different cultures and age groups
+- Implement complex features like real-time mentorship matching
+- Create intuitive interfaces that work for both 5-year-olds and 18-year-olds
+- Build robust, scalable architecture from the ground up
+
+## Contributions
+
+- **Team**: Team 15
+- **Platform**: IGA (International Girls Academy)
+- **Mission**: Empowering girls worldwide through technology and mentorship
+
+---
