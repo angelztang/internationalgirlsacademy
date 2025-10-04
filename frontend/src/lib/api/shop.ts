@@ -10,7 +10,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   export interface UserItem {
-    user_id: number;
+    user_id: string; // UUID
     item_id: number;
     quantity: number;
     acquired_at: string;
@@ -41,7 +41,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   // Get user's inventory
-  export async function getUserInventory(userId: number): Promise<UserItem[]> 
+  export async function getUserInventory(userId: string): Promise<UserItem[]> 
   {
     const response = await fetch(`${API_BASE_URL}/users/${userId}/items`);
     if (!response.ok) {
@@ -52,7 +52,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   // Purchase an item
-  export async function purchaseItem(userId: number, request: 
+  export async function purchaseItem(userId: string, request: 
   PurchaseRequest): Promise<PurchaseResponse> {
     const response = await
   fetch(`${API_BASE_URL}/users/${userId}/items/purchase`, {
@@ -72,7 +72,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   // Equip/unequip an item
-  export async function equipItem(userId: number, itemId: number, equipped: 
+  export async function equipItem(userId: string, itemId: number, equipped: 
   boolean): Promise<void> {
     const response = await
   fetch(`${API_BASE_URL}/users/${userId}/items/${itemId}/equip`, {

@@ -6,6 +6,7 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Progress } from "../../components/ui/progress";
+import { useAuth } from "@/context/AuthContext";
 import {
   Tabs,
   TabsContent,
@@ -45,12 +46,15 @@ export default function StudentDashboard({
   const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
-  const [userId] = useState(1); // TODO: Get from auth context
+  const { user } = useAuth();
+  const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
 
   // Fetch user modules 
   useEffect(() => {
+    if (!userId) return; // Wait for auth to load
+    
     const loadModules = async () => {
       try {
         const data = await getUserModules(userId);

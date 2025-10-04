@@ -36,11 +36,13 @@ async def register_user(
             raise HTTPException(status_code=400, detail="Registration failed")
 
         # Insert user profile into users table
+        # Note: password is managed by Supabase Auth, so we set it to None
         user_data = {
             "user_id": auth_response.user.id,
             "email": request.email,
             "first_name": request.first_name,
             "last_name": request.last_name,
+            "password": None,  # Managed by Supabase Auth
             "user_type": request.user_type,
             "gender": request.gender,
             "experience_points": 0

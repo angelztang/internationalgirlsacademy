@@ -7,6 +7,7 @@ import { InfoCard } from "./InfoCard";
 import { ConfettiEffect } from "./ConfettiEffect";
 import { ShopTabs } from "./ShopTabs";
 import { ProgressCard } from "./ProgressCard";
+import { useAuth } from "@/context/AuthContext";
 import {
   ShoppingBag,
   Star,
@@ -44,16 +45,19 @@ export default function Shop({
   const [apiItems, setApiItems] = useState<APIItem[]>([]);
   const [userInventory, setUserInventory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [userId] = useState(1); // TODO: Get from auth context
+  const { user } = useAuth();
+  const userId = user?.id; // Get UUID from auth context
 
   // useEffect to fetch data 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && userId) {
       loadShopData();
     }
-  }, [isOpen]);
+  }, [isOpen, userId]);
 
   const loadShopData = async () => {
+    if (!userId) return; // Guard against undefined userId
+    
     try {
       setIsLoading(true);
       const [items, inventory] = await Promise.all([
@@ -224,6 +228,11 @@ export default function Shop({
   ];
 
   const handlePurchase = async (item: any) => {
+    if (!userId) {
+      console.error('User not authenticated');
+      return;
+    }
+    
     try {
       const response = await purchaseItem(userId, {
         item_id: item.item_id || item.id,

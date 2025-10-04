@@ -14,6 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { CommentThread } from "@/components/CommentThread/CommentThread";
 import Header from "@/components/PathwayMap/Header";
 import { getUserModules, updateModuleProgress } from "@/lib/api/modules";
+import { useAuth } from "@/context/AuthContext";
 
 interface PathStep {
   id: number;
@@ -214,7 +215,8 @@ export default function PathwayMap({
   const [studentPoints, setStudentPoints] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const router = useRouter();
-  const [userId] = useState(1); // TODO: Get from auth context
+  const { user } = useAuth();
+  const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [isLoadingModules, setIsLoadingModules] = useState(false);
 
@@ -226,6 +228,8 @@ export default function PathwayMap({
 
   // Fetch user modules on mount 
   useEffect(() => {
+    if (!userId) return; // Wait for auth to load
+    
     const loadModules = async () => {
       try {
         setIsLoadingModules(true);

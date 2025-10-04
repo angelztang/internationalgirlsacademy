@@ -3,12 +3,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
 
   export interface Module {
     module_id: number;
-    user_id: number;
+    user_id: string; // UUID
     module_progress: number;
   }
 
   export interface CreateModuleRequest {
-    user_id: number;
+    user_id: string; // UUID
     module_progress: number;
   }
 
@@ -17,12 +17,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   export interface UserModulesResponse {
-    user_id: number;
+    user_id: string; // UUID
     modules: Module[];
   }
 
   // Get all modules for a specific user
-  export async function getUserModules(userId: number): 
+  export async function getUserModules(userId: string): 
   Promise<UserModulesResponse> {
     const response = await fetch(`${API_BASE_URL}/modules/user/${userId}`);
     if (!response.ok) {
