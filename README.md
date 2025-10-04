@@ -151,7 +151,7 @@ Teaser: "Complete these modules to unlock programs"
 =======
 ### User Management
 
-- `POST /api/v1/users/register` → Login/Signup
+- ✅ `POST /api/v1/users/register` → Login/Signup
   page (`frontend/src/app/login/page.tsx`)
 - `GET /users/count` → Not integrated yet
 
@@ -174,19 +174,16 @@ frontend/src/app/organizerDashboard/page.tsx`)
   Student Dashboard
   (`frontend/src/app/StudentDashboard/page.tsx`)
 - Upcoming events section
-- `POST
-/api/v1/users/events/{event_id}/register` →
+- `POST/api/v1/users/events/{event_id}/register` →
   Student Dashboard - Event registration
-- `DELETE /api/v1/users/events/{event_id}/regis
-ter/{user_id}` → Student Dashboard - Cancel
-  registration
-- `GET
-/api/v1/users/events/{event_id}/registrations`
+- `DELETE /api/v1/users/events/{event_id}/register/{user_id}`
+  → Student Dashboard - Cancel registration
+- `GET/api/v1/users/events/{event_id}/registrations`
   → Organizer Dashboard - View event attendees
 
 ### Meetings/Scheduling
 
-- `POST /api/v1/meetings/schedule` → Volunteer
+- ✅ `POST /api/v1/meetings/schedule` → Volunteer
   Dashboard (`frontend/src/app/volunteerDashboard
 /page.tsx`) - Schedule mentor sessions
 
@@ -195,9 +192,9 @@ ter/{user_id}` → Student Dashboard - Cancel
 - ✅ `GET /api/v1/items` → Shop component
   (`frontend/src/components/Shop/Shop.tsx`) -
   Load available items
-- `GET /api/v1/items/{item_id}` → Shop
+- ✅ `GET /api/v1/items/{item_id}` → Shop
   component - Item details
-- `POST /api/v1/items` → Admin/Organizer
+- ✅ `POST /api/v1/items` → Admin/Organizer
   Dashboard - Create shop items
 
 ### User Items (Inventory)
@@ -206,8 +203,7 @@ ter/{user_id}` → Student Dashboard - Cancel
   component - User inventory
 - ✅`POST /api/v1/users/{user_id}/items/purchase`
   → Shop component - Purchase items
-- `PUT
-/api/v1/users/{user_id}/items/{item_id}/equip`
+- `PUT/api/v1/users/{user_id}/items/{item_id}/equip`
   → Student Dashboard - Equip/unequip items
 
 ### Modules (Learning Progress)
