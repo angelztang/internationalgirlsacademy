@@ -55,6 +55,8 @@ export function OrganizerDashboard({
   const [modules, setModules] = useState<any[]>([]);
   const [loadingModules, setLoadingModules] = useState(false);
   const [showModulesManager, setShowModulesManager] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   // Mock data
   const organizerData = {
@@ -171,6 +173,7 @@ export function OrganizerDashboard({
   useEffect(() => {
     fetchEvents();
     fetchModules();
+    fetchUsers();
   }, []);
 
   // Show data management page
@@ -328,6 +331,42 @@ export function OrganizerDashboard({
     } catch (err) {
       console.error(err);
       alert("Failed to delete module");
+    }
+  }
+
+  async function fetchUsers() {
+    setLoadingUsers(true);
+    try {
+      const API_BASE_URL =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+      const res = await fetch(`${API_BASE_URL}/users`);
+      if (!res.ok) throw new Error("Failed to load users");
+      const data = await res.json();
+      setUsers(data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingUsers(false);
+    }
+  }
+
+  async function updateUserRole(userId: string, newRole: string) {
+    if (!confirm(`Change user role to ${newRole}?`)) return;
+
+    try {
+      const API_BASE_URL =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+      const res = await fetch(`${API_BASE_URL}/users/${userId}/role?new_role=${newRole}`, {
+        method: "PUT",
+      });
+      if (!res.ok) throw new Error("Failed to update user role");
+
+      // Refresh users list
+      await fetchUsers();
+      alert("User role updated successfully");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to update user role");
     }
   }
 
@@ -802,9 +841,73 @@ export function OrganizerDashboard({
           <TabsContent value="users">
             <Card className="p-6">
               <h3 className="text-xl mb-4">User Management</h3>
-              <p className="text-gray-600">
-                Student and volunteer management would be displayed here...
-              </p>
+
+              {loadingUsers ? (
+                <p>Loading users...</p>
+              ) : users.length === 0 ? (
+                <p className="text-gray-600">No users found</p>
+              ) : (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-5 gap-4 p-3 bg-gray-100 rounded font-semibold text-sm">
+                    <div>Name</div>
+                    <div>Email</div>
+                    <div>Current Role</div>
+                    <div>XP</div>
+                    <div>Actions</div>
+                  </div>
+                  {users.map((user) => (
+                    <div key={user.user_id} className="grid grid-cols-5 gap-4 p-3 border rounded items-center">
+                      <div>
+                        <p className="font-medium">{user.first_name} {user.last_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                      </div>
+                      <div>
+                        <Badge className={
+                          user.user_type === 'admin' ? 'bg-purple-100 text-purple-700' :
+                          user.user_type === 'volunteer' ? 'bg-pink-100 text-pink-700' :
+                          'bg-blue-100 text-blue-700'
+                        }>
+                          {user.user_type}
+                        </Badge>
+                      </div>
+                      <div>
+                        <p className="text-sm">{user.experience_points || 0}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        {user.user_type !== 'admin' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'admin')}
+                          >
+                            Make Admin
+                          </Button>
+                        )}
+                        {user.user_type !== 'volunteer' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'volunteer')}
+                          >
+                            Make Volunteer
+                          </Button>
+                        )}
+                        {user.user_type !== 'student' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateUserRole(user.user_id, 'student')}
+                          >
+                            Make Student
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           </TabsContent>
 

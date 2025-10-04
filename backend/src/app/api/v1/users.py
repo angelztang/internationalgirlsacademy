@@ -3,6 +3,7 @@ from typing import List
 from supabase import Client
 
 from app.core.database import get_supabase
+from app.core.auth import get_current_user, require_role
 from app.domain.schemas import (
     UserRegisterRequest,
     UserLoginRequest,
@@ -260,6 +261,56 @@ async def update_profile_picture(
         # Update profile picture URL
         response = db.table("users").update({
             "profile_picture_url": profile_picture_url
+        }).eq("user_id", user_id).execute()
+
+        if not response.data:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        profile = response.data[0]
+
+        return UserProfileResponse(
+            user_id=profile["user_id"],
+            email=profile["email"],
+            first_name=profile["first_name"],
+            last_name=profile["last_name"],
+            user_type=profile["user_type"],
+            gender=profile.get("gender"),
+            experience_points=int(profile.get("experience_points", 0)),
+            profile_picture_url=profile.get("profile_picture_url")
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
+@router.put("/{user_id}/role", response_model=UserProfileResponse)
+async def update_user_role(
+    user_id: str,
+    new_role: str,
+    current_user: dict = Depends(get_current_user),
+    _: None = Depends(require_role(["admin"])),
+    db: Client = Depends(get_supabase)
+):
+    """
+    Update user role (admin only).
+    Allowed roles: student, volunteer, admin
+    """
+    allowed_roles = ["student", "volunteer", "admin"]
+
+    if new_role not in allowed_roles:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid role. Must be one of: {', '.join(allowed_roles)}"
+        )
+
+    try:
+        # Update user role
+        response = db.table("users").update({
+            "user_type": new_role
         }).eq("user_id", user_id).execute()
 
         if not response.data:
