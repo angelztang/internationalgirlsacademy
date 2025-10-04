@@ -119,18 +119,18 @@ Teaser: "Complete these modules to unlock programs"
   /page.tsx`) - Schedule mentor sessions
 
   ### Shop/Items System
-  - `GET /api/v1/items` → Shop component
+  - ✅ `GET /api/v1/items` → Shop component
   (`frontend/src/components/Shop/Shop.tsx`) -
   Load available items
-  - `GET /api/v1/items/{item_id}` → Shop
+  -  `GET /api/v1/items/{item_id}` → Shop
   component - Item details
-  - `POST /api/v1/items` → Admin/Organizer
+  -  `POST /api/v1/items` → Admin/Organizer
   Dashboard - Create shop items
 
   ### User Items (Inventory)
-  - `GET /api/v1/users/{user_id}/items` → Shop
+  - ✅ `GET /api/v1/users/{user_id}/items` → Shop
   component - User inventory
-  - `POST /api/v1/users/{user_id}/items/purchase`
+  - ✅`POST /api/v1/users/{user_id}/items/purchase`
    → Shop component - Purchase items
   - `PUT
   /api/v1/users/{user_id}/items/{item_id}/equip`
