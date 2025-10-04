@@ -13,7 +13,11 @@ import { ChatBot } from "@/components/Busybot/ChatBot";
 import { useSearchParams } from "next/navigation";
 import { CommentThread } from "@/components/CommentThread/CommentThread";
 import Header from "@/components/PathwayMap/Header";
-import { getUserModules, updateModuleProgress, createModule } from "@/lib/api/modules";
+import {
+  getUserModules,
+  updateModuleProgress,
+  createModule,
+} from "@/lib/api/modules";
 import { useAuth } from "@/context/AuthContext";
 
 interface PathStep {
@@ -217,14 +221,16 @@ export default function PathwayMap({
   const router = useRouter();
   const { user, isLoading } = useAuth();
   const userId = user?.id; // Get UUID from auth context
-  const [userModules, setUserModules] = useState<Array<{module_id: number; user_id: string; progress: number}>>([]);
+  const [userModules, setUserModules] = useState<
+    Array<{ module_id: number; user_id: string; progress: number }>
+  >([]);
   const [isLoadingModules, setIsLoadingModules] = useState(false);
 
   // Protect route - require authentication
   useEffect(() => {
     if (!isLoading && !user) {
       // Store intended path for post-login redirect
-      const currentPath = `/PathwayMap${paramPath ? `?path=${paramPath}` : ''}`;
+      const currentPath = `/PathwayMap${paramPath ? `?path=${paramPath}` : ""}`;
       router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
     }
   }, [user, isLoading, router, paramPath]);
@@ -235,17 +241,17 @@ export default function PathwayMap({
     setStudentPoints(Math.round((completedSteps / currentSteps.length) * 100));
   }, [currentSteps]);
 
-  // Fetch user modules on mount 
+  // Fetch user modules on mount
   useEffect(() => {
     if (!userId) return; // Wait for auth to load
-    
+
     const loadModules = async () => {
       try {
         setIsLoadingModules(true);
         const data = await getUserModules(userId);
         setUserModules(data.modules);
       } catch (error) {
-        console.error('Failed to load modules:', error);
+        console.error("Failed to load modules:", error);
       } finally {
         setIsLoadingModules(false);
       }
@@ -276,11 +282,12 @@ export default function PathwayMap({
 
     // Update progress in backend
     try {
-      const newProgress = Math.round(((stepId + 1) / currentSteps.length) *
-  100);
+      const newProgress = Math.round(
+        ((stepId + 1) / currentSteps.length) * 100
+      );
 
       // Find or create module for this user
-      const existingModule = userModules.find(m => m.user_id === userId);
+      const existingModule = userModules.find((m) => m.user_id === userId);
 
       if (existingModule) {
         await updateModuleProgress(existingModule.module_id, newProgress);
@@ -289,12 +296,12 @@ export default function PathwayMap({
       else if (userId) {
         const newModule = await createModule({
           user_id: userId,
-          progress: newProgress
+          progress: newProgress,
         });
         setUserModules([...userModules, newModule]);
       }
     } catch (error) {
-      console.error('Failed to update module progress:', error);
+      console.error("Failed to update module progress:", error);
     }
 
     if (stepId < currentSteps.length - 1) setCurrentStep(stepId + 1);
@@ -351,6 +358,7 @@ export default function PathwayMap({
           onPurchase={handlePurchase}
         />
       )}
+
       {/* BusyBot chat button (same as homepage) */}
       <ChatBot />
     </div>

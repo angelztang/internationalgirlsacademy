@@ -29,7 +29,12 @@ import {
   Headphones,
   Laptop,
 } from "lucide-react";
-import { getAllItems, getUserInventory, purchaseItem, Item as APIItem } from "@/lib/api/shop";
+import {
+  getAllItems,
+  getUserInventory,
+  purchaseItem,
+  Item as APIItem,
+} from "@/lib/api/shop";
 
 export default function Shop({
   isOpen,
@@ -41,14 +46,14 @@ export default function Shop({
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [justPurchased, setJustPurchased] = useState<string | null>(null);
-  // new state variables 
+  // new state variables
   const [apiItems, setApiItems] = useState<APIItem[]>([]);
   const [userInventory, setUserInventory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
 
-  // useEffect to fetch data 
+  // useEffect to fetch data
   useEffect(() => {
     if (isOpen && userId) {
       loadShopData();
@@ -57,17 +62,17 @@ export default function Shop({
 
   const loadShopData = async () => {
     if (!userId) return; // Guard against undefined userId
-    
+
     try {
       setIsLoading(true);
       const [items, inventory] = await Promise.all([
         getAllItems(),
-        getUserInventory(userId)
+        getUserInventory(userId),
       ]);
       setApiItems(items);
       setUserInventory(inventory);
     } catch (error) {
-      console.error('Failed to load shop data:', error);
+      console.error("Failed to load shop data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -229,14 +234,14 @@ export default function Shop({
 
   const handlePurchase = async (item: any) => {
     if (!userId) {
-      console.error('User not authenticated');
+      console.error("User not authenticated");
       return;
     }
-    
+
     try {
       const response = await purchaseItem(userId, {
         item_id: item.item_id || item.id,
-        quantity: 1
+        quantity: 1,
       });
 
       setPurchasedItems([...purchasedItems, item.id]);
@@ -251,7 +256,7 @@ export default function Shop({
         setJustPurchased(null);
       }, 2000);
     } catch (error: any) {
-      alert(error.message || 'Failed to purchase item');
+      alert(error.message || "Failed to purchase item");
     }
   };
 
@@ -270,7 +275,7 @@ export default function Shop({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden absolute">
+      <DialogContent className="max-w-5xl  overflow-hidden absolute">
         <ShopHeader availablePoints={availablePoints} />
         <InfoCard />
         <ConfettiEffect show={showConfetti} />
