@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
@@ -38,6 +39,12 @@ export default function StudentDashboard({
   onLogout,
 }: StudentDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const router = useRouter();
+
+  const handleLogout = () => {
+    if (onLogout) onLogout();
+    router.push("/login");
+  };
 
   // Mock Data - in production, this would come from an API or props
   const userData = {
@@ -139,7 +146,7 @@ export default function StudentDashboard({
               <Button variant="ghost" size="icon">
                 <Settings className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" onClick={onLogout} className="gap-2">
+              <Button variant="ghost" onClick={handleLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>

@@ -15,11 +15,11 @@ export default function LoginRoute() {
     }
 
     if (userType === "volunteer") {
-      router.push("/volunteerDashboard");
+      router.push("/VolunteerDashboard");
       return;
     }
 
-    // organizer (admin) -> organizer dashboard
+    // admin (previously organizer) -> organizer dashboard
     router.push("/organizerDashboard");
   };
 

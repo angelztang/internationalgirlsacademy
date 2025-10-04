@@ -12,8 +12,8 @@ export default function OrganizerDashboardRoute() {
   };
 
   const handleLogout = () => {
-    // simple logout handler for now — redirect to home
-    router.push("/");
+    // simple logout handler for now — redirect to login
+    router.push("/login");
   };
 
   return <OrganizerDashboard userData={mockUser} onLogout={handleLogout} />;
