@@ -313,12 +313,6 @@ export default function ProgramSelector({
                 . Check your email for next steps, or continue exploring IGA!
               </p>
               <div className="flex justify-center gap-4">
-                <Button
-                  className="bg-gradient-to-r from-purple-500 to-pink-500"
-                  onClick={() => onSignUp && onSignUp(selectedProgram)}
-                >
-                  Sign Up Now
-                </Button>
                 <Button variant="outline" onClick={onBack}>
                   Explore More
                 </Button>
