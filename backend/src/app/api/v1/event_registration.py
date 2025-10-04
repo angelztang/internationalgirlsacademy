@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from supabase import Client
 
 from src.app.core.database import get_supabase
+from src.app.core.auth import get_current_user
 from src.app.domain.schemas import (
     EventRegistration,
     RegisterForEventRequest,
@@ -13,7 +14,11 @@ router = APIRouter()
 
 
 @router.get("/{user_id}/events", response_model=UserEventsResponse)
-async def get_user_events(user_id: int, db: Client = Depends(get_supabase)):
+async def get_user_events(
+    user_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Client = Depends(get_supabase)
+):
     """Get all events a user is registered for"""
     response = db.table("event_registration").select(
         "*, events(*)"
@@ -37,6 +42,7 @@ async def get_user_events(user_id: int, db: Client = Depends(get_supabase)):
 async def register_for_event(
     event_id: int,
     request: RegisterForEventRequest,
+    current_user: dict = Depends(get_current_user),
     db: Client = Depends(get_supabase)
 ):
     """Register a user for an event"""
@@ -78,7 +84,8 @@ async def register_for_event(
 @router.delete("/events/{event_id}/register/{user_id}", status_code=204)
 async def unregister_from_event(
     event_id: int,
-    user_id: int,
+    user_id: str,
+    current_user: dict = Depends(get_current_user),
     db: Client = Depends(get_supabase)
 ):
     """Unregister a user from an event"""

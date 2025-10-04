@@ -172,14 +172,14 @@ class UpdateEventRequest(BaseModel):
 
 class EventRegistration(BaseModel):
     registration_id: int
-    user_id: int
+    user_id: str  # UUID
     event_id: int
     event: Optional[Event] = None
     user: Optional[UserMatch] = None
 
 
 class RegisterForEventRequest(BaseModel):
-    user_id: int
+    user_id: str  # UUID
 
 
 class EventWithRegistrations(BaseModel):
@@ -192,7 +192,7 @@ class EventWithRegistrations(BaseModel):
 
 
 class UserEventsResponse(BaseModel):
-    user_id: int
+    user_id: str  # UUID
     events: List[EventRegistration]
 
 
