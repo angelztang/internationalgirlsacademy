@@ -346,9 +346,11 @@ export function OrganizerDashboard({
               <Button variant="ghost" size="icon">
                 <Bell className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon">
-                <Settings className="w-5 h-5" />
-              </Button>
+              <Link href="/profile">
+                <Button variant="ghost" size="icon">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
               <Button variant="ghost" onClick={onLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout

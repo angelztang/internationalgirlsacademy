@@ -59,6 +59,7 @@ export default function ProfilePage() {
       return;
     }
 
+    // Load user profile
     loadUserProfile();
   }, [user]);
 
@@ -147,6 +148,7 @@ export default function ProfilePage() {
       setIsUploadingImage(false);
     }
   };
+
 
   const handleSaveProfile = async () => {
     setErrors({});
