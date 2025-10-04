@@ -1,6 +1,7 @@
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import BusyBotReminder from "./BusyBotReminder";
+import { CommentThread } from "../CommentThread/CommentThread";
 
 interface PathStep {
   id: number;
@@ -31,7 +32,7 @@ export default function StepContent({
   setCurrentStep,
 }: StepContentProps) {
   return (
-    <div className="mt-32 grid lg:grid-cols-3 gap-6">
+    <div className=" grid lg:grid-cols-3 gap-6 w-full ">
       <div className="lg:col-span-2">
         <Card className="p-8 shadow-xl">
           <div className="text-center mb-8">
@@ -117,6 +118,14 @@ export default function StepContent({
 
           <BusyBotReminder />
         </Card>
+      </div>
+      <div>
+        <CommentThread
+          pathType={pathType}
+          stepNumber={currentStep + 1}
+          key={`${pathType}-step-${currentStep + 1}-comments`}
+          stepTitle={currentStepData.title}
+        />
       </div>
     </div>
   );
