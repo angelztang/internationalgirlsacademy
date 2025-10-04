@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -28,6 +28,7 @@ import {
   Clock,
   Star,
 } from "lucide-react";
+import { getUserModules } from "@/lib/api/modules";
 
 interface StudentDashboardProps {
   userData: any;
@@ -44,6 +45,30 @@ export default function StudentDashboard({
   const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
+  const [userId] = useState(1); // TODO: Get from auth context
+  const [userModules, setUserModules] = useState<any[]>([]);
+  const [moduleProgress, setModuleProgress] = useState(0);
+
+  // Fetch user modules 
+  useEffect(() => {
+    const loadModules = async () => {
+      try {
+        const data = await getUserModules(userId);
+        setUserModules(data.modules);
+
+        // Calculate average progress from all modules
+        if (data.modules.length > 0) {
+          const avgProgress = data.modules.reduce((sum: number, m: any) => sum
+   + m.module_progress, 0) / data.modules.length;
+          setModuleProgress(Math.round(avgProgress));
+        }
+      } catch (error) {
+        console.error('Failed to load modules:', error);
+      }
+    };
+
+    loadModules();
+  }, [userId]);
 
   const handleLogout = () => {
     if (onLogout) onLogout();
@@ -195,10 +220,10 @@ export default function StudentDashboard({
             <div className="mt-6">
               <div className="flex items-center justify-between text-sm mb-2">
                 <span>Overall Progress</span>
-                <span>{studentData.progress}%</span>
+                <span>{moduleProgress || studentData.progress}%</span>
               </div>
               <Progress
-                value={studentData.progress}
+                value={moduleProgress || studentData.progress}
                 className="h-3 bg-white/20"
               />
             </div>
