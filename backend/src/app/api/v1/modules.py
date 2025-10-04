@@ -3,6 +3,7 @@ from typing import List
 from supabase import Client
 
 from src.app.core.database import get_supabase
+from src.app.core.auth import get_current_user
 from src.app.domain.schemas import Module, CreateModuleRequest, UpdateModuleProgressRequest, UserModulesResponse
 
 router = APIRouter()
@@ -31,7 +32,11 @@ async def get_module(module_id: int, db: Client = Depends(get_supabase)):
 
 
 @router.post("", response_model=Module, status_code=201)
-async def create_module(request: CreateModuleRequest, db: Client = Depends(get_supabase)):
+async def create_module(
+    request: CreateModuleRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Client = Depends(get_supabase)
+):
     """Create a new module for a user"""
     # Check if user exists
     user_response = db.table("users").select("user_id").eq("user_id", request.user_id).execute()
@@ -77,6 +82,7 @@ async def create_module(request: CreateModuleRequest, db: Client = Depends(get_s
 async def update_module_progress(
     module_id: int,
     request: UpdateModuleProgressRequest,
+    current_user: dict = Depends(get_current_user),
     db: Client = Depends(get_supabase)
 ):
     """Update module progress"""
@@ -102,7 +108,12 @@ async def update_module_progress(
 
 
 @router.delete("/{module_id}/{user_id}", status_code=204)
-async def delete_module(module_id: int, user_id: str, db: Client = Depends(get_supabase)):
+async def delete_module(
+    module_id: int,
+    user_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Client = Depends(get_supabase)
+):
     """Delete a specific user's module"""
     # Check if module exists for this specific user
     module_response = db.table("user_modules").select("*").eq(
