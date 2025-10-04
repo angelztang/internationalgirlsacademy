@@ -44,7 +44,9 @@ export default function StudentDashboard({
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedDate, setSelectedDate] = useState("");
   const [timeInput, setTimeInput] = useState("");
-  const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
+  const [timeSlotsByDate, setTimeSlotsByDate] = useState<
+    Record<string, string[]>
+  >({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
   const router = useRouter();
   const { user } = useAuth();
@@ -52,10 +54,10 @@ export default function StudentDashboard({
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
 
-  // Fetch user modules 
+  // Fetch user modules
   useEffect(() => {
     if (!userId) return; // Wait for auth to load
-    
+
     const loadModules = async () => {
       try {
         const data = await getUserModules(userId);
@@ -63,12 +65,15 @@ export default function StudentDashboard({
 
         // Calculate average progress from all modules
         if (data.modules.length > 0) {
-          const avgProgress = data.modules.reduce((sum: number, m: any) => sum
-   + m.module_progress, 0) / data.modules.length;
+          const avgProgress =
+            data.modules.reduce(
+              (sum: number, m: any) => sum + m.module_progress,
+              0
+            ) / data.modules.length;
           setModuleProgress(Math.round(avgProgress));
         }
       } catch (error) {
-        console.error('Failed to load modules:', error);
+        console.error("Failed to load modules:", error);
       }
     };
 
@@ -199,7 +204,8 @@ export default function StudentDashboard({
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">
-                  Welcome back, {studentData.name.split(" ")[0]}! 👋
+                  Welcome back,{" "}
+                  {user?.name ? user.name.split(" ")[0] : "Student"}! 👋
                 </h2>
                 <p className="text-white-accent mb-4">
                   You're making great progress in {studentData.program}
@@ -218,7 +224,7 @@ export default function StudentDashboard({
                   </div>
                 </div>
               </div>
-                <Avatar className="w-20 h-20 border-4 border-white/20">
+              <Avatar className="w-20 h-20 border-4 border-white/20">
                 <AvatarFallback className="bg-blue-primary text-white text-2xl">
                   {studentData.name.charAt(0)}
                 </AvatarFallback>
@@ -312,10 +318,7 @@ export default function StudentDashboard({
                           <Badge variant="secondary">{course.progress}%</Badge>
                         </div>
                         <Progress value={course.progress} className="mb-3" />
-                                <Button
-                                  size="sm"
-                                  className="bg-blue-primary"
-                                >
+                        <Button size="sm" className="bg-blue-primary">
                           Continue
                         </Button>
                       </div>
@@ -329,9 +332,9 @@ export default function StudentDashboard({
                   <div className="grid md:grid-cols-3 gap-4">
                     {studentData.achievements.map((achievement) => (
                       <div
-                          key={achievement.id}
-                          className="text-center p-4 bg-white rounded-lg"
-                        >
+                        key={achievement.id}
+                        className="text-center p-4 bg-white rounded-lg"
+                      >
                         <div className="text-4xl mb-2">{achievement.icon}</div>
                         <p className="text-sm mb-1">{achievement.title}</p>
                         <p className="text-xs text-gray-600">
@@ -400,7 +403,6 @@ export default function StudentDashboard({
             </div>
           </TabsContent>
 
-
           {/* Mentor Tab */}
           <TabsContent value="mentor">
             <Card className="p-6">
@@ -408,7 +410,9 @@ export default function StudentDashboard({
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <p className="text-sm text-gray-600 mb-2">Select a date for mentoring sessions</p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Select a date for mentoring sessions
+                  </p>
                   <input
                     type="date"
                     value={selectedDate}
@@ -417,7 +421,9 @@ export default function StudentDashboard({
                   />
 
                   <div className="space-y-2">
-                    <label className="text-sm">Add available time for {selectedDate || '...'}</label>
+                    <label className="text-sm">
+                      Add available time for {selectedDate || "..."}
+                    </label>
                     <div className="flex gap-2">
                       <input
                         type="time"
@@ -427,13 +433,19 @@ export default function StudentDashboard({
                       />
                       <Button
                         onClick={() => {
-                          if (!selectedDate || !timeInput) return alert('Pick a date and time');
+                          if (!selectedDate || !timeInput)
+                            return alert("Pick a date and time");
                           setTimeSlotsByDate((prev) => {
                             const next = { ...prev };
-                            next[selectedDate] = Array.from(new Set([...(next[selectedDate] || []), timeInput]));
+                            next[selectedDate] = Array.from(
+                              new Set([
+                                ...(next[selectedDate] || []),
+                                timeInput,
+                              ])
+                            );
                             return next;
                           });
-                          setTimeInput('');
+                          setTimeInput("");
                         }}
                         className="bg-blue-primary"
                       >
@@ -445,26 +457,45 @@ export default function StudentDashboard({
                   <div className="mt-4">
                     <h4 className="text-sm mb-2">Your availability</h4>
                     {Object.keys(timeSlotsByDate).length === 0 ? (
-                      <p className="text-xs text-gray-500">No times added yet</p>
+                      <p className="text-xs text-gray-500">
+                        No times added yet
+                      </p>
                     ) : (
                       <div className="space-y-2">
-                        {Object.entries(timeSlotsByDate).map(([date, slots]) => (
-                          <div key={date} className="p-2 border rounded">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="text-sm font-medium">{date}</div>
-                              <div>
-                                <Button size="sm" variant="ghost" onClick={() => { const next = { ...timeSlotsByDate }; delete next[date]; setTimeSlotsByDate(next); }}>Remove</Button>
+                        {Object.entries(timeSlotsByDate).map(
+                          ([date, slots]) => (
+                            <div key={date} className="p-2 border rounded">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="text-sm font-medium">
+                                  {date}
+                                </div>
+                                <div>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                      const next = { ...timeSlotsByDate };
+                                      delete next[date];
+                                      setTimeSlotsByDate(next);
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {slots.map((t) => (
+                                  <div
+                                    key={t}
+                                    className="px-3 py-1 bg-white border rounded text-sm"
+                                  >
+                                    {t}
+                                  </div>
+                                ))}
                               </div>
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                              {slots.map((t) => (
-                                <div key={t} className="px-3 py-1 bg-white border rounded text-sm">
-                                  {t}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
                     )}
                   </div>
@@ -475,23 +506,46 @@ export default function StudentDashboard({
                       onClick={() => {
                         // Simple mock matching algorithm: choose a static pool and pick a user who shares any slot
                         const pool = [
-                          { id: 'u200', name: 'Alex Kim', available: { [selectedDate]: ['09:00', '14:00'] } },
-                          { id: 'u201', name: 'Priya Singh', available: { [selectedDate]: ['10:00', '15:00'] } },
-                          { id: 'u202', name: 'Luis Ramirez', available: { [selectedDate]: ['11:00'] } },
+                          {
+                            id: "u200",
+                            name: "Alex Kim",
+                            available: { [selectedDate]: ["09:00", "14:00"] },
+                          },
+                          {
+                            id: "u201",
+                            name: "Priya Singh",
+                            available: { [selectedDate]: ["10:00", "15:00"] },
+                          },
+                          {
+                            id: "u202",
+                            name: "Luis Ramirez",
+                            available: { [selectedDate]: ["11:00"] },
+                          },
                         ];
 
                         const mySlots = timeSlotsByDate[selectedDate] || [];
                         let found = null;
                         for (const candidate of pool) {
-                          const cSlots = candidate.available[selectedDate] || [];
+                          const cSlots =
+                            candidate.available[selectedDate] || [];
                           if (mySlots.some((s) => cSlots.includes(s))) {
-                            found = { ...candidate, matchedAt: mySlots.find((s) => cSlots.includes(s)) };
+                            found = {
+                              ...candidate,
+                              matchedAt: mySlots.find((s) =>
+                                cSlots.includes(s)
+                              ),
+                            };
                             break;
                           }
                         }
 
                         if (found) setMatchedUser(found);
-                        else setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
+                        else
+                          setMatchedUser({
+                            id: "none",
+                            name: "No match found",
+                            matchedAt: null,
+                          });
                       }}
                     >
                       Pair me!
@@ -502,33 +556,44 @@ export default function StudentDashboard({
                 <div>
                   <h4 className="text-sm mb-2">Matched mentor</h4>
                   {matchedUser ? (
-                    matchedUser.id === 'none' ? (
-                      <Card className="p-4">No matches found for those times — try other slots.</Card>
+                    matchedUser.id === "none" ? (
+                      <Card className="p-4">
+                        No matches found for those times — try other slots.
+                      </Card>
                     ) : (
                       <Card className="p-4">
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarFallback className="bg-blue-primary text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-blue-primary text-white">
+                              {matchedUser.name.charAt(0)}
+                            </AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="font-medium">{matchedUser.name}</div>
-                            <div className="text-xs text-gray-600">Matched at {matchedUser.matchedAt} on {selectedDate}</div>
+                            <div className="font-medium">
+                              {matchedUser.name}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              Matched at {matchedUser.matchedAt} on{" "}
+                              {selectedDate}
+                            </div>
                           </div>
                         </div>
                         <div className="mt-3">
-                          <Button className="bg-blue-primary">Message Mentor</Button>
+                          <Button className="bg-blue-primary">
+                            Message Mentor
+                          </Button>
                         </div>
                       </Card>
                     )
                   ) : (
-                    <p className="text-xs text-gray-500">Pairing results will show here.</p>
+                    <p className="text-xs text-gray-500">
+                      Pairing results will show here.
+                    </p>
                   )}
                 </div>
               </div>
             </Card>
           </TabsContent>
-
-          
         </Tabs>
       </div>
     </div>

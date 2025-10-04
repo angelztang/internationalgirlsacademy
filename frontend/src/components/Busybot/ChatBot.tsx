@@ -16,8 +16,10 @@ export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]); // start empty
   const [inputValue, setInputValue] = useState("");
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
@@ -30,16 +32,41 @@ export function ChatBot() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
 
-    // Minimal bot response (optional)
-    setTimeout(() => {
-      const botResponse: Message = {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/chatbot/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputValue,
+          history: messages.map((m) => ({
+            role: m.sender === "user" ? "user" : "assistant",
+            content: m.text,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      const botMessage: Message = {
         id: messages.length + 2,
-        text: "…", // or just leave empty or echo input
+        text: data.response,
         sender: "bot",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, botResponse]);
-    }, 500);
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (err) {
+      console.error("Error calling chat API:", err);
+      const errorMessage: Message = {
+        id: messages.length + 2,
+        text: "Sorry, something went wrong!",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
   };
 
   return (
