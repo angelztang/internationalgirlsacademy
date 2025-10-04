@@ -170,9 +170,9 @@ export default function StudentDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="bg-white border-b-4 border-[#f7a1c0] sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
@@ -200,7 +200,7 @@ export default function StudentDashboard({
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-blue-primary text-white p-8">
+          <Card className="bg-gradient-to-r from-[#4455f0] to-[#f7a1c0] text-white p-8 shadow-xl border-0">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">
@@ -257,7 +257,7 @@ export default function StudentDashboard({
               <div className="lg:col-span-2 space-y-6">
                 {/* Stats Cards */}
                 <div className="grid md:grid-cols-4 gap-4">
-                  <Card className="p-4">
+                  <Card className="p-4 bg-white border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       <Clock className="w-5 h-5 text-purple-600" />
                       <TrendingUp className="w-4 h-4 text-green-500" />
@@ -267,7 +267,7 @@ export default function StudentDashboard({
                     </p>
                     <p className="text-xs text-gray-600">Hours Learned</p>
                   </Card>
-                  <Card className="p-4">
+                  <Card className="p-4 bg-white border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       <Video className="w-5 h-5 text-pink-600" />
                       <TrendingUp className="w-4 h-4 text-green-500" />
@@ -277,7 +277,7 @@ export default function StudentDashboard({
                     </p>
                     <p className="text-xs text-gray-600">Sessions</p>
                   </Card>
-                  <Card className="p-4">
+                  <Card className="p-4 bg-white border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       <Award className="w-5 h-5 text-blue-600" />
                       <TrendingUp className="w-4 h-4 text-green-500" />
@@ -287,7 +287,7 @@ export default function StudentDashboard({
                     </p>
                     <p className="text-xs text-gray-600">Projects Done</p>
                   </Card>
-                  <Card className="p-4">
+                  <Card className="p-4 bg-white border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       <MessageCircle className="w-5 h-5 text-orange-600" />
                       <TrendingUp className="w-4 h-4 text-green-500" />
@@ -300,7 +300,7 @@ export default function StudentDashboard({
                 </div>
 
                 {/* Current Courses */}
-                <Card className="p-6">
+                <Card className="p-6 bg-white">
                   <h3 className="text-xl mb-4">Continue Learning</h3>
                   <div className="space-y-4">
                     {studentData.currentCourses.map((course) => (
@@ -327,13 +327,13 @@ export default function StudentDashboard({
                 </Card>
 
                 {/* Achievements */}
-                <Card className="p-6">
+                <Card className="p-6 bg-white">
                   <h3 className="text-xl mb-4">Recent Achievements</h3>
                   <div className="grid md:grid-cols-3 gap-4">
                     {studentData.achievements.map((achievement) => (
                       <div
                         key={achievement.id}
-                        className="text-center p-4 bg-white rounded-lg"
+                        className="text-center p-4 bg-[#b4bbf8]/10 rounded-lg border border-[#b4bbf8]/20"
                       >
                         <div className="text-4xl mb-2">{achievement.icon}</div>
                         <p className="text-sm mb-1">{achievement.title}</p>
@@ -349,7 +349,7 @@ export default function StudentDashboard({
               {/* Sidebar */}
               <div className="space-y-6">
                 {/* Upcoming Events */}
-                <Card className="p-6">
+                <Card className="p-6 bg-white">
                   <div className="flex items-center gap-2 mb-4">
                     <Calendar className="w-5 h-5 text-purple-600" />
                     <h3 className="text-lg">Upcoming Events</h3>
@@ -405,7 +405,7 @@ export default function StudentDashboard({
 
           {/* Mentor Tab */}
           <TabsContent value="mentor">
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <h3 className="text-xl mb-4">Mentorship</h3>
 
               <div className="grid md:grid-cols-2 gap-6">
