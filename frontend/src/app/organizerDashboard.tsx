@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -36,6 +36,12 @@ interface OrganizerDashboardProps {
 export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [showDataManagement, setShowDataManagement] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [showEventsManager, setShowEventsManager] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+  const [newEventStart, setNewEventStart] = useState("");
+  const [newEventEnd, setNewEventEnd] = useState("");
 
   // Mock data
   const organizerData = {
@@ -75,6 +81,106 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   if (showDataManagement) {
     const DM: any = DataManagement;
     return <DM onBack={() => setShowDataManagement(false)} />;
+  }
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  async function fetchEvents() {
+    setLoadingEvents(true);
+    try {
+      const res = await fetch("/api/v1/events");
+      if (!res.ok) throw new Error("Failed to load events");
+      const data = await res.json();
+      setEvents(data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingEvents(false);
+    }
+  }
+
+  async function fetchEventDetails(eventId: number) {
+    try {
+      const res = await fetch(`/api/v1/events/${eventId}`);
+      if (!res.ok) throw new Error("Failed to load event");
+      const data = await res.json();
+      setSelectedEvent(data);
+      setShowEventsManager(true);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load event details");
+    }
+  }
+
+  async function createEvent() {
+    if (!newEventStart || !newEventEnd) {
+      alert("Please provide start and end times");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/v1/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ start_time: new Date(newEventStart).toISOString(), end_time: new Date(newEventEnd).toISOString() }),
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || "Failed to create event");
+      }
+      const created = await res.json();
+      setEvents((s) => [created, ...s]);
+      setNewEventStart("");
+      setNewEventEnd("");
+      alert("Event created");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to create event");
+    }
+  }
+
+  async function updateEvent(eventId: number, payload: any) {
+    try {
+      const res = await fetch(`/api/v1/events/${eventId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to update event");
+      const updated = await res.json();
+      setEvents((s) => s.map((e) => (e.event_id === updated.event_id ? updated : e)));
+      alert("Event updated");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update event");
+    }
+  }
+
+  async function deleteEvent(eventId: number) {
+    if (!confirm("Delete this event?")) return;
+    try {
+      const res = await fetch(`/api/v1/events/${eventId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete event");
+      setEvents((s) => s.filter((e) => e.event_id !== eventId));
+      alert("Event deleted");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete event");
+    }
+  }
+
+  async function deleteModule(moduleId: number) {
+    if (!confirm("Delete this module?")) return;
+    try {
+      const res = await fetch(`/api/v1/modules/${moduleId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete module");
+      alert("Module deleted");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete module");
+    }
   }
 
   return (
@@ -233,6 +339,58 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                       </div>
                     ))}
                   </div>
+                </Card>
+
+                {/* Events Manager */}
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl">Events Manager</h3>
+                    <div className="flex items-center gap-2">
+                      <Button onClick={() => setShowEventsManager(!showEventsManager)} size="sm">{showEventsManager ? 'Hide' : 'Manage'}</Button>
+                    </div>
+                  </div>
+
+                  {showEventsManager ? (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm">Start time</label>
+                        <input type="datetime-local" value={newEventStart} onChange={(e) => setNewEventStart(e.target.value)} className="w-full border rounded p-2" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm">End time</label>
+                        <input type="datetime-local" value={newEventEnd} onChange={(e) => setNewEventEnd(e.target.value)} className="w-full border rounded p-2" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button onClick={createEvent} className="bg-blue-primary">Create Event</Button>
+                        <Button variant="ghost" onClick={() => { setNewEventStart(''); setNewEventEnd(''); }}>Reset</Button>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg mb-2">Existing Events</h4>
+                        {loadingEvents ? (
+                          <p>Loading...</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {events.map((ev) => (
+                              <div key={ev.event_id} className="flex items-center justify-between p-2 border rounded">
+                                <div>
+                                  <p className="font-medium">Event {ev.event_id}</p>
+                                  <p className="text-xs text-gray-600">{ev.start_time} → {ev.end_time}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button size="sm" onClick={() => fetchEventDetails(ev.event_id)}>Details</Button>
+                                  <Button size="sm" variant="ghost" onClick={() => updateEvent(ev.event_id, {})}>Edit</Button>
+                                  <Button size="sm" variant="destructive" onClick={() => deleteEvent(ev.event_id)}>Delete</Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-600">Events summary and quick actions live here.</p>
+                  )}
                 </Card>
               </div>
 
