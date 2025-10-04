@@ -6,7 +6,13 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Calendar, Clock, Users, Video, Plus, Play, UserCheck, Mic, MicOff } from 'lucide-react'
-import ZoomMeeting from '@/components/meetings/ZoomMeeting'
+import dynamicImport from 'next/dynamic'
+
+// Import ZoomMeeting dynamically to prevent SSR issues
+const ZoomMeeting = dynamicImport(
+  () => import('@/components/meetings/ZoomMeeting'),
+  { ssr: false }
+)
 
 interface Meeting {
   meeting_id: number
