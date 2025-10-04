@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { LogIn } from "lucide-react";
+import { LogIn, User } from "lucide-react";
 import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +25,7 @@ export default function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
+        isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -37,23 +38,41 @@ export default function Navbar() {
               width={50}
               height={50}
               className="object-contain"
-              style={{ backgroundColor: 'transparent'}}
+              style={{ backgroundColor: "transparent" }}
             />
-            <span className={`font-bold text-xl transition-colors ${
-              isScrolled ? "text-gray-900" : "text-gray-900"
-            }`}>
+            <span
+              className={`font-bold text-xl transition-colors ${
+                isScrolled ? "text-gray-900" : "text-gray-900"
+              }`}
+            >
               International Girls Academy
             </span>
           </div>
 
           {/* Login Button */}
-          <a
-            href="/login"
-            className="flex items-center gap-2 bg-blue-primary text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            <LogIn className="w-5 h-5" />
-            Login
-          </a>
+          {!user ? (
+            <a
+              href="/login"
+              className="flex items-center gap-2 bg-blue-primary text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              <LogIn className="w-5 h-5" />
+              Login
+            </a>
+          ) : (
+            <Link
+              href={
+                user.userType === "student"
+                  ? "/StudentDashboard"
+                  : user.userType === "mentor"
+                  ? "/organizerDashboard"
+                  : "/Profile"
+              }
+              className="flex items-center gap-2 bg-white border px-6 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-gray-100 hover:shadow transition-all duration-300"
+            >
+              <User className="w-5 h-5 text-blue-primary" />
+              Profile
+            </Link>
+          )}
         </div>
       </div>
     </motion.nav>
