@@ -4,19 +4,19 @@ from typing import Optional, List
 
 
 class ScheduleMeetingRequest(BaseModel):
-    user_id: int
+    user_id: str  # Changed to UUID
     duration_minutes: int
 
 
 class AvailabilitySlot(BaseModel):
     availability_id: int
-    user_id: int
+    user_id: str  # Changed to UUID
     time_start: datetime
     time_end: datetime
 
 
 class UserMatch(BaseModel):
-    user_id: int
+    user_id: str  # Changed to UUID
     first_name: str
     last_name: str
     user_type: str
@@ -28,6 +28,66 @@ class ScheduleMeetingResponse(BaseModel):
     matched_user: UserMatch
     scheduled_slot: AvailabilitySlot
     message: str
+
+
+# New meeting schemas for live meetings
+class CreateMeetingRequest(BaseModel):
+    title: str
+    description: Optional[str] = None
+    meeting_type: str  # "live" or "normal"
+    start_time: datetime
+    duration_minutes: int
+    max_participants: Optional[int] = None
+    meeting_password: Optional[str] = None
+
+
+class Meeting(BaseModel):
+    meeting_id: int
+    title: str
+    description: Optional[str] = None
+    meeting_type: str
+    start_time: datetime
+    end_time: datetime
+    max_participants: Optional[int] = None
+    meeting_password: Optional[str] = None
+    zoom_meeting_id: Optional[str] = None
+    zoom_meeting_url: Optional[str] = None
+    created_by: str  # UUID
+    created_at: datetime
+    status: str  # "scheduled", "live", "ended", "cancelled"
+
+
+class MeetingResponse(BaseModel):
+    meeting_id: int
+    title: str
+    description: Optional[str] = None
+    meeting_type: str
+    start_time: datetime
+    end_time: datetime
+    max_participants: Optional[int] = None
+    meeting_password: Optional[str] = None
+    zoom_meeting_id: Optional[str] = None
+    zoom_meeting_url: Optional[str] = None
+    created_by: str
+    created_at: datetime
+    status: str
+    can_join: bool = False
+    user_role: str = "participant"  # "host", "presenter", "participant"
+
+
+class JoinMeetingRequest(BaseModel):
+    meeting_id: int
+    user_name: str
+
+
+class JoinMeetingResponse(BaseModel):
+    meeting_id: int
+    zoom_meeting_id: str
+    zoom_meeting_url: Optional[str] = None
+    meeting_password: Optional[str] = None
+    user_role: str
+    signature: str
+    sdk_key: str
 
 
 # Item schemas

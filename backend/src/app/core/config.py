@@ -40,5 +40,9 @@ class Settings:
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER: str = os.getenv("SMTP_USER", "")
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    
+    # Zoom SDK settings
+    ZOOM_SDK_KEY: str = os.getenv("ZOOM_SDK_KEY", "")
+    ZOOM_SDK_SECRET: str = os.getenv("ZOOM_SDK_SECRET", "")
 
 settings = Settings()
