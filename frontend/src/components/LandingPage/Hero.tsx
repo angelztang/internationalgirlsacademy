@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <header className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 overflow-hidden">
+    <header className="relative flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 overflow-hidden py-20 min-h-[85vh]">
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
