@@ -97,11 +97,13 @@ class Event(BaseModel):
 
 
 class CreateEventRequest(BaseModel):
+    name: str
     start_time: datetime
     end_time: datetime
 
 
 class UpdateEventRequest(BaseModel):
+    name: str
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 
