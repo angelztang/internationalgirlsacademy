@@ -28,9 +28,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+
 interface VolunteerDashboardProps {
-  userData: any;
-  onLogout: () => void;
+  userData?: any;
+  onLogout?: () => void;
 }
 
 export default function VolunteerDashboard({
@@ -38,6 +41,19 @@ export default function VolunteerDashboard({
   onLogout,
 }: VolunteerDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const { user, logout: authLogout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear auth state
+    authLogout();
+
+    // Call optional prop logout handler
+    if (onLogout) onLogout();
+
+    // Redirect to login
+    router.push("/login");
+  };
 
   // Mock data
   const volunteerData = {
@@ -143,7 +159,7 @@ export default function VolunteerDashboard({
               <Button variant="ghost" size="icon">
                 <Settings className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" onClick={onLogout} className="gap-2">
+              <Button variant="ghost" onClick={handleLogout} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Logout
               </Button>
