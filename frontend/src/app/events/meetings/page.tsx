@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -57,11 +59,13 @@ export default function MeetingsPage() {
   }, [user])
 
   const fetchMeetings = async () => {
+    if (!user) return
+
     try {
       const { data: profile } = await supabase
         .from('users')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .single()
 
       if (!profile) return
