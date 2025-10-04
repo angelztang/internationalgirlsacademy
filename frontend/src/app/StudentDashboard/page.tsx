@@ -57,6 +57,8 @@ export default function StudentDashboard({
   const [events, setEvents] = useState<any[]>([]);
   const [registeredEvents, setRegisteredEvents] = useState<Set<number>>(new Set());
   const [loadingEvents, setLoadingEvents] = useState(false);
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
   // Fetch user modules
   useEffect(() => {
@@ -446,65 +448,138 @@ export default function StudentDashboard({
                   ) : events.length === 0 ? (
                     <p className="text-sm text-gray-600">No upcoming events</p>
                   ) : (
-                    <div className="space-y-4">
-                      {events.map((event) => {
-                        const isRegistered = registeredEvents.has(event.event_id);
-                        const eventDate = new Date(event.start_time);
+                    <>
+                      <div className="space-y-3">
+                        {(showAllEvents ? events : events.slice(0, 3)).map((event) => {
+                          const isRegistered = registeredEvents.has(event.event_id);
+                          const eventDate = new Date(event.start_time);
 
-                        return (
-                          <div
-                            key={event.event_id}
-                            className="pb-3 border-b border-gray-200 last:border-0 last:pb-0"
-                          >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex-1">
-                                <p className="text-sm font-medium mb-1">
-                                  {event.name || `Event #${event.event_id}`}
-                                </p>
-                                <p className="text-xs text-gray-600">
-                                  {eventDate.toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                  })}
-                                </p>
-                                <p className="text-xs text-purple-600">
-                                  {eventDate.toLocaleTimeString('en-US', {
-                                    hour: 'numeric',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
+                          return (
+                            <div
+                              key={event.event_id}
+                              className="pb-3 border-b border-gray-200 last:border-0 last:pb-0"
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium mb-1">
+                                    {event.name || `Event #${event.event_id}`}
+                                  </p>
+                                  <p className="text-xs text-gray-600">
+                                    {eventDate.toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </p>
+                                  <p className="text-xs text-purple-600">
+                                    {eventDate.toLocaleTimeString('en-US', {
+                                      hour: 'numeric',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                                {isRegistered && (
+                                  <Badge className="bg-green-100 text-green-700 text-xs">
+                                    Registered
+                                  </Badge>
+                                )}
                               </div>
-                              {isRegistered ? (
-                                <Badge className="bg-green-100 text-green-700 text-xs">
-                                  Registered
-                                </Badge>
-                              ) : null}
-                            </div>
-                            {isRegistered ? (
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="w-full text-red-600 hover:text-red-700"
-                                onClick={() => handleUnregisterEvent(event.event_id)}
+                                className="w-full"
+                                onClick={() => setSelectedEvent(event)}
                               >
-                                Cancel Registration
+                                Learn More
                               </Button>
-                            ) : (
-                              <Button
-                                size="sm"
-                                className="w-full bg-blue-primary"
-                                onClick={() => handleRegisterEvent(event.event_id)}
-                              >
-                                Register
-                              </Button>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {events.length > 3 && (
+                        <Button
+                          variant="ghost"
+                          className="w-full mt-4"
+                          onClick={() => setShowAllEvents(!showAllEvents)}
+                        >
+                          {showAllEvents ? 'Show Less' : `View All (${events.length})`}
+                        </Button>
+                      )}
+                    </>
                   )}
                 </Card>
+
+                {/* Event Details Modal */}
+                {selectedEvent && (
+                  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
+                    <Card className="max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="text-xl font-semibold mb-1">
+                            {selectedEvent.name || `Event #${selectedEvent.event_id}`}
+                          </h3>
+                          {registeredEvents.has(selectedEvent.event_id) && (
+                            <Badge className="bg-green-100 text-green-700">
+                              You're Registered
+                            </Badge>
+                          )}
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setSelectedEvent(null)}>
+                          ✕
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <span>
+                            {new Date(selectedEvent.start_time).toLocaleDateString('en-US', {
+                              weekday: 'long',
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="w-4 h-4 text-gray-500" />
+                          <span>
+                            {new Date(selectedEvent.start_time).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })} - {new Date(selectedEvent.end_time).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {registeredEvents.has(selectedEvent.event_id) ? (
+                        <Button
+                          variant="outline"
+                          className="w-full text-red-600 hover:text-red-700"
+                          onClick={() => {
+                            handleUnregisterEvent(selectedEvent.event_id);
+                            setSelectedEvent(null);
+                          }}
+                        >
+                          Cancel Registration
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full bg-blue-primary"
+                          onClick={() => {
+                            handleRegisterEvent(selectedEvent.event_id);
+                            setSelectedEvent(null);
+                          }}
+                        >
+                          Register for Event
+                        </Button>
+                      )}
+                    </Card>
+                  </div>
+                )}
 
                 {/* Mentor Card */}
                 <Card className="p-6 bg-white">
