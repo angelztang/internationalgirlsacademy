@@ -31,7 +31,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-lavender">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <Hero />
       <GlobeSection />
@@ -47,7 +47,7 @@ export default function Home() {
       <TrustIndicators />
       <LiveStream />
       {/* Interactive Features (Alumni, Events) */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[#b4bbf8]/10">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Alumni + Mentorship Preview */}
@@ -222,7 +222,7 @@ export default function Home() {
       {/* Filtered Q&A Form (copied from InteractiveFeatures) */}
       <section className="py-20 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
-          <Card className="mt-8 p-8 bg-white">
+          <Card className="mt-8 p-8 bg-[#f7a1c0]/5 border border-gray-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-pink rounded-full flex items-center justify-center">
                 <MessageSquare className="w-6 h-6 text-white" />
