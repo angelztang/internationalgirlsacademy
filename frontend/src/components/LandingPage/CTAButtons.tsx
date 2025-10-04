@@ -1,13 +1,15 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/lib/ui/button";
 import { GraduationCap, Heart, HandHeart } from "lucide-react";
 
 interface CTAButtonsProps {
-  onSelectPath: (path: 'student' | 'volunteer' | 'donate') => void;
+  onSelectPath?: (path: 'student' | 'volunteer' | 'donate') => void;
 }
 
 export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
+  const router = useRouter();
   return (
     <section className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-6xl">
@@ -23,7 +25,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Student Button */}
           <button
-            onClick={() => onSelectPath('student')}
+            onClick={() => onSelectPath?('student')}
             className="group relative bg-gradient-to-br from-purple-500 to-purple-700 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
@@ -46,7 +48,7 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
 
           {/* Volunteer Button */}
           <button
-            onClick={() => onSelectPath('volunteer')}
+            onClick={() => onSelectPath?('volunteer')}
             className="group relative bg-gradient-to-br from-pink-500 to-rose-700 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
@@ -69,7 +71,12 @@ export function CTAButtons({ onSelectPath }: CTAButtonsProps) {
 
           {/* Donate Button */}
           <button
-            onClick={() => onSelectPath('donate')}
+            onClick={() => {
+              if (onSelectPath) {
+                onSelectPath('donate');
+              }
+              router.push('/donations');
+            }}
             className="group relative bg-gradient-to-br from-blue-500 to-indigo-700 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white overflow-hidden"
           >
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>

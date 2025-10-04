@@ -16,13 +16,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from pink-50 to-pink-100">
       <Navbar />
       <Hero />
-      <CTAButtons
-        onSelectPath={function (
-          path: "student" | "volunteer" | "donate"
-        ): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+      <CTAButtons />
       <Programs />
       <TrustIndicators />
       <LiveStream />
