@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import dynamic from 'next/dynamic';
+import { getUserModules } from '../lib/api/modules';
 
 const DataManagement = dynamic(
   () => import('./DataManagement').then((mod) => mod.DataManagement),
@@ -42,6 +43,9 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [newEventStart, setNewEventStart] = useState("");
   const [newEventEnd, setNewEventEnd] = useState("");
+  const [modules, setModules] = useState<any[]>([]);
+  const [loadingModules, setLoadingModules] = useState(false);
+  const [showModulesManager, setShowModulesManager] = useState(false);
 
   // Mock data
   const organizerData = {
@@ -85,7 +89,35 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
 
   useEffect(() => {
     fetchEvents();
+    fetchModules();
   }, []);
+
+  async function fetchModules() {
+    setLoadingModules(true);
+    try {
+      // Fetch all user modules by getting all users first
+      const usersRes = await fetch("/api/v1/users");
+      if (!usersRes.ok) throw new Error("Failed to load users");
+      const users = await usersRes.json();
+
+      // Fetch modules for each user
+      const allModules: any[] = [];
+      for (const user of users) {
+        try {
+          const data = await getUserModules(user.user_id);
+          allModules.push(...data.modules);
+        } catch (err) {
+          console.error(`Failed to load modules for user ${user.user_id}:`, err);
+        }
+      }
+
+      setModules(allModules);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingModules(false);
+    }
+  }
 
   async function fetchEvents() {
     setLoadingEvents(true);
@@ -176,6 +208,7 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     try {
       const res = await fetch(`/api/v1/modules/${moduleId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete module");
+      setModules((s) => s.filter((m) => m.module_id !== moduleId));
       alert("Module deleted");
     } catch (err) {
       console.error(err);
@@ -390,6 +423,46 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                     </div>
                   ) : (
                     <p className="text-sm text-gray-600">Events summary and quick actions live here.</p>
+                  )}
+                </Card>
+
+                {/* Modules Manager */}
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl">Modules Manager</h3>
+                    <div className="flex items-center gap-2">
+                      <Button onClick={() => setShowModulesManager(!showModulesManager)} size="sm">{showModulesManager ? 'Hide' : 'Manage'}</Button>
+                    </div>
+                  </div>
+
+                  {showModulesManager ? (
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-lg mb-2">All User Modules</h4>
+                        {loadingModules ? (
+                          <p>Loading...</p>
+                        ) : modules.length === 0 ? (
+                          <p className="text-sm text-gray-600">No modules found</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {modules.map((mod) => (
+                              <div key={mod.module_id} className="flex items-center justify-between p-3 border rounded">
+                                <div>
+                                  <p className="font-medium">Module #{mod.module_id}</p>
+                                  <p className="text-xs text-gray-600">User: {mod.user_id}</p>
+                                  <p className="text-xs text-gray-600">Progress: {mod.progress}%</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button size="sm" variant="destructive" onClick={() => deleteModule(mod.module_id)}>Delete</Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-600">View and manage all user modules here.</p>
                   )}
                 </Card>
               </div>
