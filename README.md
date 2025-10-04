@@ -96,6 +96,59 @@ Teaser: "Complete these modules to unlock programs"
 
 ## Backend API Routes → Frontend Integration
 
+<<<<<<< HEAD
+### User Management (Authentication via Supabase)
+- ✅ `POST /api/v1/users/register` → Supabase Auth in `frontend/src/app/signup.tsx`
+- ✅ `POST /api/v1/users/login` → Supabase Auth in `frontend/src/app/login.tsx`
+- ✅ `GET /api/v1/users/me` → Auth context and profile fetching
+
+### Shop/Items System
+- ✅ `GET /api/v1/items` → Shop component (`frontend/src/components/Shop/Shop.tsx`)
+- ✅ `GET /api/v1/items/{item_id}` → Shop API utility (`frontend/src/lib/api/shop.ts`)
+- `POST /api/v1/items`
+
+### User Items (Inventory)
+- ✅ `GET /api/v1/users/{user_id}/items` → Shop component (`frontend/src/components/Shop/Shop.tsx`)
+- ✅ `POST /api/v1/users/{user_id}/items/purchase` → Shop component
+- ✅ `PUT /api/v1/users/{user_id}/items/{item_id}/equip` → Shop API utility
+
+### Modules (Learning Progress)
+- ✅ `GET /api/v1/modules/user/{user_id}` → Student Dashboard & PathwayMap
+- ✅ `GET /api/v1/modules/{module_id}` → Modules API utility (`frontend/src/lib/api/modules.ts`)
+- ✅ `POST /api/v1/modules` → Modules API utility
+- ✅ `PUT /api/v1/modules/{module_id}` → PathwayMap (`frontend/src/app/PathwayMap/page.tsx`)
+- ✅ `DELETE /api/v1/modules/{module_id}` → Organizer dashboard 
+
+### Meetings (Zoom Integration)
+- ✅ `GET /api/v1/meetings` → Meetings page (`frontend/src/app/events/meetings/page.tsx`)
+- ✅ `GET /api/v1/meetings/{meeting_id}` → Meetings page
+- ✅ `POST /api/v1/meetings/create` → Meetings page
+- ✅ `POST /api/v1/meetings/{meeting_id}/join` → ZoomMeeting component (`frontend/src/components/meetings/ZoomMeeting.tsx`)
+- ✅ `PUT /api/v1/meetings/{meeting_id}/status` → Meetings API
+- `POST /api/v1/meetings/schedule`
+
+### Events Management
+- ✅ `GET /api/v1/events` → Organizer Dashboard (`frontend/src/app/organizerDashboard.tsx`)
+- ✅ `GET /api/v1/events/{event_id}` → Organizer Dashboard
+- ✅ `POST /api/v1/events` → Organizer Dashboard
+- ✅ `PUT /api/v1/events/{event_id}` → Organizer Dashboard
+- ✅ `DELETE /api/v1/events/{event_id}` → Organizer Dashboard
+
+### Event Registration
+- `GET /api/v1/users/{user_id}/events`
+- `POST /api/v1/users/events/{event_id}/register`
+- `DELETE /api/v1/users/events/{event_id}/register/{user_id}`
+- `GET /api/v1/users/events/{event_id}/registrations`
+
+### Chatbot
+- `POST /api/v1/chatbot/chat`
+
+### Zoom
+- `GET /api/v1/zoom/get_signature`
+
+### Not Implemented in Backend
+- Donations API (frontend page exists at `frontend/src/app/donations/page.tsx` but no backend routes)
+=======
 ### User Management
 
 - ✅ `POST /api/v1/users/register` → Login/Signup
@@ -179,3 +232,4 @@ frontend/src/app/organizerDashboard/page.tsx`)
 - Donations page
   (`frontend/src/app/donations/page.tsx`) → No
   backend API routes yet (currently static page)
+>>>>>>> main

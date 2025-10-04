@@ -13,7 +13,7 @@ import { ChatBot } from "@/components/Busybot/ChatBot";
 import { useSearchParams } from "next/navigation";
 import { CommentThread } from "@/components/CommentThread/CommentThread";
 import Header from "@/components/PathwayMap/Header";
-import { getUserModules, updateModuleProgress } from "@/lib/api/modules";
+import { getUserModules, updateModuleProgress, createModule } from "@/lib/api/modules";
 import { useAuth } from "@/context/AuthContext";
 
 interface PathStep {
@@ -217,7 +217,7 @@ export default function PathwayMap({
   const router = useRouter();
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
-  const [userModules, setUserModules] = useState<any[]>([]);
+  const [userModules, setUserModules] = useState<Array<{module_id: number; user_id: string; progress: number}>>([]);
   const [isLoadingModules, setIsLoadingModules] = useState(false);
 
   // Calculate student points
@@ -276,10 +276,13 @@ export default function PathwayMap({
       if (existingModule) {
         await updateModuleProgress(existingModule.module_id, newProgress);
       }
-      // If no module exists, we'd need to create one (POST /modules)
-      // but for now we'll just log it
-      else {
-        console.log('No module found for user, progress not saved');
+      // If no module exists, create one
+      else if (userId) {
+        const newModule = await createModule({
+          user_id: userId,
+          progress: newProgress
+        });
+        setUserModules([...userModules, newModule]);
       }
     } catch (error) {
       console.error('Failed to update module progress:', error);

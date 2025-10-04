@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
+from typing import List
 from supabase import Client
 
-from src.app.core.database import get_supabase
-from src.app.domain.schemas import (
+from app.core.database import get_supabase
+from app.domain.schemas import (
     UserRegisterRequest,
     UserLoginRequest,
     AuthResponse,
@@ -10,6 +11,25 @@ from src.app.domain.schemas import (
 )
 
 router = APIRouter()
+
+@router.get("", response_model=List[UserProfileResponse])
+async def get_all_users(db: Client = Depends(get_supabase)):
+    """Get all users (for organizer dashboard)"""
+    response = db.table("users").select("*").execute()
+
+    users = []
+    for user_data in response.data:
+        users.append(UserProfileResponse(
+            user_id=user_data["user_id"],
+            email=user_data["email"],
+            first_name=user_data["first_name"],
+            last_name=user_data["last_name"],
+            user_type=user_data["user_type"],
+            gender=user_data.get("gender"),
+            experience_points=int(user_data.get("experience_points", 0))
+        ))
+
+    return users
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
 async def register_user(
