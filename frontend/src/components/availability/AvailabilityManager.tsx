@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "../../ui/card";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
-import { Badge } from "../../ui/badge";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Badge } from "../../components/ui/badge";
+// ...existing code...
 import { Calendar, Clock, Plus, Edit2, Trash2, Save, X } from "lucide-react";
 import { 
   getUserAvailability, 

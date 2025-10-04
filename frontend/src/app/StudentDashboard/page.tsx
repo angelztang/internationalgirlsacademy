@@ -31,6 +31,8 @@ import {
 } from "lucide-react";
 import { getUserModules } from "@/lib/api/modules";
 import AvailabilityManager from "@/components/availability/AvailabilityManager";
+import { createAvailability } from "@/lib/api/availability";
+import { scheduleMeeting } from "@/lib/api/meetings";
 
 interface StudentDashboardProps {
   userData: any;
@@ -46,9 +48,74 @@ export default function StudentDashboard({
   const [timeInput, setTimeInput] = useState("");
   const [timeSlotsByDate, setTimeSlotsByDate] = useState<Record<string, string[]>>({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
+  const [isMatching, setIsMatching] = useState(false);
+  const [matchingError, setMatchingError] = useState<string | null>(null);
   const router = useRouter();
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
+
+  // Function to save availability and find mentor matches
+  const handlePairMe = async () => {
+    if (!userId || !selectedDate || Object.keys(timeSlotsByDate).length === 0) {
+      setMatchingError("Please add your availability first");
+      return;
+    }
+
+    setIsMatching(true);
+    setMatchingError(null);
+    setMatchedUser(null);
+
+    try {
+      // Save each time slot to the database
+      const slotsForSelectedDate = timeSlotsByDate[selectedDate] || [];
+      
+      for (const timeSlot of slotsForSelectedDate) {
+        // Create datetime strings for the availability
+        const timeStart = `${selectedDate}T${timeSlot}:00`;
+        // Assume 1-hour slots (you can make this configurable)
+        const endTime = new Date(new Date(timeStart).getTime() + 60 * 60 * 1000);
+        const timeEnd = endTime.toISOString().slice(0, 19);
+
+        try {
+          await createAvailability(userId, {
+            time_start: timeStart,
+            time_end: timeEnd
+          });
+        } catch (error) {
+          // If availability already exists, that's okay - continue
+          console.log(`Availability for ${timeStart} may already exist:`, error);
+        }
+      }
+
+      // Now try to schedule a meeting with available mentors
+      // Default to 60-minute sessions
+      const meetingResponse = await scheduleMeeting({
+        user_id: userId,
+        duration_minutes: 60
+      });
+
+      // Set the matched user from the real API response
+      setMatchedUser({
+        id: meetingResponse.matched_user.user_id,
+        name: `${meetingResponse.matched_user.first_name} ${meetingResponse.matched_user.last_name}`,
+        userType: meetingResponse.matched_user.user_type,
+        experiencePoints: meetingResponse.matched_user.experience_points,
+        matchedAt: new Date(meetingResponse.scheduled_slot.time_start).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        scheduledSlot: meetingResponse.scheduled_slot
+      });
+
+    } catch (error) {
+      console.error("Error during pairing:", error);
+      setMatchingError(error instanceof Error ? error.message : "Failed to find mentor matches");
+      setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
+    } finally {
+      setIsMatching(false);
+    }
+  };
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
 
@@ -403,7 +470,19 @@ export default function StudentDashboard({
           {/* Mentor Tab */}
           <TabsContent value="mentor">
             <Card className="p-6">
-              <h3 className="text-xl mb-4">Mentorship</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl">Mentorship Matching</h3>
+                <Badge variant="secondary" className="text-xs">
+                  Real-time matching
+                </Badge>
+              </div>
+              
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-sm text-blue-800">
+                  💡 <strong>How it works:</strong> Add your available times, then click "Pair me!" to find mentors 
+                  who match your schedule. Your availability will be saved to help with future matching.
+                </p>
+              </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -469,31 +548,17 @@ export default function StudentDashboard({
                   </div>
 
                   <div className="mt-4">
+                    {matchingError && (
+                      <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+                        {matchingError}
+                      </div>
+                    )}
                     <Button
                       className="bg-pink"
-                      onClick={() => {
-                        // Simple mock matching algorithm: choose a static pool and pick a user who shares any slot
-                        const pool = [
-                          { id: 'u200', name: 'Alex Kim', available: { [selectedDate]: ['09:00', '14:00'] } },
-                          { id: 'u201', name: 'Priya Singh', available: { [selectedDate]: ['10:00', '15:00'] } },
-                          { id: 'u202', name: 'Luis Ramirez', available: { [selectedDate]: ['11:00'] } },
-                        ];
-
-                        const mySlots = timeSlotsByDate[selectedDate] || [];
-                        let found = null;
-                        for (const candidate of pool) {
-                          const cSlots = candidate.available[selectedDate] || [];
-                          if (mySlots.some((s) => cSlots.includes(s))) {
-                            found = { ...candidate, matchedAt: mySlots.find((s) => cSlots.includes(s)) };
-                            break;
-                          }
-                        }
-
-                        if (found) setMatchedUser(found);
-                        else setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
-                      }}
+                      onClick={handlePairMe}
+                      disabled={isMatching || !selectedDate || Object.keys(timeSlotsByDate).length === 0}
                     >
-                      Pair me!
+                      {isMatching ? "Finding mentors..." : "Pair me!"}
                     </Button>
                   </div>
                 </div>
@@ -502,25 +567,54 @@ export default function StudentDashboard({
                   <h4 className="text-sm mb-2">Matched mentor</h4>
                   {matchedUser ? (
                     matchedUser.id === 'none' ? (
-                      <Card className="p-4">No matches found for those times — try other slots.</Card>
-                    ) : (
                       <Card className="p-4">
+                        <div className="text-center text-gray-600">
+                          <Clock className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm mb-1">No mentors available</p>
+                          <p className="text-xs">Try different times or check back later.</p>
+                        </div>
+                      </Card>
+                    ) : (
+                      <Card className="p-4 bg-green-50 border-green-200">
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarFallback className="bg-blue-primary text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-green-600 text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
                           </Avatar>
-                          <div>
+                          <div className="flex-1">
                             <div className="font-medium">{matchedUser.name}</div>
-                            <div className="text-xs text-gray-600">Matched at {matchedUser.matchedAt} on {selectedDate}</div>
+                            <div className="text-xs text-gray-600 mb-1">
+                              {matchedUser.userType === 'mentor' ? 'Mentor' : matchedUser.userType}
+                              {matchedUser.experiencePoints && ` • ${matchedUser.experiencePoints} XP`}
+                            </div>
+                            <div className="text-xs text-green-700">
+                              📅 Scheduled for {matchedUser.matchedAt}
+                              {matchedUser.scheduledSlot && (
+                                <span className="block">
+                                  {new Date(matchedUser.scheduledSlot.time_start).toLocaleDateString()}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="mt-3">
-                          <Button className="bg-blue-primary">Message Mentor</Button>
+                        <div className="mt-3 flex gap-2">
+                          <Button className="bg-blue-primary flex-1">
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            Message Mentor
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            Add to Calendar
+                          </Button>
                         </div>
                       </Card>
                     )
                   ) : (
-                    <p className="text-xs text-gray-500">Pairing results will show here.</p>
+                    <Card className="p-4">
+                      <div className="text-center text-gray-500">
+                        <Users className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                        <p className="text-xs">Add your availability and click "Pair me!" to find mentors.</p>
+                      </div>
+                    </Card>
                   )}
                 </div>
               </div>
