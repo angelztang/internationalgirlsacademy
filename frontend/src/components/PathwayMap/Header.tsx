@@ -1,6 +1,13 @@
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { ArrowLeft, ShoppingBag, Star, Target, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  Link,
+  ShoppingBag,
+  Star,
+  Target,
+  Trophy,
+} from "lucide-react";
 import { motion } from "motion/react";
 import ProgressBar from "./ProgressBar";
 
@@ -58,13 +65,11 @@ export default function Header({
     <div className="bg-white shadow-sm sticky top-0 z-50 w-full">
       <div className="flex flex-wrap gap-4 sm:gap-6 items-center px-4 sm:px-10 py-3 sm:py-4 w-full">
         {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="gap-2 flex-shrink-0"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back
-        </Button>
+        <Link href="/home">
+          <Button variant="ghost" className="gap-2 flex-shrink-0">
+            <ArrowLeft className="w-4 h-4" /> Back
+          </Button>
+        </Link>
 
         {/* Progress Bar - takes full width */}
         <div className="flex-1 w-full max-w-full ">
@@ -98,20 +103,16 @@ export default function Header({
         )}
 
         {/* Module Info */}
-        <div className="flex flex-col sm:flex-row sm:gap-4 gap-1 items-start sm:items-center flex-shrink-0">
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Target className="w-5 h-5 text-[#4455f0]" />
-            <span className="text-sm whitespace-nowrap">
-              Module {currentStep + 1} of {totalSteps.length}
-            </span>
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Trophy className="w-5 h-5 text-[#f7a1c0]" />
-            <span className="text-sm whitespace-nowrap">
-              {completedSteps} completed
-            </span>
-          </div>
-        </div>
+        <Button
+          onClick={onShopOpen}
+          className="bg-[#4455f0] gap-2 relative hover:bg-[#3344df] transition-all text-white"
+        >
+          <ShoppingBag className="w-4 h-4" /> Shop
+          <Badge className="bg-white text-[#4455f0] ml-1 border-0">
+            <Star className="w-3 h-3 mr-1" />
+            {studentPoints}
+          </Badge>
+        </Button>
       </div>
     </div>
   );
