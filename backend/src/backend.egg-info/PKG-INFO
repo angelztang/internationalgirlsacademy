@@ -7,3 +7,4 @@ Description-Content-Type: text/markdown
 Requires-Dist: fastapi>=0.118.0
 Requires-Dist: supabase>=2.0.0
 Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: fastapi-mcp>=0.4.0
