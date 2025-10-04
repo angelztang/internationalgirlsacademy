@@ -119,25 +119,25 @@ Teaser: "Complete these modules to unlock programs"
   /page.tsx`) - Schedule mentor sessions
 
   ### Shop/Items System
-  - `GET /api/v1/items` → Shop component
+  - ✅ `GET /api/v1/items` → Shop component
   (`frontend/src/components/Shop/Shop.tsx`) -
   Load available items
-  - `GET /api/v1/items/{item_id}` → Shop
+  -  `GET /api/v1/items/{item_id}` → Shop
   component - Item details
-  - `POST /api/v1/items` → Admin/Organizer
+  -  `POST /api/v1/items` → Admin/Organizer
   Dashboard - Create shop items
 
   ### User Items (Inventory)
-  - `GET /api/v1/users/{user_id}/items` → Shop
+  - ✅ `GET /api/v1/users/{user_id}/items` → Shop
   component - User inventory
-  - `POST /api/v1/users/{user_id}/items/purchase`
+  - ✅`POST /api/v1/users/{user_id}/items/purchase`
    → Shop component - Purchase items
   - `PUT
   /api/v1/users/{user_id}/items/{item_id}/equip`
   → Student Dashboard - Equip/unequip items
 
   ### Modules (Learning Progress)
-  - `GET /api/v1/modules/user/{user_id}` →
+  - ✅`GET /api/v1/modules/user/{user_id}` →
   Student Dashboard - Course/module progress
   - `GET /api/v1/modules/{module_id}` →
   PathwayMap
@@ -145,7 +145,7 @@ Teaser: "Complete these modules to unlock programs"
   Module details
   - `POST /api/v1/modules` → Organizer Dashboard
   - Create learning modules
-  - `PUT /api/v1/modules/{module_id}` →
+  - ✅`PUT /api/v1/modules/{module_id}` →
   PathwayMap - Update module progress
   - `DELETE /api/v1/modules/{module_id}` →
   Organizer Dashboard - Delete modules

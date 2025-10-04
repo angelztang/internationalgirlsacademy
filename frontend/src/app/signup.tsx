@@ -15,6 +15,136 @@ interface SignupProps {
   onSwitchToLogin?: () => void;
 }
 
+// Move SignupForm component outside to prevent re-creation on every render
+function SignupForm({
+  formData,
+  errors,
+  isLoading,
+  currentConfig,
+  onInputChange,
+  onSubmit
+}: {
+  formData: any;
+  errors: Record<string, string>;
+  isLoading: boolean;
+  currentConfig: any;
+  onInputChange: (field: string, value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="firstName">First Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              id="firstName"
+              type="text"
+              value={formData.firstName}
+              onChange={(e) => onInputChange('firstName', e.target.value)}
+              placeholder="John"
+              className="pl-10"
+            />
+          </div>
+          {errors.firstName && <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="lastName">Last Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              id="lastName"
+              type="text"
+              value={formData.lastName}
+              onChange={(e) => onInputChange('lastName', e.target.value)}
+              placeholder="Doe"
+              className="pl-10"
+            />
+          </div>
+          {errors.lastName && <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>}
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="email">Email Address</Label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <Input
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={(e) => onInputChange('email', e.target.value)}
+            placeholder="you@example.com"
+            className="pl-10"
+          />
+        </div>
+        {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+      </div>
+
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <Input
+            id="password"
+            type="password"
+            value={formData.password}
+            onChange={(e) => onInputChange('password', e.target.value)}
+            placeholder="At least 6 characters"
+            className="pl-10"
+          />
+        </div>
+        {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+      </div>
+
+      <div>
+        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <Input
+            id="confirmPassword"
+            type="password"
+            value={formData.confirmPassword}
+            onChange={(e) => onInputChange('confirmPassword', e.target.value)}
+            placeholder="Re-enter password"
+            className="pl-10"
+          />
+        </div>
+        {errors.confirmPassword && <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>}
+      </div>
+
+      <div>
+        <Button
+          type="submit"
+          className={`w-full ${currentConfig.color}`}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Creating account...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <UserPlus className="w-4 h-4" />
+              Sign Up
+            </span>
+          )}
+        </Button>
+      </div>
+
+      {/* Info Notice */}
+      <div className={`${currentConfig.bgColor} p-4 rounded-lg mt-4`}>
+        <p className="text-xs text-gray-700">
+          By signing up, you agree to our Terms of Service and Privacy Policy
+        </p>
+      </div>
+    </form>
+  );
+}
+
 export default function SignupPage({ onBack, onSignupSuccess, onSwitchToLogin }: SignupProps) {
   const [activeTab, setActiveTab] = useState<'student' | 'volunteer'>('student');
   const [formData, setFormData] = useState({
@@ -141,11 +271,25 @@ export default function SignupPage({ onBack, onSignupSuccess, onSwitchToLogin }:
               </TabsList>
 
               <TabsContent value="student">
-                <SignupForm />
+                <SignupForm
+                  formData={formData}
+                  errors={errors}
+                  isLoading={isLoading}
+                  currentConfig={currentConfig}
+                  onInputChange={handleInputChange}
+                  onSubmit={handleSignup}
+                />
               </TabsContent>
 
               <TabsContent value="volunteer">
-                <SignupForm />
+                <SignupForm
+                  formData={formData}
+                  errors={errors}
+                  isLoading={isLoading}
+                  currentConfig={currentConfig}
+                  onInputChange={handleInputChange}
+                  onSubmit={handleSignup}
+                />
               </TabsContent>
             </Tabs>
           </div>
@@ -172,119 +316,4 @@ export default function SignupPage({ onBack, onSignupSuccess, onSwitchToLogin }:
       </div>
     </div>
   );
-
-  function SignupForm() {
-    return (
-      <form onSubmit={handleSignup} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="firstName">First Name</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-              <Input
-                id="firstName"
-                type="text"
-                value={formData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
-                placeholder="John"
-                className="pl-10"
-              />
-            </div>
-            {errors.firstName && <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>}
-          </div>
-
-          <div>
-            <Label htmlFor="lastName">Last Name</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-              <Input
-                id="lastName"
-                type="text"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
-                placeholder="Doe"
-                className="pl-10"
-              />
-            </div>
-            {errors.lastName && <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>}
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="email">Email Address</Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="you@example.com"
-              className="pl-10"
-            />
-          </div>
-          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-        </div>
-
-        <div>
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              placeholder="At least 6 characters"
-              className="pl-10"
-            />
-          </div>
-          {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-        </div>
-
-        <div>
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              placeholder="Re-enter password"
-              className="pl-10"
-            />
-          </div>
-          {errors.confirmPassword && <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>}
-        </div>
-
-        <div>
-          <Button
-            type="submit"
-            className={`w-full ${currentConfig.color}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Creating account...
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <UserPlus className="w-4 h-4" />
-                Sign Up
-              </span>
-            )}
-          </Button>
-        </div>
-
-        {/* Info Notice */}
-        <div className={`${currentConfig.bgColor} p-4 rounded-lg mt-4`}>
-          <p className="text-xs text-gray-700">
-            By signing up, you agree to our Terms of Service and Privacy Policy
-          </p>
-        </div>
-      </form>
-    );
-  }
 }

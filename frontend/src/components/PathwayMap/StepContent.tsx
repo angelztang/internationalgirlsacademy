@@ -125,7 +125,7 @@ export default function StepContent({
           <BusyBotReminder />
         </Card>
       </div>
-      <div>
+      <div className="h-[600px] max-h-[600px]">
         <CommentThread
           pathType={pathType}
           stepNumber={currentStep + 1}
