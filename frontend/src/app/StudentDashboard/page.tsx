@@ -30,6 +30,7 @@ import {
   Star,
 } from "lucide-react";
 import { getUserModules } from "@/lib/api/modules";
+import Link from "next/link";
 
 interface StudentDashboardProps {
   userData: any;
@@ -169,9 +170,11 @@ export default function StudentDashboard({
       <div className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h1 className="text-2xl">IGA Student Portal</h1>
-            </div>
+            <Link href="/">
+              <div className="flex items-center gap-4">
+                <h1 className="text-2xl">IGA Student Portal</h1>
+              </div>
+            </Link>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon">
                 <Bell className="w-5 h-5" />
