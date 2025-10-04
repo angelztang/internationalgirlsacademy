@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/LandingPage/Navbar";
 import Hero from "@/components/LandingPage/Hero";
+import GlobeSection from "@/components/LandingPage/GlobeSection";
 import { CTAButtons } from "@/components/LandingPage/CTAButtons";
 import Programs from "@/components/LandingPage/Programs";
 import TrustIndicators from "@/components/LandingPage/TrustIndicators";
@@ -27,10 +28,13 @@ import Link from "next/link";
 export default function Home() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-lavender">
       <Navbar />
       <Hero />
+      <GlobeSection />
       <CTAButtons
         onSelectPath={(path: "student" | "volunteer" | "donate") => {
           if (path === "student") return router.push("/PathwayMap");
@@ -123,9 +127,64 @@ export default function Home() {
                     Join our youngest learners (ages 5-7) for stories, games,
                     and fun activities!
                   </p>
-                  <Button size="sm" className="w-full">
+                  <Button
+                    size="sm"
+                    className="w-full"
+                    onClick={() => setShowModal(true)}
+                  >
                     Sign Up
                   </Button>
+                  {showModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg relative">
+                        <button
+                          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                          onClick={() => setShowModal(false)}
+                          aria-label="Close"
+                        >
+                          ×
+                        </button>
+                        <h3 className="text-xl font-semibold mb-4">
+                          Sign Up for Weekly Circle Time
+                        </h3>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            setShowModal(false);
+                            // Add your submit logic here
+                          }}
+                          className="space-y-4"
+                        >
+                          <div>
+                            <label className="block text-sm mb-1">
+                              Your Name
+                            </label>
+                            <Input
+                              type="text"
+                              required
+                              placeholder="Enter your name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm mb-1">
+                              Email Address
+                            </label>
+                            <Input
+                              type="email"
+                              required
+                              placeholder="you@example.com"
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            className="w-full bg-[#4455f0] text-white hover:bg-[#3344df]"
+                          >
+                            Submit
+                          </Button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-white rounded-lg p-4 border-l-4 border-[#f7a1c0]">
