@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import meetings
+from app.api.v1 import meetings, items, user_items
 
 api_router = APIRouter()
 
@@ -11,3 +11,5 @@ async def health_check():
 
 # Include v1 routers
 api_router.include_router(meetings.router, prefix="/meetings", tags=["meetings"])
+api_router.include_router(items.router, prefix="/items", tags=["items"])
+api_router.include_router(user_items.router, prefix="/users", tags=["users"])
