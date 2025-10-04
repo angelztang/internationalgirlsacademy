@@ -106,6 +106,82 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
   const currentConfig = tabConfig[activeTab];
   const IconComponent = currentConfig.icon;
 
+  const renderLoginForm = () => {
+    return (
+      <form onSubmit={handleLogin} className="space-y-4">
+        <div>
+          <Label htmlFor="email">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+              }}
+              placeholder="you@example.com"
+              className="pl-10"
+            />
+          </div>
+          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <Label htmlFor="password">Password</Label>
+            <a href="#" className="text-xs text-purple-600 hover:underline">
+              Forgot password?
+            </a>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
+              }}
+              placeholder="Enter your password"
+              className="pl-10"
+            />
+          </div>
+          {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+        </div>
+
+        <div>
+          <Button
+            type="submit"
+            className={`w-full ${currentConfig.color}`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Logging in...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <LogIn className="w-4 h-4" />
+                Log In
+              </span>
+            )}
+          </Button>
+        </div>
+
+        {/* Demo Credentials Notice */}
+        <div className={`${currentConfig.bgColor} p-4 rounded-lg mt-4`}>
+          <p className="text-xs text-gray-700">
+            <strong>Demo Mode:</strong> Use any email/password to explore the {activeTab} dashboard
+          </p>
+        </div>
+      </form>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="container mx-auto max-w-md">
@@ -138,15 +214,15 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
               </TabsList>
 
               <TabsContent value="student">
-                <LoginForm />
+                {renderLoginForm()}
               </TabsContent>
 
               <TabsContent value="volunteer">
-                <LoginForm />
+                {renderLoginForm()}
               </TabsContent>
 
               <TabsContent value="admin">
-                <LoginForm />
+                {renderLoginForm()}
               </TabsContent>
             </Tabs>
           </div>
@@ -173,90 +249,4 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
       </div>
     </div>
   );
-
-  function LoginForm() {
-    return (
-      <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-          <Label htmlFor="email">Email Address</Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onKeyDown={(e) => {
-                console.log('[login] email key', e.key);
-                // prevent Enter in email field from submitting the form
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                }
-              }}
-              onChange={(e) => {
-                console.log('[login] email change', e.target.value);
-                setEmail(e.target.value);
-                if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
-              }}
-              placeholder="you@example.com"
-              className="pl-10"
-            />
-          </div>
-          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-            </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <Label htmlFor="password">Password</Label>
-            <a href="#" className="text-xs text-purple-600 hover:underline">
-              Forgot password?
-            </a>
-          </div>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onKeyDown={(e) => console.log('[login] password key', e.key)}
-              onChange={(e) => {
-                console.log('[login] password change', e.target.value);
-                setPassword(e.target.value);
-                if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
-              }}
-              placeholder="Enter your password"
-              className="pl-10"
-            />
-          </div>
-          {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-  </div>
-
-        <div>
-          <Button
-            type="submit"
-            className={`w-full ${currentConfig.color}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Logging in...
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <LogIn className="w-4 h-4" />
-                Log In
-              </span>
-            )}
-          </Button>
-  </div>
-
-        {/* Demo Credentials Notice */}
-        <div className={`${currentConfig.bgColor} p-4 rounded-lg mt-4`}>
-          <p className="text-xs text-gray-700">
-            <strong>Demo Mode:</strong> Use any email/password to explore the {activeTab} dashboard
-          </p>
-        </div>
-      </form>
-    );
-  }
 }
