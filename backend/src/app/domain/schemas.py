@@ -129,3 +129,34 @@ class EventWithRegistrations(BaseModel):
 class UserEventsResponse(BaseModel):
     user_id: int
     events: List[EventRegistration]
+
+
+# Auth schemas
+class UserRegisterRequest(BaseModel):
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    user_type: str  # student, volunteer, admin
+    gender: Optional[str] = None
+
+
+class UserLoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class UserProfileResponse(BaseModel):
+    user_id: str
+    email: str
+    first_name: str
+    last_name: str
+    user_type: str
+    gender: Optional[str] = None
+    experience_points: float = 0.0
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserProfileResponse
