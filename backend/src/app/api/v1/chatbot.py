@@ -7,10 +7,14 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
-# Initialize OpenAI client
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-)
+# Initialize OpenAI client only if API key is available
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+client = None
+
+if OPENAI_API_KEY:
+    client = OpenAI(api_key=OPENAI_API_KEY)
+else:
+    print("Warning: OPENAI_API_KEY not set - chatbot functionality will be disabled")
 
 # Load MCP config with proper path resolution
 MCP_CONFIG_PATH = Path(__file__).parent.parent.parent / "mcp" / "routes.mcp.json"
@@ -23,6 +27,9 @@ except FileNotFoundError:
 
 def call_openai(prompt: str, history: list = []):
     """Call OpenAI API with MCP context"""
+    if not client:
+        return "Sorry, the chatbot is currently unavailable. Please set the OPENAI_API_KEY environment variable."
+    
     messages = [
         {
             "role": "system",
