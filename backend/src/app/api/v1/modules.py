@@ -101,16 +101,18 @@ async def update_module_progress(
     return Module(**response.data[0])
 
 
-@router.delete("/{module_id}", status_code=204)
-async def delete_module(module_id: int, db: Client = Depends(get_supabase)):
-    """Delete a module"""
-    # Check if module exists in user_modules
-    module_response = db.table("user_modules").select("*").eq("module_id", module_id).execute()
+@router.delete("/{module_id}/{user_id}", status_code=204)
+async def delete_module(module_id: int, user_id: str, db: Client = Depends(get_supabase)):
+    """Delete a specific user's module"""
+    # Check if module exists for this specific user
+    module_response = db.table("user_modules").select("*").eq(
+        "module_id", module_id
+    ).eq("user_id", user_id).execute()
 
     if not module_response.data:
-        raise HTTPException(status_code=404, detail="Module not found")
+        raise HTTPException(status_code=404, detail="Module not found for this user")
 
-    # Delete module from user_modules
-    db.table("user_modules").delete().eq("module_id", module_id).execute()
+    # Delete module from user_modules for this specific user only
+    db.table("user_modules").delete().eq("module_id", module_id).eq("user_id", user_id).execute()
 
     return None

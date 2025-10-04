@@ -81,8 +81,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
   }
 
   // Delete a module
-  export async function deleteModule(moduleId: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`, {
+  export async function deleteModule(moduleId: number, userId: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, {
       method: 'DELETE',
     });
 

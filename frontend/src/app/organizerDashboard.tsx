@@ -81,16 +81,16 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     ],
   };
 
+  useEffect(() => {
+    fetchEvents();
+    fetchModules();
+  }, []);
+
   // Show data management page
   if (showDataManagement) {
     const DM: any = DataManagement;
     return <DM onBack={() => setShowDataManagement(false)} />;
   }
-
-  useEffect(() => {
-    fetchEvents();
-    fetchModules();
-  }, []);
 
   async function fetchModules() {
     setLoadingModules(true);
@@ -209,13 +209,13 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     }
   }
 
-  async function deleteModule(moduleId: number) {
+  async function deleteModule(moduleId: number, userId: string) {
     if (!confirm("Delete this module?")) return;
     try {
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-      const res = await fetch(`${API_BASE_URL}/modules/${moduleId}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE_URL}/modules/${moduleId}/${userId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete module");
-      setModules((s) => s.filter((m) => m.module_id !== moduleId));
+      setModules((s) => s.filter((m) => !(m.module_id === moduleId && m.user_id === userId)));
       alert("Module deleted");
     } catch (err) {
       console.error(err);
@@ -254,7 +254,7 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
         <div className="mb-8">
           <Card className="bg-blue-primary text-white p-8">
             <h2 className="text-3xl mb-2">Welcome, {organizerData.name}! 👋</h2>
-            <p className="text-white-accent mb-6">Here's what's happening across IGA programs</p>
+            <p className="text-white-accent mb-6">Here&apos;s what&apos;s happening across IGA programs</p>
             <div className="grid md:grid-cols-4 gap-4">
               <div className="bg-white/10 rounded-lg p-4">
                 <Users className="w-6 h-6 mb-2" />
@@ -453,14 +453,14 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
                         ) : (
                           <div className="space-y-2">
                             {modules.map((mod) => (
-                              <div key={mod.module_id} className="flex items-center justify-between p-3 border rounded">
+                              <div key={`${mod.module_id}-${mod.user_id}`} className="flex items-center justify-between p-3 border rounded">
                                 <div>
                                   <p className="font-medium">Module #{mod.module_id}</p>
                                   <p className="text-xs text-gray-600">User: {mod.user_id}</p>
                                   <p className="text-xs text-gray-600">Progress: {mod.progress}%</p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <Button size="sm" variant="destructive" onClick={() => deleteModule(mod.module_id)}>Delete</Button>
+                                  <Button size="sm" variant="destructive" onClick={() => deleteModule(mod.module_id, mod.user_id)}>Delete</Button>
                                 </div>
                               </div>
                             ))}
@@ -564,3 +564,6 @@ export function OrganizerDashboard({ userData, onLogout }: OrganizerDashboardPro
     </div>
   );
 }
+// organizer logs in, open modules manager in organizer in organizer dashboard
+// they would automatically see all the modules created by students as they completed pathway steps 
+// can delete modules if needed (e..g, if student wants to rest)
