@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Textarea } from "../../components/ui/textarea";
@@ -226,14 +226,10 @@ export function CommentThread({
     comment: Comment;
     isReply?: boolean;
   }) => {
-    const roleColor = roleColors[comment.role];
+    const roleColor = roleColors[comment.role] || roleColors.student;
 
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`${isReply ? "ml-8 mt-3" : ""}`}
-      >
+      <div className={`${isReply ? "ml-8 mt-3" : ""}`}>
         <div className="flex gap-3">
           <Avatar className="w-8 h-8 flex-shrink-0">
             <AvatarFallback
@@ -336,14 +332,14 @@ export function CommentThread({
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   };
 
   return (
     <Card className="h-full flex flex-col overflow-hidden w-full">
       {/* Header */}
-      <div className="bg-gradient-to-r bg-[#4455F0] text-white p-4">
+      <div className="bg-gradient-to-r bg-[#4455F0] text-white p-4 flex-shrink-0">
         <div className="flex items-center gap-2 mb-1">
           <MessageCircle className="w-5 h-5" />
           <h3 className="text-lg">Community Discussion</h3>
@@ -360,28 +356,30 @@ export function CommentThread({
       </div>
 
       {/* Comments List */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-6">
-          <AnimatePresence>
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <CommentCard key={comment.id} comment={comment} />
-              ))
-            ) : (
-              <div className="text-center py-12 text-gray-500">
-                <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">
-                  No comments yet. Be the first to share!
-                </p>
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
-      </ScrollArea>
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full p-4">
+          <div className="space-y-6">
+            <AnimatePresence>
+              {comments.length > 0 ? (
+                comments.map((comment) => (
+                  <CommentCard key={comment.id} comment={comment} />
+                ))
+              ) : (
+                <div className="text-center py-12 text-gray-500">
+                  <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">
+                    No comments yet. Be the first to share!
+                  </p>
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+      </div>
 
       {/* Add Comment Form */}
       {!replyingTo && (
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
           <div className="flex gap-2">
             <Avatar className="w-8 h-8 flex-shrink-0">
               <AvatarFallback className="bg-gradient-to-r bg-[#4455F0] text-white text-xs">
@@ -399,7 +397,7 @@ export function CommentThread({
                   }
                 }}
                 placeholder="Share your experience or ask a question..."
-                className="min-h-[80px] text-sm"
+                className="h-[80px] max-h-[80px] resize-none text-sm"
               />
               <Button
                 onClick={handleAddComment}
