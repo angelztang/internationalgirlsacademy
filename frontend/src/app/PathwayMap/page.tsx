@@ -13,6 +13,7 @@ import { ChatBot } from "@/components/Busybot/ChatBot";
 import { useSearchParams } from "next/navigation";
 import { CommentThread } from "@/components/CommentThread/CommentThread";
 import Header from "@/components/PathwayMap/Header";
+import { getUserModules, updateModuleProgress } from "@/lib/api/modules";
 
 interface PathStep {
   id: number;
@@ -213,12 +214,32 @@ export default function PathwayMap({
   const [studentPoints, setStudentPoints] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const router = useRouter();
+  const [userId] = useState(1); // TODO: Get from auth context
+  const [userModules, setUserModules] = useState<any[]>([]);
+  const [isLoadingModules, setIsLoadingModules] = useState(false);
 
   // Calculate student points
   useEffect(() => {
     const completedSteps = currentSteps.filter((s) => s.completed).length;
     setStudentPoints(Math.round((completedSteps / currentSteps.length) * 100));
   }, [currentSteps]);
+
+  // Fetch user modules on mount 
+  useEffect(() => {
+    const loadModules = async () => {
+      try {
+        setIsLoadingModules(true);
+        const data = await getUserModules(userId);
+        setUserModules(data.modules);
+      } catch (error) {
+        console.error('Failed to load modules:', error);
+      } finally {
+        setIsLoadingModules(false);
+      }
+    };
+
+    loadModules();
+  }, [userId]);
 
   // Notify parent when step changes
   useEffect(() => {
@@ -231,7 +252,7 @@ export default function PathwayMap({
     }
   }, [currentStep, currentSteps, onStepChange, pathType]);
 
-  const completeStep = (stepId: number) => {
+  const completeStep = async (stepId: number) => {
     setCurrentSteps((prev) =>
       prev.map((s, idx) => ({
         ...s,
@@ -239,6 +260,27 @@ export default function PathwayMap({
         locked: idx === stepId + 1 ? false : s.locked,
       }))
     );
+
+    // Update progress in backend
+    try {
+      const newProgress = Math.round(((stepId + 1) / currentSteps.length) *
+  100);
+
+      // Find or create module for this user
+      const existingModule = userModules.find(m => m.user_id === userId);
+
+      if (existingModule) {
+        await updateModuleProgress(existingModule.module_id, newProgress);
+      }
+      // If no module exists, we'd need to create one (POST /modules)
+      // but for now we'll just log it
+      else {
+        console.log('No module found for user, progress not saved');
+      }
+    } catch (error) {
+      console.error('Failed to update module progress:', error);
+    }
+
     if (stepId < currentSteps.length - 1) setCurrentStep(stepId + 1);
     else if (
       (resolvedPathType === "student" || resolvedPathType === "volunteer") &&
