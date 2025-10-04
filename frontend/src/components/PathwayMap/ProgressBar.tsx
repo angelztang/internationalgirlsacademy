@@ -20,9 +20,12 @@ export default function ProgressBar({
   colors,
 }: ProgressBarProps) {
   const completedSteps = steps.filter((s) => s.completed).length;
-  const progressPercentage = (completedSteps / steps.length) * 100;
-  const currentProgressPercentage = ((currentStep + 1) / steps.length) * 100;
-  const safeColors = colors || { primary: "bg-[#4455f0]", secondary: "bg-[#b4bbf8]/20", accent: "border-[#4455f0]" };
+  const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+  const safeColors = colors || {
+    primary: "bg-[#4455f0]",
+    secondary: "bg-[#b4bbf8]/20",
+    accent: "border-[#4455f0]",
+  };
 
   return (
     <div className="space-y-2 w-full">
@@ -50,11 +53,11 @@ export default function ProgressBar({
           </motion.div>
 
           {/* Current position indicator */}
-          {currentProgressPercentage > progressPercentage && (
+          {progressPercentage > progressPercentage && (
             <motion.div
               initial={{ width: 0 }}
               animate={{
-                width: `${currentProgressPercentage - progressPercentage}%`,
+                width: `${progressPercentage - progressPercentage}%`,
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className={`h-full ${colors.secondary} opacity-60`}

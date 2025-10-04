@@ -70,7 +70,7 @@ export default function Header({
         <div className="flex-1 w-full max-w-full ">
           <ProgressBar
             steps={totalSteps}
-            currentStep={currentStep}
+            currentStep={completedSteps}
             colors={colors}
           />
         </div>
