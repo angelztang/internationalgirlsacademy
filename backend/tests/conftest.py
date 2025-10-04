@@ -50,7 +50,7 @@ def client(test_db):
 from unittest.mock import Mock
 
 from app.main import app
-from app.core.database import get_supabase
+from src.app.core.database import get_supabase
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "../../components/ui/dialog";
 import { ShopHeader } from "./ShopHeader";
 import { InfoCard } from "./InfoCard";
@@ -28,6 +28,7 @@ import {
   Headphones,
   Laptop,
 } from "lucide-react";
+import { getAllItems, getUserInventory, purchaseItem, Item as APIItem } from "@/lib/api/shop";
 
 export default function Shop({
   isOpen,
@@ -39,6 +40,34 @@ export default function Shop({
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [justPurchased, setJustPurchased] = useState<string | null>(null);
+  // new state variables 
+  const [apiItems, setApiItems] = useState<APIItem[]>([]);
+  const [userInventory, setUserInventory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId] = useState(1); // TODO: Get from auth context
+
+  // useEffect to fetch data 
+  useEffect(() => {
+    if (isOpen) {
+      loadShopData();
+    }
+  }, [isOpen]);
+
+  const loadShopData = async () => {
+    try {
+      setIsLoading(true);
+      const [items, inventory] = await Promise.all([
+        getAllItems(),
+        getUserInventory(userId)
+      ]);
+      setApiItems(items);
+      setUserInventory(inventory);
+    } catch (error) {
+      console.error('Failed to load shop data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   interface ShopItem {
     id: string;
@@ -194,17 +223,26 @@ export default function Shop({
     },
   ];
 
-  const handlePurchase = (item: any) => {
-    if (availablePoints >= item.cost && !purchasedItems.includes(item.id)) {
+  const handlePurchase = async (item: any) => {
+    try {
+      const response = await purchaseItem(userId, {
+        item_id: item.item_id || item.id,
+        quantity: 1
+      });
+
       setPurchasedItems([...purchasedItems, item.id]);
-      onPurchase(item.id, item.cost);
       setJustPurchased(item.id);
       setShowConfetti(true);
+
+      // Reload inventory
+      await loadShopData();
 
       setTimeout(() => {
         setShowConfetti(false);
         setJustPurchased(null);
       }, 2000);
+    } catch (error: any) {
+      alert(error.message || 'Failed to purchase item');
     }
   };
 

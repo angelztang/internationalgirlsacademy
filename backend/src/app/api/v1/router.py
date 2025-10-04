@@ -1,10 +1,8 @@
 from fastapi import APIRouter
-from app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot, users
+from app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot
 
 api_router = APIRouter()
 
-# Include user routes
-api_router.include_router(users.router, prefix="/users", tags=["users"])
 # Include v1 routers
 api_router.include_router(meetings.router, prefix="/meetings", tags=["meetings"])
 api_router.include_router(items.router, prefix="/items", tags=["items"])

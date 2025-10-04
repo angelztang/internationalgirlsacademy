@@ -74,8 +74,9 @@ Teaser: "Complete these modules to unlock programs"
 /src/
   /app/         # Pages and layouts
   /components/  # Reusable UI components
-  /lib/         # Utility functions
-  /types/       # TypeScript types
+  /lib/         # Utility functions  
+  /lib/api/     # API utility files for route integration 
+  /types/       # TypeScript types  
 ```
 
 ## Backend API Routes → Frontend Integration
