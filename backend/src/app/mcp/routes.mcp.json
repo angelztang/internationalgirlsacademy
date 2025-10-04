@@ -93,6 +93,15 @@
             "summary": "Delete meeting",
             "handler": "app.api.v1.meetings:delete_meeting",
             "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/chatbot/chat",
+            "methods": [
+                "POST"
+            ],
+            "summary": "Chat with AI assistant",
+            "handler": "app.api.v1.chatbot:chat_endpoint",
+            "source_file": "src/app/api/v1/chatbot.py"
         }
     ],
     "metadata": {
