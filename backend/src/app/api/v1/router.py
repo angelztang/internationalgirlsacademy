@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot, users, availability
+from app.api.v1 import meetings, items, user_items, modules, events, event_registration, chatbot, users
 
 api_router = APIRouter()
 
@@ -14,4 +14,3 @@ api_router.include_router(modules.router, prefix="/modules", tags=["modules"])
 api_router.include_router(events.router, prefix="/events", tags=["events"])
 api_router.include_router(event_registration.router, prefix="/users", tags=["event-registration"])
 api_router.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
-api_router.include_router(availability.router, prefix="/availability", tags=["availability"])

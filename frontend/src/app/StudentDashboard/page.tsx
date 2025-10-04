@@ -30,6 +30,7 @@ import {
   Star,
 } from "lucide-react";
 import { getUserModules } from "@/lib/api/modules";
+import Link from "next/link";
 
 interface StudentDashboardProps {
   userData: any;
@@ -47,74 +48,9 @@ export default function StudentDashboard({
     Record<string, string[]>
   >({});
   const [matchedUser, setMatchedUser] = useState<any | null>(null);
-  const [isMatching, setIsMatching] = useState(false);
-  const [matchingError, setMatchingError] = useState<string | null>(null);
   const router = useRouter();
   const { user } = useAuth();
   const userId = user?.id; // Get UUID from auth context
-
-  // Function to save availability and find mentor matches
-  const handlePairMe = async () => {
-    if (!userId || !selectedDate || Object.keys(timeSlotsByDate).length === 0) {
-      setMatchingError("Please add your availability first");
-      return;
-    }
-
-    setIsMatching(true);
-    setMatchingError(null);
-    setMatchedUser(null);
-
-    try {
-      // Save each time slot to the database
-      const slotsForSelectedDate = timeSlotsByDate[selectedDate] || [];
-      
-      for (const timeSlot of slotsForSelectedDate) {
-        // Create datetime strings for the availability
-        const timeStart = `${selectedDate}T${timeSlot}:00`;
-        // Assume 1-hour slots (you can make this configurable)
-        const endTime = new Date(new Date(timeStart).getTime() + 60 * 60 * 1000);
-        const timeEnd = endTime.toISOString().slice(0, 19);
-
-        try {
-          await createAvailability(userId, {
-            time_start: timeStart,
-            time_end: timeEnd
-          });
-        } catch (error) {
-          // If availability already exists, that's okay - continue
-          console.log(`Availability for ${timeStart} may already exist:`, error);
-        }
-      }
-
-      // Now try to schedule a meeting with available mentors
-      // Default to 60-minute sessions
-      const meetingResponse = await scheduleMeeting({
-        user_id: userId,
-        duration_minutes: 60
-      });
-
-      // Set the matched user from the real API response
-      setMatchedUser({
-        id: meetingResponse.matched_user.user_id,
-        name: `${meetingResponse.matched_user.first_name} ${meetingResponse.matched_user.last_name}`,
-        userType: meetingResponse.matched_user.user_type,
-        experiencePoints: meetingResponse.matched_user.experience_points,
-        matchedAt: new Date(meetingResponse.scheduled_slot.time_start).toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        }),
-        scheduledSlot: meetingResponse.scheduled_slot
-      });
-
-    } catch (error) {
-      console.error("Error during pairing:", error);
-      setMatchingError(error instanceof Error ? error.message : "Failed to find mentor matches");
-      setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
-    } finally {
-      setIsMatching(false);
-    }
-  };
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
 
@@ -312,7 +248,6 @@ export default function StudentDashboard({
           <TabsList className="mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="mentor">Mentorship</TabsTrigger>
-            <TabsTrigger value="availability">Availability</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -470,7 +405,7 @@ export default function StudentDashboard({
 
           {/* Mentor Tab */}
           <TabsContent value="mentor">
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <h3 className="text-xl mb-4">Mentorship</h3>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -566,33 +501,51 @@ export default function StudentDashboard({
                   </div>
 
                   <div className="mt-4">
-                    {matchingError && (
-                      <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
-                        {matchingError}
-                      </div>
-                    )}
                     <Button
                       className="bg-pink"
                       onClick={() => {
                         // Simple mock matching algorithm: choose a static pool and pick a user who shares any slot
                         const pool = [
-                          { id: 'u200', name: 'Alex Kim', available: { [selectedDate]: ['09:00', '14:00'] } },
-                          { id: 'u201', name: 'Priya Singh', available: { [selectedDate]: ['10:00', '15:00'] } },
-                          { id: 'u202', name: 'Luis Ramirez', available: { [selectedDate]: ['11:00'] } },
+                          {
+                            id: "u200",
+                            name: "Alex Kim",
+                            available: { [selectedDate]: ["09:00", "14:00"] },
+                          },
+                          {
+                            id: "u201",
+                            name: "Priya Singh",
+                            available: { [selectedDate]: ["10:00", "15:00"] },
+                          },
+                          {
+                            id: "u202",
+                            name: "Luis Ramirez",
+                            available: { [selectedDate]: ["11:00"] },
+                          },
                         ];
 
                         const mySlots = timeSlotsByDate[selectedDate] || [];
                         let found = null;
                         for (const candidate of pool) {
-                          const cSlots = candidate.available[selectedDate] || [];
+                          const cSlots =
+                            candidate.available[selectedDate] || [];
                           if (mySlots.some((s) => cSlots.includes(s))) {
-                            found = { ...candidate, matchedAt: mySlots.find((s) => cSlots.includes(s)) };
+                            found = {
+                              ...candidate,
+                              matchedAt: mySlots.find((s) =>
+                                cSlots.includes(s)
+                              ),
+                            };
                             break;
                           }
                         }
 
                         if (found) setMatchedUser(found);
-                        else setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
+                        else
+                          setMatchedUser({
+                            id: "none",
+                            name: "No match found",
+                            matchedAt: null,
+                          });
                       }}
                     >
                       Pair me!
@@ -603,41 +556,44 @@ export default function StudentDashboard({
                 <div>
                   <h4 className="text-sm mb-2">Matched mentor</h4>
                   {matchedUser ? (
-                    matchedUser.id === 'none' ? (
-                      <Card className="p-4">No matches found for those times — try other slots.</Card>
-                    ) : (
+                    matchedUser.id === "none" ? (
                       <Card className="p-4">
-                        <div className="text-center text-gray-600">
-                          <Clock className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm mb-1">No mentors available</p>
-                          <p className="text-xs">Try different times or check back later.</p>
-                        </div>
+                        No matches found for those times — try other slots.
                       </Card>
                     ) : (
-                      <Card className="p-4 bg-green-50 border-green-200">
+                      <Card className="p-4">
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarFallback className="bg-blue-primary text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-blue-primary text-white">
+                              {matchedUser.name.charAt(0)}
+                            </AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="font-medium">{matchedUser.name}</div>
-                            <div className="text-xs text-gray-600">Matched at {matchedUser.matchedAt} on {selectedDate}</div>
+                            <div className="font-medium">
+                              {matchedUser.name}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              Matched at {matchedUser.matchedAt} on{" "}
+                              {selectedDate}
+                            </div>
                           </div>
                         </div>
                         <div className="mt-3">
-                          <Button className="bg-blue-primary">Message Mentor</Button>
+                          <Button className="bg-blue-primary">
+                            Message Mentor
+                          </Button>
                         </div>
                       </Card>
                     )
                   ) : (
-                    <p className="text-xs text-gray-500">Pairing results will show here.</p>
+                    <p className="text-xs text-gray-500">
+                      Pairing results will show here.
+                    </p>
                   )}
                 </div>
               </div>
             </Card>
           </TabsContent>
-
-          
         </Tabs>
       </div>
     </div>
