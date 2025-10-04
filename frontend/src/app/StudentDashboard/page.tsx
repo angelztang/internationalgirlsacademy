@@ -30,6 +30,7 @@ import {
   Star,
 } from "lucide-react";
 import { getUserModules } from "@/lib/api/modules";
+import AvailabilityManager from "@/components/availability/AvailabilityManager";
 
 interface StudentDashboardProps {
   userData: any;
@@ -239,6 +240,7 @@ export default function StudentDashboard({
           <TabsList className="mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="mentor">Mentorship</TabsTrigger>
+            <TabsTrigger value="availability">Availability</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -525,6 +527,20 @@ export default function StudentDashboard({
             </Card>
           </TabsContent>
 
+          {/* Availability Tab */}
+          <TabsContent value="availability">
+            <div className="max-w-4xl mx-auto">
+              {userId ? (
+                <AvailabilityManager userId={userId} />
+              ) : (
+                <Card className="p-6">
+                  <div className="text-center text-gray-500">
+                    Please log in to manage your availability.
+                  </div>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
           
         </Tabs>
       </div>
