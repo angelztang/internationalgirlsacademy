@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ArrowLeft, Trophy, Target, ShoppingBag, Star } from "lucide-react";
@@ -38,7 +38,7 @@ interface PathwayMapProps {
   onComplete?: () => void;
 }
 
-export default function PathwayMap({
+function PathwayMapContent({
   pathType,
   onBack = () => {},
   onStepChange,
@@ -356,5 +356,13 @@ export default function PathwayMap({
       {/* BusyBot chat button (same as homepage) */}
       <ChatBot />
     </div>
+  );
+}
+
+export default function PathwayMap(props: PathwayMapProps = {}) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#b4bbf8]/10 flex items-center justify-center">Loading...</div>}>
+      <PathwayMapContent {...props} />
+    </Suspense>
   );
 }
