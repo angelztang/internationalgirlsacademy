@@ -8,6 +8,7 @@ import { motion } from "motion/react";
 import PathSteps from "../../components/PathwayMap/PathSteps";
 import StepContent from "../../components/PathwayMap/StepContent";
 import Shop from "../../components/Shop/Shop";
+import Header from "@/components/PathwayMap/Header";
 
 interface PathStep {
   id: number;
@@ -237,26 +238,15 @@ export default function PathwayMap({
 
   return (
     <div className="min-h-screen bg-[#b4bbf8]/10">
-      <div className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={onBack} className="gap-2">
-            <ArrowLeft className="w-4 h-4" /> Back
-          </Button>
-
-          {pathType === "student" && (
-            <Button
-              onClick={() => setShowShop(true)}
-              className="bg-[#4455f0] gap-2 relative hover:bg-[#3344df] transition-all text-white"
-            >
-              <ShoppingBag className="w-4 h-4" /> Shop
-              <Badge className="bg-white text-[#4455f0] ml-1 border-0">
-                <Star className="w-3 h-3 mr-1" />
-                {studentPoints}
-              </Badge>
-            </Button>
-          )}
-        </div>
-      </div>
+      <Header
+        pathType={pathType}
+        onBack={onBack}
+        studentPoints={studentPoints}
+        currentStep={currentStep}
+        totalSteps={steps}
+        completedSteps={currentSteps.filter((s) => s.completed).length}
+        onShopOpen={() => setShowShop(true)}
+      />
 
       <div className="container mx-auto px-4 py-12">
         <PathSteps
