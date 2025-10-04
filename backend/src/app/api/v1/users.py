@@ -26,7 +26,8 @@ async def get_all_users(db: Client = Depends(get_supabase)):
             last_name=user_data["last_name"],
             user_type=user_data["user_type"],
             gender=user_data.get("gender"),
-            experience_points=int(user_data.get("experience_points", 0))
+            experience_points=int(user_data.get("experience_points", 0)),
+            profile_picture_url=user_data.get("profile_picture_url")
         ))
 
     return users
@@ -78,7 +79,8 @@ async def register_user(
                 last_name=request.last_name,
                 user_type=request.user_type,
                 gender=request.gender,
-                experience_points=0
+                experience_points=0,
+                profile_picture_url=None
             )
         )
 
@@ -131,7 +133,8 @@ async def login_user(
                 last_name=profile["last_name"],
                 user_type=profile["user_type"],
                 gender=profile.get("gender"),
-                experience_points=int(profile.get("experience_points", 0))
+                experience_points=int(profile.get("experience_points", 0)),
+                profile_picture_url=profile.get("profile_picture_url")
             )
         )
 
@@ -181,7 +184,8 @@ async def get_current_user(
             last_name=profile["last_name"],
             user_type=profile["user_type"],
             gender=profile.get("gender"),
-            experience_points=int(profile.get("experience_points", 0))
+            experience_points=int(profile.get("experience_points", 0)),
+            profile_picture_url=profile.get("profile_picture_url")
         )
 
     except HTTPException:
@@ -190,4 +194,41 @@ async def get_current_user(
         raise HTTPException(
             status_code=401,
             detail="Invalid or expired token"
+        )
+
+@router.put("/{user_id}/profile-picture", response_model=UserProfileResponse)
+async def update_profile_picture(
+    user_id: str,
+    profile_picture_url: str,
+    db: Client = Depends(get_supabase)
+):
+    """Update user profile picture URL"""
+    try:
+        # Update profile picture URL
+        response = db.table("users").update({
+            "profile_picture_url": profile_picture_url
+        }).eq("user_id", user_id).execute()
+
+        if not response.data:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        profile = response.data[0]
+
+        return UserProfileResponse(
+            user_id=profile["user_id"],
+            email=profile["email"],
+            first_name=profile["first_name"],
+            last_name=profile["last_name"],
+            user_type=profile["user_type"],
+            gender=profile.get("gender"),
+            experience_points=int(profile.get("experience_points", 0)),
+            profile_picture_url=profile.get("profile_picture_url")
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
         )
