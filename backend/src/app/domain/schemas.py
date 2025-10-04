@@ -20,7 +20,7 @@ class UserMatch(BaseModel):
     first_name: str
     last_name: str
     user_type: str
-    experience_points: Optional[float] = None
+    experience_points: Optional[int] = None
     gender: Optional[str] = None
 
 
@@ -56,7 +56,7 @@ class PurchaseItemResponse(BaseModel):
     item: Item
     quantity: int
     total_cost: int
-    remaining_experience_points: float
+    remaining_experience_points: int
 
 
 class EquipItemRequest(BaseModel):
@@ -153,7 +153,7 @@ class UserProfileResponse(BaseModel):
     last_name: str
     user_type: str
     gender: Optional[str] = None
-    experience_points: float = 0.0
+    experience_points: int = 0
 
 
 class AuthResponse(BaseModel):

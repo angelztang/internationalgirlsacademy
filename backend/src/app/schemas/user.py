@@ -1,6 +1,5 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from decimal import Decimal
 
 
 class UserCreate(BaseModel):
@@ -17,7 +16,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     email: str
-    experience_points: Decimal
+    experience_points: int
     user_type: str
     gender: Optional[str] = None
 

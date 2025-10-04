@@ -43,7 +43,7 @@ async def register_user(
             "last_name": request.last_name,
             "user_type": request.user_type,
             "gender": request.gender,
-            "experience_points": 0.0
+            "experience_points": 0
         }
 
         db.table("users").insert(user_data).execute()
@@ -58,7 +58,7 @@ async def register_user(
                 last_name=request.last_name,
                 user_type=request.user_type,
                 gender=request.gender,
-                experience_points=0.0
+                experience_points=0
             )
         )
 
@@ -111,7 +111,7 @@ async def login_user(
                 last_name=profile["last_name"],
                 user_type=profile["user_type"],
                 gender=profile.get("gender"),
-                experience_points=profile.get("experience_points", 0.0)
+                experience_points=int(profile.get("experience_points", 0))
             )
         )
 
@@ -161,7 +161,7 @@ async def get_current_user(
             last_name=profile["last_name"],
             user_type=profile["user_type"],
             gender=profile.get("gender"),
-            experience_points=profile.get("experience_points", 0.0)
+            experience_points=int(profile.get("experience_points", 0))
         )
 
     except HTTPException:
