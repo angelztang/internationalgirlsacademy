@@ -32,23 +32,8 @@ import {
 import { getUserModules } from "@/lib/api/modules";
 
 interface StudentDashboardProps {
-  userData: {
-    name?: string;
-    email?: string;
-    id?: string;
-  };
+  userData: any;
   onLogout: () => void;
-}
-
-interface MatchResult {
-  id: string;
-  name: string;
-  time: string | null;
-}
-
-interface ScheduleMeetingResponse {
-  match?: MatchResult;
-  error?: string;
 }
 
 export default function StudentDashboard({
@@ -65,13 +50,11 @@ export default function StudentDashboard({
   const userId = user?.id; // Get UUID from auth context
   const [userModules, setUserModules] = useState<any[]>([]);
   const [moduleProgress, setModuleProgress] = useState(0);
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-  // Fetch user modules
+  // Fetch user modules 
   useEffect(() => {
     if (!userId) return; // Wait for auth to load
-
+    
     const loadModules = async () => {
       try {
         const data = await getUserModules(userId);
@@ -84,7 +67,7 @@ export default function StudentDashboard({
           setModuleProgress(Math.round(avgProgress));
         }
       } catch (error) {
-        console.error("Failed to load modules:", error);
+        console.error('Failed to load modules:', error);
       }
     };
 
@@ -95,66 +78,6 @@ export default function StudentDashboard({
     if (onLogout) onLogout();
     router.push("/login");
   };
-
-  interface ScheduleMeetingResponse {
-    match?: { id: string; name: string; time: string };
-    error?: string;
-  }
-
-  async function scheduleAllMeetings(
-    userId: string,
-    location: string,
-    timeSlotsByDate: Record<string, { start_time: string; end_time: string }[]>
-  ): Promise<ScheduleMeetingResponse> {
-    let lastError: string | undefined = undefined;
-    let lastMatch: MatchResult | undefined = undefined;
-
-    for (const [date, slots] of Object.entries(timeSlotsByDate)) {
-      for (const slot of slots) {
-        const startDateTime = `${date}T${slot.start_time}`;
-        const endDateTime = `${date}T${slot.end_time}`;
-
-        const [startH, startM] = slot.start_time.split(":").map(Number);
-        const [endH, endM] = slot.end_time.split(":").map(Number);
-        const durationMinutes = endH * 60 + endM - (startH * 60 + startM);
-
-        console.log(`⏱ Scheduling: ${startDateTime} → ${endDateTime}`);
-
-        const response = await fetch(
-          `${API_BASE_URL}/api/v1/meetings/schedule`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: userId,
-              location,
-              start_time: startDateTime,
-              end_time: endDateTime,
-              duration_minutes: durationMinutes,
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          const error = await response.json();
-          console.error("Failed to schedule:", error);
-          lastError = error?.error || "Failed to schedule meeting";
-        } else {
-          const match = await response.json();
-          console.log("Meeting scheduled:", match);
-          lastMatch = match.match || match;
-        }
-      }
-    }
-
-    if (lastError) {
-      return { error: lastError };
-    }
-    if (lastMatch) {
-      return { match: { ...lastMatch, time: lastMatch?.time ?? "" } };
-    }
-    return { error: "No match found" };
-  }
 
   // Mock Data - in production, this would come from an API or props
   const userData = {
@@ -292,7 +215,7 @@ export default function StudentDashboard({
                   </div>
                 </div>
               </div>
-              <Avatar className="w-20 h-20 border-4 border-white/20">
+                <Avatar className="w-20 h-20 border-4 border-white/20">
                 <AvatarFallback className="bg-blue-primary text-white text-2xl">
                   {studentData.name.charAt(0)}
                 </AvatarFallback>
@@ -386,7 +309,10 @@ export default function StudentDashboard({
                           <Badge variant="secondary">{course.progress}%</Badge>
                         </div>
                         <Progress value={course.progress} className="mb-3" />
-                        <Button size="sm" className="bg-blue-primary">
+                                <Button
+                                  size="sm"
+                                  className="bg-blue-primary"
+                                >
                           Continue
                         </Button>
                       </div>
@@ -400,9 +326,9 @@ export default function StudentDashboard({
                   <div className="grid md:grid-cols-3 gap-4">
                     {studentData.achievements.map((achievement) => (
                       <div
-                        key={achievement.id}
-                        className="text-center p-4 bg-white rounded-lg"
-                      >
+                          key={achievement.id}
+                          className="text-center p-4 bg-white rounded-lg"
+                        >
                         <div className="text-4xl mb-2">{achievement.icon}</div>
                         <p className="text-sm mb-1">{achievement.title}</p>
                         <p className="text-xs text-gray-600">
@@ -471,6 +397,7 @@ export default function StudentDashboard({
             </div>
           </TabsContent>
 
+
           {/* Mentor Tab */}
           <TabsContent value="mentor">
             <Card className="p-6">
@@ -478,11 +405,7 @@ export default function StudentDashboard({
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Select a date for mentoring sessions
-                  </p>
-
-                  {/* Date selector */}
+                  <p className="text-sm text-gray-600 mb-2">Select a date for mentoring sessions</p>
                   <input
                     type="date"
                     value={selectedDate}
@@ -490,136 +413,82 @@ export default function StudentDashboard({
                     className="w-full border rounded p-2 mb-3"
                   />
 
-                  {/* Time range inputs */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      Add available time range for {selectedDate || "..."}
-                    </label>
-
-                    <div className="flex flex-col md:flex-row gap-2">
+                    <label className="text-sm">Add available time for {selectedDate || '...'}</label>
+                    <div className="flex gap-2">
                       <input
                         type="time"
-                        value={startTime}
-                        onChange={(e) => setStartTime(e.target.value)}
+                        value={timeInput}
+                        onChange={(e) => setTimeInput(e.target.value)}
                         className="flex-1 border rounded p-2"
-                        placeholder="Start time"
                       />
-                      <input
-                        type="time"
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
-                        className="flex-1 border rounded p-2"
-                        placeholder="End time"
-                      />
-
                       <Button
                         onClick={() => {
-                          if (!selectedDate || !startTime || !endTime) {
-                            alert(
-                              "Please select a date, start time, and end time."
-                            );
-                            return;
-                          }
-
+                          if (!selectedDate || !timeInput) return alert('Pick a date and time');
                           setTimeSlotsByDate((prev) => {
                             const next = { ...prev };
-                            next[selectedDate] = [
-                              ...(next[selectedDate] || []),
-                              { start_time: startTime, end_time: endTime },
-                            ];
+                            next[selectedDate] = Array.from(new Set([...(next[selectedDate] || []), timeInput]));
                             return next;
                           });
-
-                          setStartTime("");
-                          setEndTime("");
+                          setTimeInput('');
                         }}
                         className="bg-blue-primary"
                       >
-                        Add time range
+                        Add time
                       </Button>
                     </div>
                   </div>
 
-                  {/* Show added availability */}
                   <div className="mt-4">
                     <h4 className="text-sm mb-2">Your availability</h4>
                     {Object.keys(timeSlotsByDate).length === 0 ? (
-                      <p className="text-xs text-gray-500">
-                        No times added yet
-                      </p>
+                      <p className="text-xs text-gray-500">No times added yet</p>
                     ) : (
                       <div className="space-y-2">
-                        {Object.entries(timeSlotsByDate).map(
-                          ([date, slots]) => (
-                            <div key={date} className="p-2 border rounded">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="text-sm font-medium">
-                                  {date}
-                                </div>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    const next = { ...timeSlotsByDate };
-                                    delete next[date];
-                                    setTimeSlotsByDate(next);
-                                  }}
-                                >
-                                  Remove
-                                </Button>
-                              </div>
-
-                              <div className="flex flex-wrap gap-2">
-                                {slots.map((slot, i) => (
-                                  <div
-                                    key={i}
-                                    className="px-3 py-1 bg-white border rounded text-sm"
-                                  >
-                                    {slot.start_time} – {slot.end_time}
-                                  </div>
-                                ))}
+                        {Object.entries(timeSlotsByDate).map(([date, slots]) => (
+                          <div key={date} className="p-2 border rounded">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="text-sm font-medium">{date}</div>
+                              <div>
+                                <Button size="sm" variant="ghost" onClick={() => { const next = { ...timeSlotsByDate }; delete next[date]; setTimeSlotsByDate(next); }}>Remove</Button>
                               </div>
                             </div>
-                          )
-                        )}
+                            <div className="flex flex-wrap gap-2">
+                              {slots.map((t) => (
+                                <div key={t} className="px-3 py-1 bg-white border rounded text-sm">
+                                  {t}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
 
-                  {/* Pair me button */}
                   <div className="mt-4">
                     <Button
                       className="bg-pink"
-                      onClick={async () => {
-                        if (!userId) return alert("User not authenticated");
-                        if (!Object.keys(timeSlotsByDate).length)
-                          return alert("Please select a date and time range");
+                      onClick={() => {
+                        // Simple mock matching algorithm: choose a static pool and pick a user who shares any slot
+                        const pool = [
+                          { id: 'u200', name: 'Alex Kim', available: { [selectedDate]: ['09:00', '14:00'] } },
+                          { id: 'u201', name: 'Priya Singh', available: { [selectedDate]: ['10:00', '15:00'] } },
+                          { id: 'u202', name: 'Luis Ramirez', available: { [selectedDate]: ['11:00'] } },
+                        ];
 
-                        const result = await scheduleAllMeetings(
-                          userId,
-                          "Anywhere",
-                          timeSlotsByDate
-                        );
-
-                        if (result.error) {
-                          setMatchedUser({
-                            id: "none",
-                            name: result.error,
-                            matchedAt: null,
-                          });
-                        } else if (result.match) {
-                          setMatchedUser({
-                            id: result.match.id,
-                            name: result.match.name,
-                            matchedAt: result.match.time,
-                          });
-                        } else {
-                          setMatchedUser({
-                            id: "none",
-                            name: "No match found",
-                            matchedAt: null,
-                          });
+                        const mySlots = timeSlotsByDate[selectedDate] || [];
+                        let found = null;
+                        for (const candidate of pool) {
+                          const cSlots = candidate.available[selectedDate] || [];
+                          if (mySlots.some((s) => cSlots.includes(s))) {
+                            found = { ...candidate, matchedAt: mySlots.find((s) => cSlots.includes(s)) };
+                            break;
+                          }
                         }
+
+                        if (found) setMatchedUser(found);
+                        else setMatchedUser({ id: 'none', name: 'No match found', matchedAt: null });
                       }}
                     >
                       Pair me!
@@ -630,44 +499,33 @@ export default function StudentDashboard({
                 <div>
                   <h4 className="text-sm mb-2">Matched mentor</h4>
                   {matchedUser ? (
-                    matchedUser.id === "none" ? (
-                      <Card className="p-4">
-                        No matches found for those times — try other slots.
-                      </Card>
+                    matchedUser.id === 'none' ? (
+                      <Card className="p-4">No matches found for those times — try other slots.</Card>
                     ) : (
                       <Card className="p-4">
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarFallback className="bg-blue-primary text-white">
-                              {matchedUser.name.charAt(0)}
-                            </AvatarFallback>
+                            <AvatarFallback className="bg-blue-primary text-white">{matchedUser.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="font-medium">
-                              {matchedUser.name}
-                            </div>
-                            <div className="text-xs text-gray-600">
-                              Matched at {matchedUser.matchedAt} on{" "}
-                              {selectedDate}
-                            </div>
+                            <div className="font-medium">{matchedUser.name}</div>
+                            <div className="text-xs text-gray-600">Matched at {matchedUser.matchedAt} on {selectedDate}</div>
                           </div>
                         </div>
                         <div className="mt-3">
-                          <Button className="bg-blue-primary">
-                            Message Mentor
-                          </Button>
+                          <Button className="bg-blue-primary">Message Mentor</Button>
                         </div>
                       </Card>
                     )
                   ) : (
-                    <p className="text-xs text-gray-500">
-                      Pairing results will show here.
-                    </p>
+                    <p className="text-xs text-gray-500">Pairing results will show here.</p>
                   )}
                 </div>
               </div>
             </Card>
           </TabsContent>
+
+          
         </Tabs>
       </div>
     </div>
