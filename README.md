@@ -137,7 +137,7 @@ Teaser: "Complete these modules to unlock programs"
   → Student Dashboard - Equip/unequip items
 
   ### Modules (Learning Progress)
-  - `GET /api/v1/modules/user/{user_id}` →
+  - ✅`GET /api/v1/modules/user/{user_id}` →
   Student Dashboard - Course/module progress
   - `GET /api/v1/modules/{module_id}` →
   PathwayMap
@@ -145,7 +145,7 @@ Teaser: "Complete these modules to unlock programs"
   Module details
   - `POST /api/v1/modules` → Organizer Dashboard
   - Create learning modules
-  - `PUT /api/v1/modules/{module_id}` →
+  - ✅`PUT /api/v1/modules/{module_id}` →
   PathwayMap - Update module progress
   - `DELETE /api/v1/modules/{module_id}` →
   Organizer Dashboard - Delete modules
