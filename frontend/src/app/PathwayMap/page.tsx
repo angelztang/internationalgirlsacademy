@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 import PathSteps from "../../components/PathwayMap/PathSteps";
 import StepContent from "../../components/PathwayMap/StepContent";
 import Shop from "../../components/Shop/Shop";
-import Header from "@/components/PathwayMap/Header";
+import { ChatBot } from "@/components/Busybot/ChatBot";
+import { useSearchParams } from "next/navigation";
 
 interface PathStep {
   id: number;
@@ -37,7 +38,17 @@ export default function PathwayMap({
   onStepChange,
   onComplete,
 }: PathwayMapProps) {
-  pathType = pathType || "student";
+  // allow path to be passed via search params (e.g. /PathwayMap?path=volunteer)
+  const searchParams = useSearchParams();
+  const paramPath = searchParams?.get("path") as
+    | "student"
+    | "volunteer"
+    | "donate"
+    | null;
+
+  // resolvedPathType prefers explicit prop, then search param, then default student
+  const resolvedPathType: "student" | "volunteer" | "donate" =
+    pathType || paramPath || "student";
 
   // Inline step data
   const studentSteps: PathStep[] = [
@@ -188,9 +199,9 @@ export default function PathwayMap({
   };
 
   const steps =
-    pathType === "student"
+    resolvedPathType === "student"
       ? studentSteps
-      : pathType === "volunteer"
+      : resolvedPathType === "volunteer"
       ? volunteerSteps
       : donateSteps;
 
@@ -211,7 +222,7 @@ export default function PathwayMap({
   useEffect(() => {
     if (onStepChange) {
       onStepChange({
-        pathType,
+        pathType: resolvedPathType,
         currentStep,
         stepTitle: currentSteps[currentStep].title,
       });
@@ -228,7 +239,7 @@ export default function PathwayMap({
     );
     if (stepId < currentSteps.length - 1) setCurrentStep(stepId + 1);
     else if (
-      (pathType === "student" || pathType === "volunteer") &&
+      (resolvedPathType === "student" || resolvedPathType === "volunteer") &&
       onComplete
     ) {
       setTimeout(onComplete, 500);
@@ -240,27 +251,45 @@ export default function PathwayMap({
 
   return (
     <div className="min-h-screen bg-[#b4bbf8]/10">
-      <Header
-        pathType={pathType}
-        onBack={onBack}
-        studentPoints={studentPoints}
-        currentStep={currentStep}
-        totalSteps={steps}
-        completedSteps={currentSteps.filter((s) => s.completed).length}
-        onShopOpen={() => setShowShop(true)}
-      />
+      <div className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (onBack) return onBack();
+              router.push("/");
+            }}
+            className="gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
+          </Button>
+
+          {resolvedPathType === "student" && (
+            <Button
+              onClick={() => setShowShop(true)}
+              className="bg-[#4455f0] gap-2 relative hover:bg-[#3344df] transition-all text-white"
+            >
+              <ShoppingBag className="w-4 h-4" /> Shop
+              <Badge className="bg-white text-[#4455f0] ml-1 border-0">
+                <Star className="w-3 h-3 mr-1" />
+                {studentPoints}
+              </Badge>
+            </Button>
+          )}
+        </div>
+      </div>
 
       <div className="container mx-auto px-4 py-12">
         <PathSteps
           steps={currentSteps}
           currentStep={currentStep}
-          colors={pathColors[pathType]}
+          colors={pathColors[resolvedPathType]}
           setCurrentStep={setCurrentStep}
         />
         <StepContent
           currentStepData={currentSteps[currentStep]}
-          pathType={pathType}
-          colors={pathColors[pathType]}
+          pathType={resolvedPathType}
+          colors={pathColors[resolvedPathType]}
           currentStep={currentStep}
           steps={currentSteps}
           completeStep={completeStep}
@@ -268,7 +297,7 @@ export default function PathwayMap({
         />
       </div>
 
-      {pathType === "student" && (
+      {resolvedPathType === "student" && (
         <Shop
           isOpen={showShop}
           onClose={() => setShowShop(false)}
@@ -276,6 +305,9 @@ export default function PathwayMap({
           onPurchase={handlePurchase}
         />
       )}
+      {/* BusyBot chat button (same as homepage) */}
+      <ChatBot />
     </div>
   );
 }
+
