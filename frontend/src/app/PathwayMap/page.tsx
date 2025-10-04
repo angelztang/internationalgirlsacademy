@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+export const dynamic = 'force-dynamic'
+
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ArrowLeft, Trophy, Target, ShoppingBag, Star } from "lucide-react";
@@ -30,8 +32,8 @@ interface PathStep {
 }
 
 interface PathwayMapProps {
-  pathType: "student" | "volunteer" | "donate";
-  onBack: () => void;
+  pathType?: "student" | "volunteer" | "donate";
+  onBack?: () => void;
   onStepChange?: (stepInfo: {
     pathType: "student" | "volunteer" | "donate";
     currentStep: number;
@@ -40,12 +42,12 @@ interface PathwayMapProps {
   onComplete?: () => void;
 }
 
-export default function PathwayMap({
+function PathwayMapContent({
   pathType,
-  onBack,
+  onBack = () => {},
   onStepChange,
   onComplete,
-}: PathwayMapProps) {
+}: PathwayMapProps = {}) {
   // allow path to be passed via search params (e.g. /PathwayMap?path=volunteer)
   const searchParams = useSearchParams();
   const paramPath = searchParams?.get("path") as
@@ -316,12 +318,12 @@ export default function PathwayMap({
   const handlePurchase = (itemId: string) =>
     setPurchasedItems([...purchasedItems, itemId]);
 
-  const colors = pathColors[pathType];
+  const colors = pathColors[resolvedPathType];
   const completedSteps = currentSteps.filter((step) => step.completed).length;
   return (
     <div className="min-h-screen bg-[#b4bbf8]/10">
       <Header
-        pathType={pathType}
+        pathType={resolvedPathType}
         onBack={onBack}
         studentPoints={studentPoints}
         currentStep={currentStep}
@@ -340,8 +342,8 @@ export default function PathwayMap({
         <div className="flex mt-32">
           <StepContent
             currentStepData={currentSteps[currentStep]}
-            pathType={pathType}
-            colors={pathColors[pathType]}
+            pathType={resolvedPathType}
+            colors={pathColors[resolvedPathType]}
             currentStep={currentStep}
             steps={currentSteps}
             completeStep={completeStep}
@@ -362,5 +364,13 @@ export default function PathwayMap({
       {/* BusyBot chat button (same as homepage) */}
       <ChatBot />
     </div>
+  );
+}
+
+export default function PathwayMap(props: PathwayMapProps = {}) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#b4bbf8]/10 flex items-center justify-center">Loading...</div>}>
+      <PathwayMapContent {...props} />
+    </Suspense>
   );
 }

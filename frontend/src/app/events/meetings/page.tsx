@@ -1,10 +1,49 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/context/AuthContext'
-import { supabase } from '@/lib/supabase'
-import { Calendar, Clock, Users, Video, Plus, Play, UserCheck, Mic, MicOff } from 'lucide-react'
-import ZoomMeeting from '@/components/meetings/ZoomMeeting'
+import React, { useState } from 'react'
+import { Calendar, Clock, Users, Video, Plus, ExternalLink } from 'lucide-react'
+
+const HARDCODED_MEET_LINK = 'https://meet.google.com/bpq-cyty-bra?pli=1'
+
+// Dummy meetings data - purely visual, no backend
+const DUMMY_MEETINGS = [
+  {
+    meeting_id: 1,
+    title: 'Community Town Hall',
+    description: 'Monthly community gathering to discuss updates and initiatives',
+    meeting_type: 'normal' as const,
+    start_time: new Date(Date.now() + 86400000).toISOString(),
+    end_time: new Date(Date.now() + 90000000).toISOString(),
+    max_participants: 100,
+    status: 'scheduled' as const,
+    can_join: true,
+    google_meet_url: HARDCODED_MEET_LINK
+  },
+  {
+    meeting_id: 2,
+    title: 'Volunteer Training Session',
+    description: 'Learn about volunteer opportunities and how to get involved',
+    meeting_type: 'live' as const,
+    start_time: new Date(Date.now() + 172800000).toISOString(),
+    end_time: new Date(Date.now() + 176400000).toISOString(),
+    max_participants: 50,
+    status: 'scheduled' as const,
+    can_join: true,
+    google_meet_url: HARDCODED_MEET_LINK
+  },
+  {
+    meeting_id: 3,
+    title: 'Weekly Check-in',
+    description: 'Casual meetup to connect with the community',
+    meeting_type: 'normal' as const,
+    start_time: new Date(Date.now() + 259200000).toISOString(),
+    end_time: new Date(Date.now() + 262800000).toISOString(),
+    max_participants: 75,
+    status: 'scheduled' as const,
+    can_join: true,
+    google_meet_url: HARDCODED_MEET_LINK
+  }
+]
 
 interface Meeting {
   meeting_id: number
@@ -14,14 +53,9 @@ interface Meeting {
   start_time: string
   end_time: string
   max_participants?: number
-  meeting_password?: string
-  zoom_meeting_id?: string
-  zoom_meeting_url?: string
-  created_by: string
-  created_at: string
   status: 'scheduled' | 'live' | 'ended' | 'cancelled'
   can_join: boolean
-  user_role: 'host' | 'presenter' | 'participant'
+  google_meet_url: string
 }
 
 interface CreateMeetingForm {
@@ -31,180 +65,80 @@ interface CreateMeetingForm {
   start_time: string
   duration_minutes: number
   max_participants: number
-  meeting_password: string
 }
 
 export default function MeetingsPage() {
-  const { user } = useAuth()
-  const [meetings, setMeetings] = useState<Meeting[]>([])
-  const [loading, setLoading] = useState(true)
+  const [meetings, setMeetings] = useState<Meeting[]>(DUMMY_MEETINGS)
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [currentMeeting, setCurrentMeeting] = useState<Meeting | null>(null)
   const [createForm, setCreateForm] = useState<CreateMeetingForm>({
     title: '',
     description: '',
     meeting_type: 'normal',
     start_time: '',
     duration_minutes: 60,
-    max_participants: 50,
-    meeting_password: ''
+    max_participants: 50
   })
 
-  useEffect(() => {
-    if (user) {
-      fetchMeetings()
-    }
-  }, [user])
-
-  const fetchMeetings = async () => {
-    try {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('user_id', user?.id)
-        .single()
-
-      if (!profile) return
-
-      const response = await fetch(`http://localhost:8000/api/v1/meetings?user_id=${user.id}&user_type=${profile.user_type}`)
-      if (response.ok) {
-        const meetingsData = await response.json()
-        setMeetings(meetingsData)
-      }
-    } catch (error) {
-      console.error('Error fetching meetings:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const createMeeting = async (e: React.FormEvent) => {
+  const createMeeting = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user) return
-
-    try {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-
-      if (!profile) return
-
-      const response = await fetch('http://localhost:8000/api/v1/meetings/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...createForm,
-          user_id: user.id,
-          user_type: profile.user_type
-        })
-      })
-
-      if (response.ok) {
-        setShowCreateForm(false)
-        setCreateForm({
-          title: '',
-          description: '',
-          meeting_type: 'normal',
-          start_time: '',
-          duration_minutes: 60,
-          max_participants: 50,
-          meeting_password: ''
-        })
-        fetchMeetings()
-      } else {
-        const error = await response.json()
-        alert(error.detail || 'Failed to create meeting')
-      }
-    } catch (error) {
-      console.error('Error creating meeting:', error)
-      alert('Failed to create meeting')
+    
+    const startTime = new Date(createForm.start_time)
+    const endTime = new Date(startTime.getTime() + createForm.duration_minutes * 60000)
+    
+    const newMeeting: Meeting = {
+      meeting_id: meetings.length + 1,
+      title: createForm.title,
+      description: createForm.description,
+      meeting_type: createForm.meeting_type,
+      start_time: startTime.toISOString(),
+      end_time: endTime.toISOString(),
+      max_participants: createForm.max_participants,
+      status: 'scheduled',
+      can_join: true,
+      google_meet_url: HARDCODED_MEET_LINK
     }
+    
+    setMeetings([...meetings, newMeeting])
+    setShowCreateForm(false)
+    setCreateForm({
+      title: '',
+      description: '',
+      meeting_type: 'normal',
+      start_time: '',
+      duration_minutes: 60,
+      max_participants: 50
+    })
   }
 
-  const joinMeeting = async (meeting: Meeting) => {
-    if (!user) return
-
-    try {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-
-      if (!profile) return
-
-      // Set the current meeting to join
-      setCurrentMeeting(meeting)
-    } catch (error) {
-      console.error('Error joining meeting:', error)
-      alert('Failed to join meeting')
-    }
-  }
-
-  const handleMeetingEnd = () => {
-    setCurrentMeeting(null)
-    fetchMeetings() // Refresh meetings list
-  }
-
-  const canCreateMeetings = user && ['volunteer', 'admin'].includes(user.userType)
-
-  // If user is in a meeting, show the Zoom meeting component
-  if (currentMeeting && user) {
-    return (
-      <ZoomMeeting
-        meetingId={currentMeeting.meeting_id}
-        userName={`${user.name}`}
-        userType={user.userType}
-        meetingType={currentMeeting.meeting_type}
-        onMeetingEnd={handleMeetingEnd}
-      />
-    )
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading meetings...</p>
-        </div>
-      </div>
-    )
+  const joinMeeting = (meeting: Meeting) => {
+    window.open(HARDCODED_MEET_LINK, '_blank')
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#b4bbf8]/10 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
+        <div className="mb-12">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Meetings</h1>
-              <p className="mt-2 text-gray-600">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">Community Meetings</h1>
+              <p className="text-lg text-gray-700">
                 Join live presentations or participate in community discussions
               </p>
             </div>
-            {canCreateMeetings && (
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-              >
-                <Plus className="h-5 w-5" />
-                Create Meeting
-              </button>
-            )}
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="bg-[#4455f0] text-white px-6 py-3 rounded-lg hover:bg-[#3344df] flex items-center gap-2 shadow-lg transition-all"
+            >
+              <Plus className="h-5 w-5" />
+              Create Meeting
+            </button>
           </div>
         </div>
 
-        {/* Create Meeting Modal */}
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Create New Meeting</h2>
+            <div className="bg-white rounded-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Create New Meeting</h2>
               <form onSubmit={createMeeting} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Title</label>
@@ -269,26 +203,22 @@ export default function MeetingsPage() {
                     max="1000"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Password (optional)</label>
-                  <input
-                    type="text"
-                    value={createForm.meeting_password}
-                    onChange={(e) => setCreateForm({...createForm, meeting_password: e.target.value})}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                  />
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                  <p className="text-sm text-blue-700">
+                    <strong>Note:</strong> All meetings use the same Google Meet room for demo purposes
+                  </p>
                 </div>
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                    className="flex-1 bg-[#4455f0] text-white py-3 px-4 rounded-lg hover:bg-[#3344df] font-semibold transition-all"
                   >
                     Create Meeting
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
+                    className="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-300 font-semibold transition-all"
                   >
                     Cancel
                   </button>
@@ -298,41 +228,37 @@ export default function MeetingsPage() {
           </div>
         )}
 
-        {/* Meetings List */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {meetings.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <Video className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No meetings available</h3>
-              <p className="text-gray-500">
-                {canCreateMeetings 
-                  ? "Create your first meeting to get started" 
-                  : "Check back later for upcoming meetings"
-                }
-              </p>
+            <div className="col-span-full text-center py-16 bg-white rounded-xl shadow-md">
+              <div className="w-16 h-16 bg-[#b4bbf8]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Video className="h-8 w-8 text-[#4455f0]" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No meetings available</h3>
+              <p className="text-gray-600">Create your first meeting to get started</p>
             </div>
           ) : (
             meetings.map((meeting) => (
-              <div key={meeting.meeting_id} className="bg-white rounded-lg shadow-md p-6">
+              <div key={meeting.meeting_id} className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all border-l-4 border-[#4455f0]">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
                       {meeting.title}
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         meeting.meeting_type === 'live' 
-                          ? 'bg-red-100 text-red-800' 
-                          : 'bg-blue-100 text-blue-800'
+                          ? 'bg-[#f7a1c0]/20 text-[#f7a1c0] border border-[#f7a1c0]/40' 
+                          : 'bg-[#4455f0]/20 text-[#4455f0] border border-[#4455f0]/40'
                       }`}>
                         {meeting.meeting_type === 'live' ? 'Live Meeting' : 'Normal Meeting'}
                       </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         meeting.status === 'live' 
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-100 text-green-700 border border-green-200'
                           : meeting.status === 'scheduled'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-[#b4bbf8]/30 text-[#4455f0] border border-[#b4bbf8]'
+                          : 'bg-gray-100 text-gray-600 border border-gray-200'
                       }`}>
                         {meeting.status}
                       </span>
@@ -340,12 +266,6 @@ export default function MeetingsPage() {
                     {meeting.description && (
                       <p className="text-gray-600 text-sm mb-3">{meeting.description}</p>
                     )}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
-                    {meeting.user_role === 'host' && <UserCheck className="h-4 w-4" />}
-                    {meeting.user_role === 'presenter' && <Mic className="h-4 w-4" />}
-                    {meeting.user_role === 'participant' && <MicOff className="h-4 w-4" />}
-                    <span className="capitalize">{meeting.user_role}</span>
                   </div>
                 </div>
 
@@ -357,7 +277,7 @@ export default function MeetingsPage() {
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <Clock className="h-4 w-4" />
                     <span>
-                      {new Date(meeting.start_time).toLocaleTimeString()} - {new Date(meeting.end_time).toLocaleTimeString()}
+                      {new Date(meeting.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(meeting.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                   {meeting.max_participants && (
@@ -366,20 +286,26 @@ export default function MeetingsPage() {
                       <span>Max {meeting.max_participants} participants</span>
                     </div>
                   )}
+                  <div className="flex items-center gap-2 text-sm text-[#4455f0] font-medium">
+                    <div className="w-6 h-6 bg-[#4455f0]/10 rounded-full flex items-center justify-center">
+                      <Video className="h-3.5 w-3.5" />
+                    </div>
+                    <span>Google Meet</span>
+                  </div>
                 </div>
 
                 {meeting.can_join && (
                   <button
                     onClick={() => joinMeeting(meeting)}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 flex items-center justify-center gap-2"
+                    className="w-full bg-[#4455f0] text-white py-3 px-4 rounded-lg hover:bg-[#3344df] flex items-center justify-center gap-2 font-semibold shadow-md transition-all"
                   >
-                    <Play className="h-4 w-4" />
+                    <ExternalLink className="h-5 w-5" />
                     Join Meeting
                   </button>
                 )}
 
                 {!meeting.can_join && (
-                  <div className="w-full bg-gray-100 text-gray-500 py-2 px-4 rounded-md text-center">
+                  <div className="w-full bg-gray-100 text-gray-600 py-3 px-4 rounded-lg text-center font-medium">
                     Meeting {meeting.status}
                   </div>
                 )}
