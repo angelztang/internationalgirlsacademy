@@ -105,8 +105,21 @@ async def update_event(
 
     # Validate times if both are provided or one is updated
     current_event = event_response.data[0]
-    final_start = request.start_time if request.start_time else current_event["start_time"]
-    final_end = request.end_time if request.end_time else current_event["end_time"]
+
+    # Convert strings to datetime if needed
+    from datetime import datetime
+    if isinstance(current_event["start_time"], str):
+        current_start = datetime.fromisoformat(current_event["start_time"].replace("Z", "+00:00"))
+    else:
+        current_start = current_event["start_time"]
+
+    if isinstance(current_event["end_time"], str):
+        current_end = datetime.fromisoformat(current_event["end_time"].replace("Z", "+00:00"))
+    else:
+        current_end = current_event["end_time"]
+
+    final_start = request.start_time if request.start_time else current_start
+    final_end = request.end_time if request.end_time else current_end
 
     if final_end <= final_start:
         raise HTTPException(
