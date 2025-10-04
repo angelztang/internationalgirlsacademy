@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SignupPage from "../signup";
 import { useAuth } from "@/context/AuthContext";
 
 export default function SignupRoute() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { signup } = useAuth();
 
   const handleBack = () => router.push("/");
@@ -21,7 +22,14 @@ export default function SignupRoute() {
       accessToken: userData.accessToken
     });
 
-    // Navigate to appropriate dashboard after successful signup
+    // Check if there's a redirect parameter
+    const redirectPath = searchParams?.get('redirect');
+    if (redirectPath) {
+      router.push(redirectPath);
+      return;
+    }
+
+    // Default navigation based on role
     if (userType === "student") {
       router.push("/StudentDashboard");
       return;
@@ -36,7 +44,15 @@ export default function SignupRoute() {
     router.push("/organizerDashboard");
   };
 
-  const handleSwitchToLogin = () => router.push("/login");
+  const handleSwitchToLogin = () => {
+    // Preserve redirect parameter when switching to login
+    const redirectPath = searchParams?.get('redirect');
+    if (redirectPath) {
+      router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`);
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <SignupPage

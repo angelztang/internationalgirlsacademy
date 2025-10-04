@@ -299,6 +299,30 @@ export default function StudentDashboard({
                   </Card>
                 </div>
 
+                {/* My Learning Pathway - Direct access to PathwayMap */}
+                <div className="mt-6">
+                  <Link href="/PathwayMap">
+                  <Card className="p-6 bg-gradient-to-r from-[#4455f0] to-[#b4bbf8] text-white cursor-pointer hover:shadow-xl transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
+                          <BookOpen className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl mb-1">My Learning Pathway</h3>
+                          <p className="text-sm text-blue-100">
+                            Continue your journey through the IGA program
+                          </p>
+                        </div>
+                      </div>
+                      <Button className="bg-white text-blue-primary hover:bg-white/90">
+                        Continue →
+                      </Button>
+                    </div>
+                  </Card>
+                  </Link>
+                </div>
+
                 {/* Current Courses */}
                 <Card className="p-6 bg-white">
                   <h3 className="text-xl mb-4">Continue Learning</h3>
