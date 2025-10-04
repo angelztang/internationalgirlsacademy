@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Lock, CheckCircle2, Circle } from "lucide-react";
 
 interface PathStep {
@@ -65,7 +65,7 @@ export default function PathSteps({
                   transition-all duration-300 shadow-lg
                   ${
                     step.completed
-                      ? `bg-gradient-to-br ${colors.primary} text-white scale-110`
+                      ? `bg-blue-primary text-white scale-110`
                       : step.locked
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : `${colors.secondary} border-4 ${colors.accent} hover:scale-110 cursor-pointer`

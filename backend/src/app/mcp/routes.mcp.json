@@ -1,0 +1,112 @@
+{
+    "name": "Team-15 API Routes",
+    "version": "1.0.0",
+    "description": "FastAPI routes for Team-15 backend",
+    "base_path": "/api/v1",
+    "routes": [
+        {
+            "path": "/",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Root welcome endpoint",
+            "handler": "app.main:root",
+            "source_file": "src/app/main.py"
+        },
+        {
+            "path": "/health",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Health check endpoint",
+            "handler": "app.main:health_check",
+            "source_file": "src/app/main.py"
+        },
+        {
+            "path": "/api/v1/items",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Get all items",
+            "handler": "app.api.v1.items:read_items",
+            "source_file": "src/app/api/v1/items.py"
+        },
+        {
+            "path": "/api/v1/items/{item_id}",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Get item by ID",
+            "handler": "app.api.v1.items:read_item",
+            "source_file": "src/app/api/v1/items.py"
+        },
+        {
+            "path": "/api/v1/items",
+            "methods": [
+                "POST"
+            ],
+            "summary": "Create new item",
+            "handler": "app.api.v1.items:create_item",
+            "source_file": "src/app/api/v1/items.py"
+        },
+        {
+            "path": "/api/v1/meetings",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Get all meetings",
+            "handler": "app.api.v1.meetings:get_meetings",
+            "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/meetings/{meeting_id}",
+            "methods": [
+                "GET"
+            ],
+            "summary": "Get meeting by ID",
+            "handler": "app.api.v1.meetings:get_meeting",
+            "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/meetings",
+            "methods": [
+                "POST"
+            ],
+            "summary": "Create new meeting",
+            "handler": "app.api.v1.meetings:create_meeting",
+            "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/meetings/{meeting_id}",
+            "methods": [
+                "PUT"
+            ],
+            "summary": "Update meeting",
+            "handler": "app.api.v1.meetings:update_meeting",
+            "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/meetings/{meeting_id}",
+            "methods": [
+                "DELETE"
+            ],
+            "summary": "Delete meeting",
+            "handler": "app.api.v1.meetings:delete_meeting",
+            "source_file": "src/app/api/v1/meetings.py"
+        },
+        {
+            "path": "/api/v1/chatbot/chat",
+            "methods": [
+                "POST"
+            ],
+            "summary": "Chat with AI assistant",
+            "handler": "app.api.v1.chatbot:chat_endpoint",
+            "source_file": "src/app/api/v1/chatbot.py"
+        }
+    ],
+    "metadata": {
+        "generated_at": "2025-10-03",
+        "project_name": "Team-15 Backend",
+        "openapi_url": "/api/v1/openapi.json"
+    }
+}

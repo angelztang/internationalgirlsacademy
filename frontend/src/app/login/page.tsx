@@ -15,7 +15,7 @@ export default function LoginRoute() {
     }
 
     if (userType === "volunteer") {
-      router.push("/VolunteerDashboard");
+      router.push("/volunteerDashboard");
       return;
     }
 

@@ -92,7 +92,7 @@ export default function StepContent({
 
             {!currentStepData.completed && (
               <Button
-                className={`bg-gradient-to-r ${colors.primary} text-white px-8`}
+                className={`bg-blue-primary text-white px-8`}
                 onClick={() => completeStep(currentStep)}
               >
                 {currentStep === steps.length - 1
@@ -103,7 +103,7 @@ export default function StepContent({
 
             {currentStepData.completed && currentStep < steps.length - 1 && (
               <Button
-                className={`bg-gradient-to-r ${colors.primary} text-white px-8`}
+                className={`bg-blue-primary text-white px-8`}
                 onClick={() => setCurrentStep(currentStep + 1)}
               >
                 Continue

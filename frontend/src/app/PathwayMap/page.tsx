@@ -5,6 +5,7 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ArrowLeft, Trophy, Target, ShoppingBag, Star } from "lucide-react";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import PathSteps from "../../components/PathwayMap/PathSteps";
 import StepContent from "../../components/PathwayMap/StepContent";
 import Shop from "../../components/Shop/Shop";
@@ -198,6 +199,7 @@ export default function PathwayMap({
   const [showShop, setShowShop] = useState(false);
   const [studentPoints, setStudentPoints] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
+  const router = useRouter();
 
   // Calculate student points
   useEffect(() => {

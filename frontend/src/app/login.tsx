@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Users, GraduationCap, Heart, ArrowLeft } from "lucide-react";
 
 interface LoginProps {
@@ -21,6 +20,16 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    console.log('[login] mounted');
+    const onBefore = () => console.log('[login] beforeunload');
+    window.addEventListener('beforeunload', onBefore);
+    return () => {
+      console.log('[login] unmounted');
+      window.removeEventListener('beforeunload', onBefore);
+    };
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,20 +66,20 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
   const tabConfig = {
     student: {
       icon: GraduationCap,
-      color: 'bg-purple-600 text-white',
-      bgColor: 'bg-purple-50',
+      color: 'bg-blue-primary text-white',
+      bgColor: 'bg-lavender',
       description: 'Access your learning journey, programs, and mentors'
     },
     volunteer: {
       icon: Heart,
-      color: 'bg-pink-600 text-white',
-      bgColor: 'bg-pink-50',
+      color: 'bg-pink text-white',
+      bgColor: 'bg-pink',
       description: 'Connect with students and manage your mentorship'
     },
     admin: {
       icon: Users,
-      color: 'bg-blue-600 text-white',
-      bgColor: 'bg-blue-50',
+      color: 'bg-blue-primary text-white',
+      bgColor: 'bg-white',
       description: 'Manage programs, events, and community'
     }
   };
@@ -93,15 +102,9 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
         <Card className="overflow-hidden">
           {/* Header */}
           <div className={`${currentConfig.color} p-8 text-center`}>
-            <motion.div
-              key={activeTab}
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", duration: 0.6 }}
-              className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4"
-            >
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <IconComponent className="w-8 h-8" />
-            </motion.div>
+            </div>
             <h1 className="text-3xl mb-2">Welcome Back!</h1>
             <p className="text-sm text-white/90">{currentConfig.description}</p>
           </div>
@@ -139,6 +142,7 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
               <button
+                type="button"
                 onClick={onSwitchToSignup}
                 className="text-purple-600 hover:underline"
               >
@@ -154,11 +158,7 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
   function LoginForm() {
     return (
       <form onSubmit={handleLogin} className="space-y-4">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
+            <div>
           <Label htmlFor="email">Email Address</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -166,7 +166,15 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
               id="email"
               type="email"
               value={email}
+              onKeyDown={(e) => {
+                console.log('[login] email key', e.key);
+                // prevent Enter in email field from submitting the form
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                }
+              }}
               onChange={(e) => {
+                console.log('[login] email change', e.target.value);
                 setEmail(e.target.value);
                 if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
               }}
@@ -175,13 +183,9 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
             />
           </div>
           {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-        </motion.div>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div>
           <div className="flex items-center justify-between mb-1">
             <Label htmlFor="password">Password</Label>
             <a href="#" className="text-xs text-purple-600 hover:underline">
@@ -194,7 +198,9 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
               id="password"
               type="password"
               value={password}
+              onKeyDown={(e) => console.log('[login] password key', e.key)}
               onChange={(e) => {
+                console.log('[login] password change', e.target.value);
                 setPassword(e.target.value);
                 if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
               }}
@@ -203,16 +209,12 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
             />
           </div>
           {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-        </motion.div>
+  </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div>
           <Button
             type="submit"
-            className={`w-full bg-gradient-to-r ${currentConfig.color}`}
+            className={`w-full ${currentConfig.color}`}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -227,7 +229,7 @@ export default function LoginPage({ onBack, onLogin, onSwitchToSignup }: LoginPr
               </span>
             )}
           </Button>
-        </motion.div>
+  </div>
 
         {/* Demo Credentials Notice */}
         <div className={`${currentConfig.bgColor} p-4 rounded-lg mt-4`}>

@@ -28,9 +28,7 @@ export default function ProgressBar({
       {/* Header */}
       <div className="flex items-center justify-between text-sm">
         <span className="text-gray-600">Your Progress</span>
-        <span
-          className={`bg-gradient-to-r ${colors.primary} bg-clip-text text-transparent`}
-        >
+        <span className={`text-blue-primary`}>
           {Math.round(progressPercentage)}% Complete
         </span>
       </div>

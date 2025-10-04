@@ -7,7 +7,7 @@ export function CommunitySection() {
   const isEventLive = true; // Set to false when no event is live
   
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-purple-50 to-pink-50">
+  <section className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl mb-4">Our Community & Programs</h2>
@@ -67,7 +67,7 @@ export function CommunitySection() {
           <h3 className="text-3xl text-center mb-8">Our Programs</h3>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-8 bg-gradient-to-br from-purple-500 to-purple-700 text-white">
+            <Card className="p-8 bg-lavender text-white">
               <h4 className="text-2xl mb-3">Ujima Program</h4>
               <p className="text-purple-100 mb-4">
                 Our flagship mentorship program connecting students with experienced professionals for one-on-one guidance and support.
@@ -80,7 +80,7 @@ export function CommunitySection() {
               </ul>
             </Card>
 
-            <Card className="p-8 bg-gradient-to-br from-pink-500 to-rose-700 text-white">
+            <Card className="p-8 bg-pink text-white">
               <h4 className="text-2xl mb-3">After School Programs</h4>
               <p className="text-pink-100 mb-4">
                 Engaging activities and learning opportunities that extend beyond the classroom to build skills and confidence.
@@ -93,7 +93,7 @@ export function CommunitySection() {
               </ul>
             </Card>
 
-            <Card className="p-8 bg-gradient-to-br from-blue-500 to-indigo-700 text-white">
+            <Card className="p-8 bg-blue-primary text-white">
               <h4 className="text-2xl mb-3">Entrepreneurship Track</h4>
               <p className="text-blue-100 mb-4">
                 Learn to turn your ideas into reality with business skills, mentorship, and resources to launch your own ventures.
@@ -106,7 +106,7 @@ export function CommunitySection() {
               </ul>
             </Card>
 
-            <Card className="p-8 bg-gradient-to-br from-indigo-500 to-purple-700 text-white">
+            <Card className="p-8 bg-blue-primary text-white">
               <h4 className="text-2xl mb-3">Alumni Network</h4>
               <p className="text-indigo-100 mb-4">
                 Stay connected, give back, and continue growing with our global network of IGA graduates making an impact.

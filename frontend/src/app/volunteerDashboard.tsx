@@ -64,7 +64,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -93,7 +93,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <Card className="bg-gradient-to-r from-pink-500 to-rose-700 text-white p-8">
+          <Card className="bg-pink text-white p-8">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-3xl mb-2">Welcome, {volunteerData.name.split(' ')[0]}! 💝</h2>
@@ -110,7 +110,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
                 </div>
               </div>
               <Avatar className="w-20 h-20 border-4 border-white/20">
-                <AvatarFallback className="bg-white/20 text-white text-2xl">
+                <AvatarFallback className="bg-pink text-white text-2xl">
                   {volunteerData.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
@@ -195,7 +195,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
                             <Avatar>
-                              <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                                          <AvatarFallback className="bg-lavender text-white">
                                 {mentee.name.charAt(0)}
                               </AvatarFallback>
                             </Avatar>
@@ -213,7 +213,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
                               <MessageCircle className="w-3 h-3 mr-1" />
                               Message
                             </Button>
-                            <Button size="sm" className="bg-gradient-to-r from-pink-500 to-rose-700">
+                            <Button size="sm" className="bg-pink">
                               View Profile
                             </Button>
                           </div>
@@ -228,7 +228,7 @@ export default function VolunteerDashboard({ userData, onLogout }: VolunteerDash
                   <h3 className="text-xl mb-4">Your Achievements</h3>
                   <div className="grid md:grid-cols-3 gap-4">
                     {volunteerData.achievements.map((achievement) => (
-                      <div key={achievement.id} className="text-center p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                      <div key={achievement.id} className="text-center p-4 bg-white rounded-lg">
                         <div className="text-4xl mb-2">{achievement.icon}</div>
                         <p className="text-sm mb-1">{achievement.title}</p>
                         <p className="text-xs text-gray-600">{achievement.date}</p>
