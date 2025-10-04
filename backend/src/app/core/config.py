@@ -11,6 +11,9 @@ env_path = backend_dir / ".env"
 
 # Load .env file if it exists
 load_dotenv(env_path)
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Settings:
@@ -41,6 +44,9 @@ class Settings:
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER: str = os.getenv("SMTP_USER", "")
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    # Supabase
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_KEY: str = os.getenv("SUPABASE_KEY", "")
 
 
 settings = Settings()
