@@ -24,6 +24,7 @@ import {
   LogOut,
   Bell,
   Settings,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -262,6 +263,30 @@ export default function VolunteerDashboard({
                     </p>
                     <p className="text-xs text-gray-600">Impact</p>
                   </Card>
+                </div>
+
+                {/* My Volunteer Pathway - Direct access to volunteer PathwayMap */}
+                <div className="mt-6">
+                  <Link href="/PathwayMap?path=volunteer">
+                  <Card className="p-6 bg-gradient-to-r from-[#f7a1c0] to-[#b4bbf8] text-white cursor-pointer hover:shadow-xl transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
+                          <BookOpen className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl mb-1">My Volunteer Pathway</h3>
+                          <p className="text-sm text-pink-100">
+                            Continue your volunteering journey and learn how to mentor
+                          </p>
+                        </div>
+                      </div>
+                      <Button className="bg-white text-pink hover:bg-white/90">
+                        Continue →
+                      </Button>
+                    </div>
+                  </Card>
+                  </Link>
                 </div>
 
                 {/* Mentees Overview */}
