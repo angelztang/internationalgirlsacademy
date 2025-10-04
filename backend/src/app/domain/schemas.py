@@ -158,13 +158,21 @@ class Event(BaseModel):
 
 
 class CreateEventRequest(BaseModel):
+<<<<<<< HEAD
     name: Optional[str] = None
+=======
+    name: str
+>>>>>>> main
     start_time: datetime
     end_time: datetime
 
 
 class UpdateEventRequest(BaseModel):
+<<<<<<< HEAD
     name: Optional[str] = None
+=======
+    name: str
+>>>>>>> main
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 

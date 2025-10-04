@@ -70,8 +70,13 @@ async def create_event(request: CreateEventRequest, db: Client = Depends(get_sup
             detail="Event end time must be after start time"
         )
 
+<<<<<<< HEAD
     insert_data = {
         "name": request.name or "Untitled Event",
+=======
+    response = db.table("events").insert({
+        "name": request.name,
+>>>>>>> main
         "start_time": request.start_time.isoformat(),
         "end_time": request.end_time.isoformat()
     }
@@ -99,12 +104,18 @@ async def update_event(
 
     # Build update dict
     update_data = {}
+<<<<<<< HEAD
     if request.name is not None:
+=======
+    if request.name:
+>>>>>>> main
         update_data["name"] = request.name
     if request.start_time:
         update_data["start_time"] = request.start_time.isoformat()
     if request.end_time:
         update_data["end_time"] = request.end_time.isoformat()
+    
+    
 
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
@@ -132,6 +143,8 @@ async def update_event(
             status_code=400,
             detail="Event end time must be after start time"
         )
+    
+    print(update_data)
 
     # Update event
     response = db.table("events").update(update_data).eq("event_id", event_id).execute()
