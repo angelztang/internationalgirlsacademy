@@ -141,7 +141,7 @@ Teaser: "Complete these modules to unlock programs"
 - `GET /api/v1/users/events/{event_id}/registrations`
 
 ### Chatbot
-- `POST /api/v1/chatbot/chat`
+- ✅ `POST /api/v1/chatbot/chat`
 
 ### Zoom
 - `GET /api/v1/zoom/get_signature`
