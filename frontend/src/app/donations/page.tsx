@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, DollarSign, Users, TrendingUp, Check } from "lucide-react";
+import { Heart, DollarSign, Users, TrendingUp, Check, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const donationTiers = [
   {
@@ -39,11 +40,12 @@ const impactStats = [
 export default function DonationPage() {
   const [customAmount, setCustomAmount] = useState("");
   const [selectedTier, setSelectedTier] = useState<number | null>(null);
+  const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-purple-100">
+  <div className="min-h-screen bg-lavender/10">
       {/* Hero Section */}
-      <section className="relative py-20 px-6 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 overflow-hidden">
+  <section className="relative py-20 px-6 bg-white overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             animate={{
@@ -66,12 +68,21 @@ export default function DonationPage() {
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="mb-6 text-left">
+            <button
+              type="button"
+              onClick={() => router.push('/')}
+              className="inline-flex items-center gap-2 text-sm text-blue-primary hover:underline"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-blue-primary">
               Empower the Next Generation
             </h1>
             <p className="text-xl md:text-2xl text-gray-700 mb-8">
@@ -94,9 +105,7 @@ export default function DonationPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  {stat.value}
-                </div>
+                <div className="text-4xl font-bold text-blue-primary mb-2">{stat.value}</div>
                 <div className="text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
@@ -108,7 +117,7 @@ export default function DonationPage() {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-4xl font-bold mb-4 text-blue-primary">
               Choose Your Impact
             </h2>
             <p className="text-gray-600 text-lg">
@@ -130,28 +139,26 @@ export default function DonationPage() {
                   onClick={() => setSelectedTier(tier.amount)}
                   className={`relative cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all p-8 ${
                     selectedTier === tier.amount
-                      ? "ring-4 ring-pink-500"
+                      ? "ring-4 ring-blue-primary"
                       : ""
-                  } ${tier.popular ? "border-4 border-purple-500" : ""}`}
+                  } ${tier.popular ? "border-4 border-blue-primary" : ""}`}
                 >
                   {tier.popular && (
-                    <div className="absolute top-0 right-0 bg-purple-500 text-white px-4 py-1 rounded-bl-2xl rounded-tr-2xl text-sm font-semibold">
+                    <div className="absolute top-0 right-0 bg-blue-primary text-white px-4 py-1 rounded-bl-2xl rounded-tr-2xl text-sm font-semibold">
                       Most Popular
                     </div>
                   )}
 
-                  <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-2xl flex items-center justify-center mb-6">
-                    <Icon className="w-8 h-8 text-purple-600" strokeWidth={2.5} />
+                  <div className="w-16 h-16 bg-lavender rounded-2xl flex items-center justify-center mb-6">
+                    <Icon className="w-8 h-8 text-blue-primary" strokeWidth={2.5} />
                   </div>
 
-                  <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                    ${tier.amount}
-                  </div>
+                  <div className="text-4xl font-bold mb-2 text-blue-primary">${tier.amount}</div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
                     {tier.title}
                   </h3>
                   <p className="text-gray-600 mb-4">{tier.description}</p>
-                  <div className="flex items-center gap-2 text-pink-600 font-semibold">
+                  <div className="flex items-center gap-2 text-pink font-semibold">
                     <Check className="w-5 h-5" />
                     <span>{tier.impact}</span>
                   </div>
@@ -178,10 +185,10 @@ export default function DonationPage() {
                   placeholder="Enter amount"
                   value={customAmount}
                   onChange={(e) => setCustomAmount(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 text-2xl border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500"
+                  className="w-full pl-12 pr-4 py-4 text-2xl border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-primary/20 focus:border-blue-primary"
                 />
               </div>
-              <button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all">
+              <button className="bg-blue-primary text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all">
                 Donate Now
               </button>
             </div>
@@ -190,7 +197,7 @@ export default function DonationPage() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-blue-50 to-purple-50">
+  <section className="py-20 px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6 text-gray-900">
             Your Donation is Secure & Tax-Deductible

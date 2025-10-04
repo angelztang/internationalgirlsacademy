@@ -4,6 +4,7 @@ export default function ProgressBar({ steps, currentStep, colors }: any) {
   const completedSteps = steps.filter((s: any) => s.completed).length;
   const progressPercentage = (completedSteps / steps.length) * 100;
   const currentProgressPercentage = ((currentStep + 1) / steps.length) * 100;
+  const safeColors = colors || { primary: "bg-[#4455f0]", secondary: "bg-[#b4bbf8]/20", accent: "border-[#4455f0]" };
 
   return (
     <div className="space-y-2">
@@ -27,7 +28,7 @@ export default function ProgressBar({ steps, currentStep, colors }: any) {
               width: `${currentProgressPercentage - progressPercentage}%`,
             }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className={`h-full ${colors.secondary} opacity-60`}
+            className={`h-full ${safeColors.secondary} opacity-60`}
           />
         )}
       </div>
