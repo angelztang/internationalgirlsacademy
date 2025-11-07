@@ -1,325 +1,262 @@
-# Team-15
+# IGA Platform — Team-15
 
-# Landing Page - IGA Platform
+Empowering girls ages 5–18 through STEM, financial literacy, and entrepreneurship.
 
-## Hero Section
+## Overview
 
-**Headline:** "No Limitations. Just Possibilities."
-**Subheadline:** "Empowering girls ages 5-18 through STEM, financial literacy, and entrepreneurship"
-**Design:** Pink color scheme, bold typography
-**CTA:** "Join Now" button → onboarding flow
+The IGA Platform is a modern educational technology system designed to provide structured learning pathways, mentorship connections, program participation, and community engagement for girls globally. The platform currently supports students in the United States, Ghana, Liberia, and Guyana.
 
-## Welcome Video (North Star)
-
-**Placement:** Hero section or immediately below
-**Content:** 1-2 min explaining who IGA is, what programs exist, what to expect
-**Purpose:** Sets clear expectations, shows community/safe space vibe
-**Design:** Prominent play button or auto-play on mute
-
-## Role Selection Cards
-
-Four clear options:
-
-- "I'm a Student" → student onboarding
-- "I'm a Parent" → parent info/signup
-- "I'm a Volunteer/Mentor" → volunteer onboarding
-- "I'm an Alumni" → alumni portal
-
-Visual distinction between each role
-
-## Your Journey Section
-
-**Visual roadmap showing:**
-
-1. Learn Nguzo Saba principles (modules)
-2. Choose your program (Ujima, Kumbathon)
-3. Build your future
-
-Time commitments displayed for each step
-
-## Programs Overview
-
-**Three program cards:**
-
-- **Ujima Business Program:** 12 weeks to launch your business
-- **Kumbathon:** Make coding cool through hackathons
-- **Box of Open Love:** Get essential items for school/college
-
-Each with icon, description, "Learn More" link
-
-## Nguzo Saba Preview
-
-Display all 7 principles with icons
-Highlight top 3: Unity, Purpose, Collective Work
-Teaser: "Complete these modules to unlock programs"
-
-## Community Transparency
-
-**Section answering:** "What is this community?"
-
-- Clear explanation of safe space commitment
-- "Practical pricing, no scamming" messaging
-- Who we serve and why
-
-## Trust Indicators
-
-- "2,000+ students empowered"
-- "Global reach: US to Liberia"
-- Partner/sponsor logos
-- Student testimonial carousel
-
-## Footer
-
-- Donate button with brief impact explanation
-- Contact information
-- Social media links
-- Language toggle (English/Spanish/others)
-
-## Design Principles
-
-- Mobile-first responsive
-- High contrast, readable fonts (ages 5-18)
-- Zero confusion navigation
-- Cultural markers visible (pink, Nguzo Saba symbols)
-- Clear next steps at every section
-
-## Backend API Routes → Frontend Integration
-
-### User Management (Authentication via Supabase)
-- ✅ `POST /api/v1/users/register` → Supabase Auth in `frontend/src/app/signup.tsx`
-- ✅ `POST /api/v1/users/login` → Supabase Auth in `frontend/src/app/login.tsx`
-- ✅ `GET /api/v1/users/me` → Auth context and profile fetching
-
-### Shop/Items System
-- ✅ `GET /api/v1/items` → Shop component (`frontend/src/components/Shop/Shop.tsx`)
-- ✅ `GET /api/v1/items/{item_id}` → Shop API utility (`frontend/src/lib/api/shop.ts`)
-- `POST /api/v1/items`
-
-### User Items (Inventory)
-- ✅ `GET /api/v1/users/{user_id}/items` → Shop component (`frontend/src/components/Shop/Shop.tsx`)
-- ✅ `POST /api/v1/users/{user_id}/items/purchase` → Shop component
-- ✅ `PUT /api/v1/users/{user_id}/items/{item_id}/equip` → Shop API utility
-
-### Modules (Learning Progress)
-- ✅ `GET /api/v1/modules/user/{user_id}` → Student Dashboard & PathwayMap
-- ✅ `GET /api/v1/modules/{module_id}` → Modules API utility (`frontend/src/lib/api/modules.ts`)
-- ✅ `POST /api/v1/modules` → Modules API utility
-- ✅ `PUT /api/v1/modules/{module_id}` → PathwayMap (`frontend/src/app/PathwayMap/page.tsx`)
-- ✅ `DELETE /api/v1/modules/{module_id}` → Organizer dashboard 
-
-### Meetings (Zoom Integration)
-- ✅ `GET /api/v1/meetings` → Meetings page (`frontend/src/app/events/meetings/page.tsx`)
-- ✅ `GET /api/v1/meetings/{meeting_id}` → Meetings page
-- ✅ `POST /api/v1/meetings/create` → Meetings page
-- ✅ `POST /api/v1/meetings/{meeting_id}/join` → ZoomMeeting component (`frontend/src/components/meetings/ZoomMeeting.tsx`)
-- ✅ `PUT /api/v1/meetings/{meeting_id}/status` → Meetings API
-- `POST /api/v1/meetings/schedule`
-
-### Events Management
-- ✅ `GET /api/v1/events` → Organizer Dashboard (`frontend/src/app/organizerDashboard.tsx`)
-- ✅ `GET /api/v1/events/{event_id}` → Organizer Dashboard
-- ✅ `POST /api/v1/events` → Organizer Dashboard
-- ✅ `PUT /api/v1/events/{event_id}` → Organizer Dashboard
-- ✅ `DELETE /api/v1/events/{event_id}` → Organizer Dashboard
-
-### Event Registration
-- `GET /api/v1/users/{user_id}/events`
-- `POST /api/v1/users/events/{event_id}/register`
-- `DELETE /api/v1/users/events/{event_id}/register/{user_id}`
-- `GET /api/v1/users/events/{event_id}/registrations`
-
-### Chatbot
-- ✅ `POST /api/v1/chatbot/chat`
-
-### Zoom
-- `GET /api/v1/zoom/get_signature`
-
-### Not Implemented in Backend
-- Donations API (frontend page exists at `frontend/src/app/donations/page.tsx` but no backend routes)
-
-
-# IGA Platform - Team 15
-
-> Empowering girls ages 5-18 through STEM, financial literacy, and entrepreneurship
-
-## 🌟 Project Overview
-
-The IGA Platform is a comprehensive educational technology solution designed to connect, educate, and empower young girls worldwide. Built with modern web technologies, it provides mentorship matching, learning pathways, community engagement, and global connectivity spanning the United States, Ghana, Liberia, and Guyana.
-
-## 🧠 Brainstorming Process & LLM Integration
-
-### Initial Ideation with AI Assistance
-
-Our development process was deeply integrated with Large Language Models (LLMs) from conception to implementation. Here's how we leveraged AI throughout our brainstorming and development journey:
-
-#### 1. **Concept Development & User Journey Mapping**
-- **Prompt Engineering**: We used LLMs to explore different user personas (students, mentors, parents, alumni) and their unique needs
-- **Journey Visualization**: AI helped us map out complex user flows from onboarding through program completion
-- **Feature Prioritization**: Used conversational AI to evaluate feature importance and technical feasibility
-
-```
-Example Prompt: "Help us design a user onboarding flow for girls aged 5-18 joining an educational mentorship platform. Consider different age groups, technical literacy levels, and cultural backgrounds."
-```
-
-#### 2. **Architecture & Technical Planning**
-- **Technology Stack Selection**: LLMs helped evaluate trade-offs between different frameworks (Next.js vs. React, FastAPI vs. Django)
-- **Database Schema Design**: AI-assisted in designing relational structures for users, programs, mentorship matching, and progress tracking
-- **API Design Patterns**: Used LLMs to establish RESTful conventions and endpoint structures
-
-#### 3. **UI/UX Design Philosophy**
-- **Accessibility-First Design**: AI helped us consider users with different abilities and technical backgrounds
-- **Cultural Sensitivity**: LLMs provided insights on creating inclusive interfaces for diverse global users
-- **Age-Appropriate Design**: Leveraged AI to ensure interfaces work for both 5-year-olds and 18-year-olds
-
-### LLM-Powered Development Features
-
-#### 1. **Intelligent Chatbot (BusyBot 🤖)**
-- **Implementation**: [`frontend/src/components/Busybot/ChatBot.tsx`](frontend/src/components/Busybot/ChatBot.tsx)
-- **Backend Integration**: [`backend/src/app/api/v1/chatbot.py`](backend/src/app/api/v1/chatbot.py)
-- **Purpose**: Provides contextual help throughout the learning journey
-- **AI Model**: GPT-4o-mini with custom educational prompts
-
-```typescript
-// Example of our chatbot integration
-const handleSend = async () => {
-  const data = await apiClient.post<{ response: string }>('/chatbot/chat', {
-    message: inputValue,
-    history: messages.map((m) => ({
-      role: m.sender === "user" ? "user" : "assistant",
-      content: m.text,
-    })),
-  });
-};
-```
-
-#### 2. **Code Generation & Documentation**
-- **Component Generation**: Used LLMs to scaffold React components with TypeScript
-- **API Documentation**: AI-generated comprehensive API documentation and integration guides
-- **Test Case Creation**: Leveraged LLMs to create edge cases and comprehensive test suites
-
-#### 3. **Content Creation & Localization**
-- **Educational Content**: AI helped generate age-appropriate learning modules
-- **Multi-language Support**: LLMs assisted in creating culturally appropriate content for different regions
-- **Accessibility Text**: Generated alt-text and screen reader friendly descriptions
-
-## 🏗️ Technical Architecture
-
-### Frontend Stack
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS + Radix UI
-- **Animations**: Framer Motion
-- **3D Graphics**: Three.js with React Three Fiber
-- **State Management**: React Context + Local State
-
-### Backend Stack
-- **Framework**: FastAPI (Python)
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
-- **Real-time**: WebSocket connections
-- **AI Integration**: OpenAI GPT-4o-mini
-- **Video Conferencing**: Zoom SDK
-
-### Key Features Developed with AI Assistance
-
-#### 🌍 **Global Connectivity**
-- Interactive 3D globe showing connections between US, Ghana, Liberia, and Guyana
-- Real-time community statistics and engagement metrics
-
-#### 🎓 **Learning Pathways**
-- Personalized learning journeys based on Nguzo Saba principles
-- Progress tracking with gamification elements
-- AI-powered content recommendations
-
-#### 🤝 **Mentorship Matching**
-- Algorithm-based mentor-student pairing
-- Availability scheduling and meeting coordination
-- Progress tracking and feedback systems
-
-#### 💬 **Community Features**
-- Live chat during events and workshops
-- Comment threads on learning modules
-- Community recognition and achievement systems
-
-## 🔄 LLM-Assisted Development Workflow
-
-### 1. **Planning Phase**
-```
-Human: "We need to create a mentorship platform for young girls. What are the key features we should prioritize?"
-
-AI: "Based on educational platform best practices, I recommend focusing on:
-1. Safe, moderated communication channels
-2. Progress tracking with age-appropriate gamification
-3. Cultural sensitivity for global users
-4. Accessibility features for different abilities..."
-```
-
-### 2. **Implementation Phase**
-- **Code Reviews**: LLMs helped identify potential bugs and suggest optimizations
-- **Documentation**: AI generated inline comments and README sections
-- **Testing Strategies**: Created comprehensive test cases covering edge scenarios
-
-### 3. **Refinement Phase**
-- **User Experience**: AI helped identify friction points in user flows
-- **Performance Optimization**: LLMs suggested caching strategies and bundle optimizations
-- **Security Audits**: AI-assisted security review of authentication and data handling
-
-## 📁 Project Structure
-
-```
-├── frontend/                 # Next.js React application
-│   ├── src/app/             # App Router pages
-│   ├── src/components/      # Reusable UI components
-│   ├── src/lib/            # Utilities and API clients
-│   └── src/context/        # React Context providers
-├── backend/                 # FastAPI Python application
-│   ├── src/app/api/        # API routes and endpoints
-│   ├── src/app/core/       # Core configurations
-│   ├── src/app/models/     # Database models
-│   └── tests/              # Test suites
-└── README.md               # This file
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ and npm
-- Python 3.11+
-- Supabase account
-- OpenAI API key (for BusyBot)
-
-## 🎯 Key Learning Outcomes from LLM Integration
-
-### What Worked Well
-1. **Rapid Prototyping**: LLMs accelerated initial feature development by 3-4x
-2. **Code Quality**: AI-assisted code reviews caught edge cases we might have missed
-3. **Documentation**: Comprehensive documentation generated with minimal manual effort
-4. **User Experience**: AI helped us consider accessibility and usability from day one
-
-### Challenges & Solutions
-1. **Over-reliance Risk**: We balanced AI suggestions with human judgment and domain expertise
-2. **Context Limitations**: Broke down complex problems into smaller, AI-manageable chunks
-3. **Code Consistency**: Established clear prompting patterns and coding standards
-
-### Future LLM Integration Plans
-- **Adaptive Learning**: AI-powered curriculum that adjusts to individual student progress
-- **Automated Mentorship Matching**: Enhanced algorithms using NLP to match communication styles
-- **Content Generation**: AI-created educational materials tailored to different cultural contexts
-
-## 🌟 Impact & Vision
-
-This platform represents more than just code—it's a bridge connecting young women across continents, powered by human creativity and AI efficiency. By leveraging LLMs throughout our development process, we've created a more thoughtful, accessible, and globally-minded educational platform.
-
-Our AI-assisted approach enabled us to:
-- Consider edge cases for users across different cultures and age groups
-- Implement complex features like real-time mentorship matching
-- Create intuitive interfaces that work for both 5-year-olds and 18-year-olds
-- Build robust, scalable architecture from the ground up
-
-## Contributions
-
-- **Team**: Team 15
-- **Platform**: IGA (International Girls Academy)
-- **Mission**: Empowering girls worldwide through technology and mentorship
+It includes a full-stack web platform with user onboarding, customizable learning modules, real-time community features, mentorship scheduling, event management, and AI-assisted educational interaction.
 
 ---
+
+## Landing Page Design
+
+A structured landing experience highlights:
+
+* Clear messaging emphasizing accessible opportunity
+* Role-based onboarding (students, parents, mentors, alumni)
+* Program previews and learning pathways
+* Community values and trust indicators
+* Testimonials, partner logos, and donation pathways
+
+Key design goals:
+
+* Mobile-first responsiveness
+* High contrast, accessible UI
+* Culturally contextual visual elements
+* Minimal user friction
+
+---
+
+## Architecture Overview
+
+### Frontend
+
+* Next.js 14 (App Router)
+* React + TypeScript
+* Tailwind CSS
+* Radix UI
+* Framer Motion (animations)
+* React Three Fiber + Three.js (3D globe visualization)
+* React Context + local state management
+
+### Backend
+
+* FastAPI (Python)
+* Supabase (PostgreSQL)
+* Supabase Auth
+* WebSockets
+* Zoom SDK integration
+* OpenAI model integration
+
+### DevOps
+
+* Modular file structure for maintainability
+* Environment-variable based configuration
+* Supabase hosting + auth
+* Full REST API communication between frontend and backend
+
+---
+
+## Core Features
+
+### User Roles
+
+* Students
+* Parents
+* Volunteers/Mentors
+* Alumni
+
+Each role receives distinct onboarding flows and contextual dashboards.
+
+---
+
+### Learning & Program Flow
+
+A structured pathway guides students through:
+
+1. Nguzo Saba principles
+2. Program selection (Ujima, Kumbathon, Box of Open Love)
+3. Mentorship engagement and workshops
+
+Features:
+
+* Age-appropriate curriculum
+* Progress tracking
+* Instructional modules
+* Integration with calendar + meetings
+
+---
+
+### Marketplace / Shop
+
+* View catalog of items
+* Purchase with earned credits
+* Manage user inventory
+* Equip/use items
+
+Routes support listing, transactions, and inventory management.
+
+---
+
+### Events & Meetings
+
+* Event listing and details
+* User registration and management
+* Zoom meeting integration
+* Join links + scheduling
+* Organizer dashboard supporting CRUD
+
+---
+
+### Chatbot
+
+* Contextual chat assistant
+* Supports conversational guidance
+* Integrated with OpenAI model
+* Used across platform to support onboarding and learning
+
+Frontend + backend endpoints fully implemented.
+
+---
+
+## API Surface Summary
+
+### User (Supabase Auth)
+
+* `POST /api/v1/users/register`
+* `POST /api/v1/users/login`
+* `GET  /api/v1/users/me`
+
+### Items
+
+* `GET  /api/v1/items`
+* `GET  /api/v1/items/{id}`
+* `POST /api/v1/items`
+
+### User Items
+
+* `GET  /api/v1/users/{id}/items`
+* `POST /api/v1/users/{id}/items/purchase`
+* `PUT  /api/v1/users/{id}/items/{item_id}/equip`
+
+### Modules
+
+* `GET    /api/v1/modules/user/{id}`
+* `GET    /api/v1/modules/{id}`
+* `POST   /api/v1/modules`
+* `PUT    /api/v1/modules/{id}`
+* `DELETE /api/v1/modules/{id}`
+
+### Meetings
+
+* `GET  /api/v1/meetings`
+* `GET  /api/v1/meetings/{id}`
+* `POST /api/v1/meetings/create`
+* `POST /api/v1/meetings/{id}/join`
+* `PUT  /api/v1/meetings/{id}/status`
+
+### Events
+
+* `GET    /api/v1/events`
+* `GET    /api/v1/events/{id}`
+* `POST   /api/v1/events`
+* `PUT    /api/v1/events/{id}`
+* `DELETE /api/v1/events/{id}`
+
+### Chatbot
+
+* `POST /api/v1/chatbot/chat`
+
+Not implemented: Donations API
+
+---
+
+## LLM Integration
+
+LLMs supported multiple phases of development:
+
+### Planning
+
+* Persona definition and journey mapping
+* Flow design for students, mentors, and parents
+* Feature prioritization
+
+### System & Architecture
+
+* Evaluating Next.js vs. React alternatives
+* Designing relational schemas under Supabase
+* REST API layout and endpoint specification
+
+### UI/UX
+
+* Accessibility-first layout
+* Cultural contextualization
+* Simplified navigation for diverse age ranges
+
+### Implementation
+
+* Assisted in React component scaffolding
+* Example test case generation
+* Internal API documentation drafts
+* Edge-case suggestions for input handling
+
+### Chatbot Integration
+
+* Frontend React component
+* Backend Python endpoint
+* Contextual messaging to support learning pathways
+
+---
+
+## Project Structure
+
+```
+├── frontend/
+│   ├── src/app/                 # Next.js pages (App Router)
+│   ├── src/components/          # UI + domain components
+│   ├── src/lib/                 # API clients + utilities
+│   └── src/context/             # App state / auth context
+├── backend/
+│   ├── src/app/api/             # API endpoint definitions
+│   ├── src/app/core/            # App config
+│   ├── src/app/models/          # Database models
+│   └── tests/                   # Test coverage
+└── README.md
+```
+
+---
+
+## Key Lessons from LLM-Assisted Workflow
+
+### Strengths
+
+* Reduced initial prototyping time
+* Accelerated drafting of documentation
+* Helped establish consistent architectural patterns
+* Provided guidance for accessibility and inclusive design
+
+### Challenges
+
+* Avoiding over-reliance on automated solutions
+* Designing good prompts for consistent outputs
+* Constraining AI suggestions to real project needs
+
+---
+
+## Future Expansion
+
+* Personalized learning curriculum powered by adaptive AI
+* Enhanced resource recommendations
+* Improved matching algorithms for mentors + students
+* Localization improvements for additional regions
+* Chatbot domain-skill tutoring
+
+---
+
+## Mission
+
+The IGA platform supports the development of future innovators by providing accessible learning tools, culturally resonant mentorship opportunities, and global community connection for students aged 5–18.
+
+Just tell me what format you need.
