@@ -25,6 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicon: use public/nonprofit-logo.png as site icon to avoid default /favicon.ico 404 */}
+        <link rel="icon" href="/nonprofit-logo.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
