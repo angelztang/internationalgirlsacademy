@@ -173,43 +173,6 @@ Not implemented: Donations API
 
 ---
 
-## LLM Integration
-
-LLMs supported multiple phases of development:
-
-### Planning
-
-* Persona definition and journey mapping
-* Flow design for students, mentors, and parents
-* Feature prioritization
-
-### System & Architecture
-
-* Evaluating Next.js vs. React alternatives
-* Designing relational schemas under Supabase
-* REST API layout and endpoint specification
-
-### UI/UX
-
-* Accessibility-first layout
-* Cultural contextualization
-* Simplified navigation for diverse age ranges
-
-### Implementation
-
-* Assisted in React component scaffolding
-* Example test case generation
-* Internal API documentation drafts
-* Edge-case suggestions for input handling
-
-### Chatbot Integration
-
-* Frontend React component
-* Backend Python endpoint
-* Contextual messaging to support learning pathways
-
----
-
 ## Project Structure
 
 ```
@@ -228,23 +191,6 @@ LLMs supported multiple phases of development:
 
 ---
 
-## Key Lessons from LLM-Assisted Workflow
-
-### Strengths
-
-* Reduced initial prototyping time
-* Accelerated drafting of documentation
-* Helped establish consistent architectural patterns
-* Provided guidance for accessibility and inclusive design
-
-### Challenges
-
-* Avoiding over-reliance on automated solutions
-* Designing good prompts for consistent outputs
-* Constraining AI suggestions to real project needs
-
----
-
 ## Future Expansion
 
 * Personalized learning curriculum powered by adaptive AI
@@ -252,11 +198,3 @@ LLMs supported multiple phases of development:
 * Improved matching algorithms for mentors + students
 * Localization improvements for additional regions
 * Chatbot domain-skill tutoring
-
----
-
-## Mission
-
-The IGA platform supports the development of future innovators by providing accessible learning tools, culturally resonant mentorship opportunities, and global community connection for students aged 5–18.
-
-Just tell me what format you need.
