@@ -11,7 +11,18 @@ import os
 app = FastAPI(title="User Registration API", version="1.0.0")
 
 # Database setup
-SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"
+# Prefer a DATABASE_URL env var (for production/postgres). Otherwise fall back to a
+# writable SQLite path. On serverless platforms like Vercel the project root
+# may be read-only, so use /tmp which is writable for the function invocation.
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL
+else:
+    # Use a file in /tmp so serverless invocations can write the DB during runtime.
+    tmp_path = os.environ.get("SQLITE_PATH", "/tmp/users.db")
+    # If tmp_path is absolute (starts with /) then prefix will become sqlite:////abs/path
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///{tmp_path}"
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -61,8 +72,18 @@ def get_db() -> Generator:
     finally:
         db.close()
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Create tables (guarded). On serverless platforms table creation may fail at import
+# time; catch and log errors so the function can still start and return a helpful
+# message instead of crashing Vercel invocation.
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    # Log the issue but don't re-raise so Vercel will return a 500 at invocation
+    # rather than failing to deploy entirely. This makes debugging the runtime
+    # easier from function logs.
+    import sys, traceback
+    print("Warning: failed to create database tables:", e, file=sys.stderr)
+    traceback.print_exc()
 
 # Helper functions
 def get_password_hash(password: str) -> str:
